@@ -7,6 +7,7 @@
 #include "Audio.h"
 #include "Entity.h"
 #include "Prince.h"
+#include "Level.h"
 
 #include <windows.h>		//fuck I always misspell windows (I mean typos, I can bloody spell windows -.-)
 #include <string.h>
@@ -18,6 +19,11 @@
 #define FOOT_FLOAT			11
 #define TORCH_FLOAT			60
 #define TORCH_FLOAT_LEFT	20
+
+
+#define DEBUG 0
+
+
 
 class Prince;
 
@@ -50,6 +56,7 @@ private:
 	//Benchmark	benchmark;
 
 private:
+	Level *level;
 
 	//Level Data
 	int TOP;
@@ -88,8 +95,6 @@ private:
 	Prince* prince;
 
 	Sprite test;
-
-
 
 	D3DCOLOR fontSurf[512 * 84];
 	Font fixedSys;
