@@ -52,7 +52,19 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 			case VK_SPACE:
 				input.setSpaceStatus(true);
 				break;
-
+			case 0x41:	//A key
+				OutputDebugStringA("A PRESSED\n");
+				input.setAStatus(true);
+				break;
+			case 0x44: //D key
+				input.setDStatus(true);
+				break;
+			case 0x57: //W key
+				input.setWStatus(true);
+				break; 
+			case 0x53: //S key
+				input.setSStatus(true);
+				break; 
 			}
 			return 0;
 		case WM_KEYUP:
@@ -79,6 +91,19 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 			case VK_SPACE:
 				input.setSpaceStatus(false);
 				break;
+			case 0x41:	//A key
+				OutputDebugStringA("A RELEASED\n");
+				input.setAStatus(false);
+				break;
+			case 0x44: //D key
+				input.setDStatus(false);
+				break;
+			case 0x57: //W key
+				input.setWStatus(false);
+				break;
+			case 0x53: //S key
+				input.setSStatus(false);
+				break; 
 
 			}
 			return 0;
@@ -122,8 +147,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
         // Size and position
         xPos,			//Position X
 		yPos,			//Position Y
-		sizeX,		//Size X
-		sizeY,		//Size Y
+		sizeX,			//Size X
+		sizeY,			//Size Y
 
         NULL,       // Parent window    
         NULL,       // Menu

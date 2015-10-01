@@ -8,6 +8,21 @@ class Input {
 public:
 	Input();
 
+	void setWStatus(bool status);
+	bool getWStatus();
+
+	void setSStatus(bool status);
+	bool getSStatus();
+
+	void setDStatus(bool status);
+	bool getDStatus();
+
+	void setAStatus(bool status);
+	bool getAStatus();
+
+
+
+
 	void setLeftStatus(bool status);
 	bool isLeftPressed();
 	bool getLeftPrev();
@@ -38,6 +53,12 @@ public:
 	
 	bool Input::hasUpBeenPressed();
 	bool Input::hasDownBeenPressed();
+
+	bool hasWBeenPressed();
+	bool hasABeenPressed();
+	bool hasSBeenPressed();
+	bool hasDBeenPressed();
+
 private:
 	bool down;
 	bool up;
@@ -57,5 +78,16 @@ private:
 
 	bool upMessageSent;
 	bool downMessageSent;
+
+	bool wMessageSent;
+	bool sMessageSent;
+	bool aMessageSent;
+	bool dMessageSent;
+
+
+	bool W;
+	bool S;
+	bool D;
+	bool A;
 
 };

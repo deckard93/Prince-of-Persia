@@ -281,7 +281,19 @@ void Prince::increaseMaxHealth() {
 int Prince::setFall() {
 	//sanity checks
 	//assert(currentAnim == running || currentAnim == runningJump || currentAnim == staticJump || currentAnim == fall);
-	if( this->getAnim() != jumpGrab) {
+	if(this->getAnim() == runningJump) {
+		if(this->getAnim()->getCurrentFrame() < 6) {
+			return 0;
+		}
+	}
+
+	if(this->getAnim() == staticJump) {
+		if(this->getAnim()->getCurrentFrame() < 11) {
+			return 0;
+		}
+	}
+
+	if( this->getAnim() != jumpGrab && this->getAnim() != hang) {
 		if(this->getAnim() != fall) {
 			this->setCurrentAnim(fall);
 			this->getAnim()->Play();
