@@ -8,7 +8,7 @@ ________________________________________________________________________________
 ]T    [IIIIII]_T_____T__T__[IIII]T_T__[IIIIIIIIIIIII]____T_[IIII]_T___[_____________________
 ]T    T_________  _T__           __T__T__      _______ T____T  [II]  [IIIIIIIIII]_        [I
 ]T    T____TT__T  [II]___________T_T  [I]____ _T__[II] [IIII]__T__T__T_T________TT________[I
-I]____T [IIIIII]_ [IIIIIII] [IIII]_T__T_[II]  [IIIIIII__[IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
-I]  __T___ [IIII] [IIIIIII] [IIII]_T__  [II]  [IIII                                         
+I]____T [IIIIII]_ [IIIIIII] [IIII]_T__T_[II]  [IIIIII]__[IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+I]  __T_T_ [IIII] [IIIIIII] [IIII]_T__  [II]  [IIII                                         
 I]  [IIII]_TT___T_T__TT__T   [IIIIII]T  [II]   [III                                         
 I]__[IIIIIIIIIIIIIIIIIIII]___[IIIIIII]__TT_T___[III                                         

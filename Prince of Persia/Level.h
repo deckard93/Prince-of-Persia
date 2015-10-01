@@ -7,7 +7,6 @@
 
 #include "Graphics.h"
 
-
 #define DEBUG 1
 
 enum direction { U, D, L, R }; 
@@ -17,7 +16,6 @@ struct levelBlock {
 	//  trap: guilotine | spikes | gate | potion
 	//  on | off //in case of gates / spikes / guilotens
 	//  dungeon: I | T | ] | [ | _ |   |
-
 };
 
 
@@ -25,9 +23,7 @@ class Level {
 
 //functions
 public:
-	Level();
-
-	void setGFX(Graphics* gfx);
+	Level() {}
 
 	void changeScene(direction dir);
 
@@ -39,26 +35,11 @@ public:
 	~Level();
 private:
 							
-			
-		
-	
 //variales
 public:
 
-	static const int               LEFT = 10;
-	static const int	  	    	TOP = 10;
-	static const int	  		 BOTTOM = 10;
-	static const int	  		  RIGHT = 10;
-	static const int   LEVEL_HEIGHT_PIX = 20;
-	static const int    LEVEL_WIDTH_PIX = 20;
-	static const int LEVEL_HEIGHT_BLOCK = 3 ;
-	static const int  LEVEL_WIDTH_BLOCK = 10;
-	static const int         FOOT_FLOAT = 11;
-	static const int        TORCH_FLOAT = 60;
-	static const int   TORCH_FLOAT_LEFT = 20;
-
-	static const int SCENE_WIDTH = 12;
-	static const int SCENE_HEIGHT = 4;
+	static const int SCENE_WIDTH = 10;
+	static const int SCENE_HEIGHT = 3;
 
 	static const int MAX_LEVEL_WIDTH = 1024;
 	static const int MAX_LEVEL_HEIGHT = 1024;
@@ -67,8 +48,6 @@ public:
 private:
 	int scene_x;
 	int scene_y;
-
-	Graphics* graphics;
 
 	int level_width;
 	int level_height;

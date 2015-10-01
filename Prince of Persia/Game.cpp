@@ -23,7 +23,6 @@ Game::Game(HWND hwnd, Input* in) :
 		RIGHT(0) {
 
 	level = new Level();
-	level->setGFX(&graphics);
 	level->loadLevel(1);
 
 	TOP = (SCREEN_Y - LEVEL_HEIGHT_PIX * LEVEL_HEIGHT_BLOCK) / 2;
@@ -74,10 +73,7 @@ Game::Game(HWND hwnd, Input* in) :
 
 	prince->setX(LEFT + 2 * LEVEL_WIDTH_PIX);
 	prince->setY(TOP - prince->getAnim()->getSheet()->getSprite()->height + LEVEL_HEIGHT_PIX * 2 - FOOT_FLOAT);
-	prince->setX(0);
-	prince->setY(0);
-	//prince->setY(SCREEN_Y/2);
-	//prince->setX(SCREEN_X/2);
+
 
 	prince->getAnim()->setLoop(true);
 	prince->getAnim()->Play();
@@ -175,7 +171,7 @@ void Game::CheckCollision() {
 
 	
 	/* fall */
-	if(scene[nBlockY][nBlockX] == '_' || scene[nBlockY][nBlockX] == 'T') {
+	if(level->getCode(nBlockY, nBlockX) == '_' || level->getCode(nBlockY, nBlockX) == 'T') {
 		int bar = (TOP + LEVEL_HEIGHT_PIX * nBlockY);
 
 		graphics.DrawLine(0, bar, 1200, bar, 255, 255, 255);
@@ -189,7 +185,7 @@ void Game::CheckCollision() {
 		
 	}
 
-	if(mX < 0 && scene[nBlockY][nBlockX] == ']') {
+	if(mX < 0 && level->getCode(nBlockY, nBlockX) == ']') {
 		int bar = (LEFT + LEVEL_WIDTH_PIX * (nBlockX));
 
 		//graphics.DrawLine(0, bar, 1200, bar, 255, 255, 255);
@@ -199,7 +195,7 @@ void Game::CheckCollision() {
 		}
 	}
 
-	if(mX > 0 && scene[nBlockY][nBlockX] == '[') {
+	if(mX > 0 && level->getCode(nBlockY,nBlockX) == '[') {
 		int bar = (LEFT + LEVEL_WIDTH_PIX * (nBlockX - 1));
 
 		//graphics.DrawLine(0, bar, 1200, bar, 255, 255, 255);
@@ -209,7 +205,7 @@ void Game::CheckCollision() {
 		}
 	}
 
-	if( scene[nBlockY][nBlockX] == ' ') {
+	if( level->getCode(nBlockY, nBlockX) == ' ') {
 		mY += prince->setFall();
 	}
 
@@ -425,7 +421,7 @@ void Game::DrawLevelBySchematic() {
 	int yOff;
 	int xOff;
 
-	for(int i = 0; i < 4; i++){
+	for(int i = 3; i >= 0; i--){
 		for(int j = 0; j < 11; j++){
 
 			yOff = TOP +  LEVEL_HEIGHT_PIX * i;
@@ -440,7 +436,7 @@ void Game::DrawLevelBySchematic() {
 			case 'T':
 				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
 				graphics.DrawSprite(xOff, yOff - columnFront.height, &columnFront);
-				graphics.DrawSprite(xOff, yOff - columnBack.height, &columnBack);
+				graphics.DrawSprite(xOff, yOff - columnBack.height - 15, &columnBack);
 				break;
 			case ']':
 				//this is fine

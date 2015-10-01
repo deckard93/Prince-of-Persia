@@ -1,8 +1,6 @@
 #include "Prince.h"
 
 
-
-
 //constructors
 Prince::Prince() {
 
@@ -64,8 +62,6 @@ int Prince::getMaxHealth() {
 void Prince::Animate(Graphics* graphics) {
 	int moveX = 0;
 	int moveY = 0;
-
-	
 
 	if(this->getAnim()->isFinished()) {
 
