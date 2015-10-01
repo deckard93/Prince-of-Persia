@@ -20,9 +20,6 @@ public:
 	void setAStatus(bool status);
 	bool getAStatus();
 
-
-
-
 	void setLeftStatus(bool status);
 	bool isLeftPressed();
 	bool getLeftPrev();

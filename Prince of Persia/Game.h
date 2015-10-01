@@ -9,7 +9,7 @@
 #include "Prince.h"
 #include "Level.h"
 
-#include <windows.h>		//fuck I always misspell windows (I mean typos, I can bloody spell windows -.-)
+#include <windows.h>
 #include <string.h>
 
 #define LEVEL_HEIGHT_PIX	126
@@ -22,7 +22,6 @@
 
 
 #define DEBUG 0
-
 
 
 class Prince;
