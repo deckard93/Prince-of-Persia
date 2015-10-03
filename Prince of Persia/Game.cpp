@@ -3,8 +3,6 @@
 #include "Level.h"
 
 
-
-
 char scene[4][12] = {
 	 {' ','_','_','_','_','_','_','_','_','_','_'},
 	 {'_',' ',' ','  ','_','_','_','_','[','I','I'},
@@ -12,7 +10,7 @@ char scene[4][12] = {
 	 {' ','I','I','I',']','_','T','_','_','_','['},
 	};
 
-	
+
 #define BORDERS 1
 Game::Game(HWND hwnd, Input* in) : 
 		graphics(hwnd),
@@ -83,56 +81,37 @@ Game::Game(HWND hwnd, Input* in) :
 
 }
 
-Game::~Game() {}
-
-void Game::Go() {
-
+void Game::GameLoop() {
 	//HandleInput();
 	graphics.BeginFrame();
 	
-
 	//ControlAI
 	UpdateFrame();
 
 
-
-	OutputDebugStringA("In input\n");
-
-
-	if(input->hasABeenPressed()) {
+	if(input->hasBeenPressed('A')) {
 		level->changeScene(L);
 	} 
 
-	if(input->hasDBeenPressed()) {
+	if(input->hasBeenPressed('D')) {
 		level->changeScene(R);
-
 	}
 
-	if(input->hasSBeenPressed()) {
+	if(input->hasBeenPressed('S')) {
 		level->changeScene(D);
 	} 
 
-	if(input->hasWBeenPressed()) {
+	if(input->hasBeenPressed('W')) {
 		level->changeScene(U);
-
 	}
-
-
-
 
 	prince->HandlePrince(input);
 	CheckCollision();
 
-	
-	
-
 	graphics.EndFrame();
 }
 
-
 //control
-
-
 void Game::CheckCollision() {
 
 
@@ -174,7 +153,7 @@ void Game::CheckCollision() {
 	if(level->getCode(nBlockY, nBlockX) == '_' || level->getCode(nBlockY, nBlockX) == 'T') {
 		int bar = (TOP + LEVEL_HEIGHT_PIX * nBlockY);
 
-		graphics.DrawLine(0, bar, 1200, bar, 255, 255, 255);
+		if(DEBUG) graphics.DrawLine(0, bar, 1200, bar, 255, 255, 255);
 
 		if(yFoot < bar - 20) {
 			mY += prince->setFall();
@@ -237,7 +216,6 @@ void Game::CheckCollision() {
 	}
 
 }
-
 void Game::HandleInput() {
 	
 	
@@ -246,7 +224,6 @@ void Game::HandleInput() {
 	prince->HandlePrince(input);
 
 }
-
 void Game::UpdateFrame() {
 
 	//graphics.BeginFrame();
@@ -319,7 +296,6 @@ void Game::ComposeFrame() {
 
 	prince->Animate(&graphics);
 }
-
 void Game::DrawLevelManualy() {
 	int yOff;
 
@@ -408,7 +384,6 @@ void Game::DrawLevelManualy() {
 		}
 
 }
-
 void Game::DrawLevelBySchematic() {
 	
 	/*
@@ -479,3 +454,5 @@ void Game::DrawLevelBySchematic() {
 
 
 }
+
+Game::~Game() {}

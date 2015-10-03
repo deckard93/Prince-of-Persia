@@ -52,19 +52,11 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 			case VK_SPACE:
 				input.setSpaceStatus(true);
 				break;
-			case 0x41:	//A key
-				OutputDebugStringA("A PRESSED\n");
-				input.setAStatus(true);
-				break;
-			case 0x44: //D key
-				input.setDStatus(true);
-				break;
-			case 0x57: //W key
-				input.setWStatus(true);
-				break; 
-			case 0x53: //S key
-				input.setSStatus(true);
-				break; 
+			default:
+				if(0x41 <= wParam && wParam <= 0x5A) {
+					OutputDebugString(L"Pressed\n");
+					input.setKeyStatus(wParam, true);
+				}
 			}
 			return 0;
 		case WM_KEYUP:
@@ -91,20 +83,11 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 			case VK_SPACE:
 				input.setSpaceStatus(false);
 				break;
-			case 0x41:	//A key
-				OutputDebugStringA("A RELEASED\n");
-				input.setAStatus(false);
-				break;
-			case 0x44: //D key
-				input.setDStatus(false);
-				break;
-			case 0x57: //W key
-				input.setWStatus(false);
-				break;
-			case 0x53: //S key
-				input.setSStatus(false);
-				break; 
-
+			default:
+				if(0x41 <= wParam && wParam <= 0x5A) {
+					OutputDebugString(L"Released\n");
+					input.setKeyStatus(wParam, false);
+				}
 			}
 			return 0;
 		
@@ -174,7 +157,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 
 
 		} else {
-			game.Go();
+			game.GameLoop();
 		}
     }
 

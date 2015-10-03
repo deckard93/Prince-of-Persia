@@ -3,22 +3,10 @@
 #include <Windows.h>
 
 class Input {
-	
+
 
 public:
 	Input();
-
-	void setWStatus(bool status);
-	bool getWStatus();
-
-	void setSStatus(bool status);
-	bool getSStatus();
-
-	void setDStatus(bool status);
-	bool getDStatus();
-
-	void setAStatus(bool status);
-	bool getAStatus();
 
 	void setLeftStatus(bool status);
 	bool isLeftPressed();
@@ -48,13 +36,14 @@ public:
 	bool isSpacePressed();
 	bool getSpacePrev();
 	
-	bool Input::hasUpBeenPressed();
-	bool Input::hasDownBeenPressed();
+	bool hasUpBeenPressed();
+	bool hasDownBeenPressed();
 
-	bool hasWBeenPressed();
-	bool hasABeenPressed();
-	bool hasSBeenPressed();
-	bool hasDBeenPressed();
+
+	bool getKeyStatus(char k);
+	void setKeyStatus(int k, bool status);
+	bool hasBeenPressed(char k);
+
 
 private:
 	bool down;
@@ -76,15 +65,7 @@ private:
 	bool upMessageSent;
 	bool downMessageSent;
 
-	bool wMessageSent;
-	bool sMessageSent;
-	bool aMessageSent;
-	bool dMessageSent;
-
-
-	bool W;
-	bool S;
-	bool D;
-	bool A;
+	bool key[256];
+	bool keyMessageSent[256];
 
 };
