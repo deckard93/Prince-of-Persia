@@ -1,6 +1,5 @@
 #include "Input.h"
 
-
 Input::Input() {
 	down = false;
 	up = false;
@@ -139,88 +138,20 @@ bool Input::hasDownBeenPressed()
 	return false;
 }
 
-void Input::setSStatus(bool status) {
-	S = status;
-	if(status == false) {
-		sMessageSent = false;
-	}
+bool Input::getKeyStatus(char k) {
+	return key[(int)k - 65];
 }
-void Input::setWStatus(bool status) {
-	W = status;
-	
-	if(status == false) {
-		wMessageSent = false;
-	}
-}
-void Input::setDStatus(bool status) {
-	D = status;
+void Input::setKeyStatus(int k, bool status) {
+	key[k - 65] = status;
 
 	if(status == false) {
-		dMessageSent = false;
+		keyMessageSent[k - 65] = false;
 	}
 }
-void Input::setAStatus(bool status) {
-	A = status;
-
-	if(status == false) {
-		aMessageSent = false;
-	}
-}
-
-
-bool Input::getSStatus() {
-
-	return S;
-
-}
-bool Input::getWStatus() {
-
-	return W;
-
-}
-bool Input::getDStatus() {
-
-	return D;
-
-}
-bool Input::getAStatus() {
-
-	return A;
-
-}
-
-
-bool Input::hasWBeenPressed() {
-	if (W == true) {
-		if(!wMessageSent) {
-			wMessageSent = true;
-			return true;
-		}
-	}
-	return false;
-}
-bool Input::hasABeenPressed() {
-	if (A == true) {
-		if(!aMessageSent) {
-			aMessageSent = true;
-			return true;
-		}
-	}
-	return false;
-}
-bool Input::hasSBeenPressed() {
-	if (S == true) {
-		if(!sMessageSent) {
-			sMessageSent = true;
-			return true;
-		}
-	}
-	return false;
-}
-bool Input::hasDBeenPressed() {
-	if (D == true) {
-		if(!dMessageSent) {
-			dMessageSent = true;
+bool Input::hasBeenPressed(char k) {
+	if (key[(int)k - 65] == true) {
+		if(!keyMessageSent[k - 65]) {
+			keyMessageSent[k - 65] = true;
 			return true;
 		}
 	}

@@ -1,6 +1,5 @@
 #include "Level.h";
 
-
 void Level::loadLevel(int l) {
 
 	std::string levelNo = static_cast<std::ostringstream*>( &(std::ostringstream() << l) )->str();

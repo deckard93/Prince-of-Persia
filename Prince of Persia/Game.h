@@ -30,7 +30,7 @@ class Game {
 public:
 	Game (HWND hwnd, Input* in);
 
-	void Go();
+	void GameLoop();
 
 	~Game();
 

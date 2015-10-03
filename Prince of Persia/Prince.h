@@ -64,6 +64,4 @@ private:
 	void handleInput();
 	void switchFacing();
 	void doAnimationEffects();
-
-
 };
