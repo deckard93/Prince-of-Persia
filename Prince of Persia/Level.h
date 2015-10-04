@@ -4,10 +4,11 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <list>
 
+#include "Entity.h"
 #include "Graphics.h"
 
-#define DEBUG 1
 
 enum direction { U, D, L, R }; 
 
@@ -18,6 +19,13 @@ struct levelBlock {
 	//  dungeon: I | T | ] | [ | _ |   |
 };
 
+#define LEVEL_HEIGHT_PIX	126
+#define LEVEL_WIDTH_PIX		64
+#define LEVEL_HEIGHT_BLOCK	3
+#define LEVEL_WIDTH_BLOCK	10
+#define FOOT_FLOAT			11
+#define TORCH_FLOAT			60
+#define TORCH_FLOAT_LEFT	20
 
 class Level {
 
@@ -27,10 +35,17 @@ public:
 
 	void changeScene(direction dir);
 
+	int getBlockXByCoord(int yCoord);
+	int getBlockYByCoord(int xCoord);
+
 	void drawLevel();
 	void changeScene();
 	void loadLevel(int level);
-	char getCode(int i, int j);
+	void loadEntities();
+	std::list<Entity>* getTorchEntities();
+	
+	char getCodeByBlock(int i, int j);
+	char getCodeByCoord(int x, int y);
 
 	~Level();
 private:
@@ -55,6 +70,8 @@ private:
 	//level information
 	char scene[32][32];
 	char level[1024][1024]; //try to dynamically allocate this
+
+	std::list<Entity> *torchList;
 
 	//Level Sprites
 	Sprite block;

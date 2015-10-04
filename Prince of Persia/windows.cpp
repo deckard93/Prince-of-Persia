@@ -112,8 +112,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 	//Find the center position for the window
 	int border_thickness = GetSystemMetrics(SM_CXSIZEFRAME);
 
-	int sizeX = SCREEN_X + border_thickness * 2;
-	int sizeY = SCREEN_Y + border_thickness * 2;
+	int sizeX = Graphics::SCREENX + border_thickness * 2;
+	int sizeY = Graphics::SCREENY + border_thickness * 2;
 
 	int xPos = (GetSystemMetrics(SM_CXSCREEN) - sizeX)/2;
 	int yPos = (GetSystemMetrics(SM_CYSCREEN) - sizeY)/2;
