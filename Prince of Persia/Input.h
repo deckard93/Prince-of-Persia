@@ -54,14 +54,6 @@ private:
 	bool ctrl;
 	bool space;
 
-	bool prevDown;
-	bool prevUp;
-	bool prevLeft;
-	bool prevRight;
-	bool prevShift;
-	bool prevSpace;
-	bool prevCtrl;
-
 	bool upMessageSent;
 	bool downMessageSent;
 

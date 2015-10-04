@@ -17,7 +17,7 @@
 #define LEVEL_HEIGHT_BLOCK	3
 #define LEVEL_WIDTH_BLOCK	10
 #define FOOT_FLOAT			11
-#define TORCH_FLOAT			60
+#define TORCH_FLOAT			125
 #define TORCH_FLOAT_LEFT	20
 
 
@@ -39,13 +39,15 @@ private:
 	void HandleInput();
 	void ControlAI();
 	void CheckCollision();
-	void UpdateFrame();
+	void DrawGraphics();
 
 
 	//Update Frame
 	void ComposeFrame();
-	void DrawLevelManualy();
-	void DrawLevelBySchematic();
+	void DrawLevel();
+	void DrawBackground();
+	void DrawForeground();
+	void DrawHealth();
 
 private:
 	HWND		winHandle;
@@ -98,5 +100,9 @@ private:
 	D3DCOLOR fontSurf[512 * 84];
 	Font fixedSys;
 	Sprite sp;
+
+public:
+	static const int TOP_MARGIN = (Graphics::SCREENY - LEVEL_HEIGHT_PIX * LEVEL_HEIGHT_BLOCK) / 2;
+	static const int LEFT_MARGIN = (Graphics::SCREENX - LEVEL_WIDTH_PIX * LEVEL_WIDTH_BLOCK) / 2;
 
 };

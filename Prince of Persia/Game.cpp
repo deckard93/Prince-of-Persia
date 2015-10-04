@@ -2,16 +2,8 @@
 #include "Graphics.h"
 #include "Level.h"
 
+#define BORDERS 0
 
-char scene[4][12] = {
-	 {' ','_','_','_','_','_','_','_','_','_','_'},
-	 {'_',' ',' ','  ','_','_','_','_','[','I','I'},
-	 {']','_','_','_','T',' ','[','I','I','I','I'},
-	 {' ','I','I','I',']','_','T','_','_','_','['},
-	};
-
-
-#define BORDERS 1
 Game::Game(HWND hwnd, Input* in) : 
 		graphics(hwnd),
 		input(in),
@@ -82,30 +74,14 @@ Game::Game(HWND hwnd, Input* in) :
 }
 
 void Game::GameLoop() {
-	//HandleInput();
+	
 	graphics.BeginFrame();
 	
 	//ControlAI
-	UpdateFrame();
+	DrawGraphics();
 
 
-	if(input->hasBeenPressed('A')) {
-		level->changeScene(L);
-	} 
-
-	if(input->hasBeenPressed('D')) {
-		level->changeScene(R);
-	}
-
-	if(input->hasBeenPressed('S')) {
-		level->changeScene(D);
-	} 
-
-	if(input->hasBeenPressed('W')) {
-		level->changeScene(U);
-	}
-
-	prince->HandlePrince(input);
+	HandleInput();
 	CheckCollision();
 
 	graphics.EndFrame();
@@ -113,7 +89,6 @@ void Game::GameLoop() {
 
 //control
 void Game::CheckCollision() {
-
 
 	//calculate foot position
 	//int xFoot = prince->getX() + prince->getAnim()->getSheet()->getSprite()->width / 2 - 32;
@@ -145,12 +120,15 @@ void Game::CheckCollision() {
 	}
 
 	//determine where in the level we are
-	int nBlockX = (xFoot - LEFT + LEVEL_WIDTH_PIX) / LEVEL_WIDTH_PIX;
-	int nBlockY = (yFoot - TOP + LEVEL_HEIGHT_PIX) / LEVEL_HEIGHT_PIX;
+	int nBlockX = level->getBlockXByCoord(xFoot - LEFT);
+	int nBlockY = level->getBlockYByCoord(yFoot - TOP);
 
 	
 	/* fall */
-	if(level->getCode(nBlockY, nBlockX) == '_' || level->getCode(nBlockY, nBlockX) == 'T') {
+	if(level->getCodeByBlock(nBlockY, nBlockX) == '_' || 
+	   level->getCodeByBlock(nBlockY, nBlockX) == '#' ||
+	   level->getCodeByBlock(nBlockY, nBlockX) == '^' ||
+	   level->getCodeByBlock(nBlockY, nBlockX) == '_' ) {
 		int bar = (TOP + LEVEL_HEIGHT_PIX * nBlockY);
 
 		if(DEBUG) graphics.DrawLine(0, bar, 1200, bar, 255, 255, 255);
@@ -160,11 +138,9 @@ void Game::CheckCollision() {
 		} else {
 			prince->getAnim()->Play();
 		}
-
-		
 	}
 
-	if(mX < 0 && level->getCode(nBlockY, nBlockX) == ']') {
+	if(mX < 0 && level->getCodeByBlock(nBlockY, nBlockX) == ']') {
 		int bar = (LEFT + LEVEL_WIDTH_PIX * (nBlockX));
 
 		//graphics.DrawLine(0, bar, 1200, bar, 255, 255, 255);
@@ -174,7 +150,7 @@ void Game::CheckCollision() {
 		}
 	}
 
-	if(mX > 0 && level->getCode(nBlockY,nBlockX) == '[') {
+	if(mX > 0 && level->getCodeByBlock(nBlockY,nBlockX) == '[') {
 		int bar = (LEFT + LEVEL_WIDTH_PIX * (nBlockX - 1));
 
 		//graphics.DrawLine(0, bar, 1200, bar, 255, 255, 255);
@@ -184,47 +160,59 @@ void Game::CheckCollision() {
 		}
 	}
 
-	if( level->getCode(nBlockY, nBlockX) == ' ') {
+	if( level->getCodeByBlock(nBlockY, nBlockX) == ' ' || 
+		level->getCodeByBlock(nBlockY, nBlockX) == '*' ) {
 		mY += prince->setFall();
+	}
+
+
+	//Change Scenes
+	if(yFoot - 120 / 2 > TOP + LEVEL_HEIGHT_PIX * 3) {
+		level->changeScene(D);
+		prince->setY(TOP - 120 / 2);
+	}
+
+	if(yFoot < TOP) {
+		level->changeScene(U);
+		prince->setY(TOP + LEVEL_HEIGHT_PIX * 3);
+	}
+
+	if(xFoot + 60 > LEFT + LEVEL_WIDTH_PIX * 10 + 5) {
+		level->changeScene(R);
+		prince->setX(LEFT - 30);
+	}
+
+	if(xFoot < LEFT - 5) {
+		level->changeScene(L);
+		prince->setX(LEFT + LEVEL_WIDTH_PIX * 9 - 30);
 	}
 
 
 	//move prince
 	prince->MoveX(mX);
 	prince->MoveY(mY);
-
-
-	/* Debug information */
-	if(DEBUG) {
-		std::string s;
-		s = "P: " + std::to_string((long double)xFoot) + '.' + std::to_string((long double)yFoot);
-		s += " | ";
-		s += "B:" + std::to_string((long double)nBlockX) + '.' + std::to_string((long double)nBlockY);
-		s += " | ";
-
-		if(nBlockY >= 0 && nBlockX >= 0) {
-			std::string g(1,scene[nBlockY][nBlockX - 1]);
-			s += "M: " + g;
-			std::string h(1,scene[nBlockY][nBlockX]);
-			s += h;
-			std::string j(1,scene[nBlockY][nBlockX + 1]);
-			s += j;
-		}
-		s += "\n";
-
-		OutputDebugStringA(s.c_str());
-	}
-
 }
 void Game::HandleInput() {
 	
-	
+	if(input->hasBeenPressed('A')) {
+		level->changeScene(L);
+	} 
 
+	if(input->hasBeenPressed('D')) {
+		level->changeScene(R);
+	}
+
+	if(input->hasBeenPressed('S')) {
+		level->changeScene(D);
+	} 
+
+	if(input->hasBeenPressed('W')) {
+		level->changeScene(U);
+	}
 
 	prince->HandlePrince(input);
-
 }
-void Game::UpdateFrame() {
+void Game::DrawGraphics() {
 
 	//graphics.BeginFrame();
 
@@ -237,65 +225,127 @@ void Game::UpdateFrame() {
 
 //util
 void Game::ComposeFrame() {
+	DrawBackground();
 
-	//DrawLevelManualy();
-	DrawLevelBySchematic();
-	//level->drawLevel();
+	prince->Animate(&graphics);
 
-	//graphics.DrawFlippedSprite(princeX, princeY, currentAnim);
+	DrawForeground();
+}
+void Game::DrawHealth() {
 
-	//graphics.DrawSprite(120, 0, &princeRunning, dummy, 0, 120, 120);
-
-	//graphics.DrawFlippedSprite(princeX, princeY, &princeRunning, dummy, 0, 120, 120);
-	
-	//graphics.DrawSprite(princeX, princeY, &princeIdle);
-
-	//graphics.DrawSprite(LEFT, princeY, &torch, dummy, 0, 23, 68);
-
-	//graphics.DrawSprite(LEFT + 2 * LEVEL_WIDTH_PIX + TORCH_FLOAT_LEFT, TOP - torch.height - TORCH_FLOAT + LEVEL_HEIGHT_PIX * 2, &torch, dummy, 0, 23, 68);
-
-
-	//torchEntity->getAnim()->getSheet()->getSprite();
-
-
-	//graphics.DrawFrame(torchEntity->getX(), torchEntity->getY(), torchEntity->getAnim()->getSheet(), 3, false); 
-
-	torchEntity->Animate(&graphics);
-	
-	
-	graphics.DrawSprite(LEFT + LEVEL_WIDTH_PIX + TORCH_FLOAT_LEFT, TOP - torch.height - TORCH_FLOAT + LEVEL_HEIGHT_PIX * 2, &torch, dummy, 0, 23, 68);
-
-	dummy += 23;
-
-	if(dummy >= 23 * 5) { dummy = 0; }
-
-	int p = SCREEN_Y;
-
-	//Black Borders - till I fix the cut out sprites
-	
-	if(BORDERS) {
-	graphics.DrawBlock(0, 0, SCREEN_X, TOP - 7, D3DCOLOR_XRGB(0,0,0));	//top
-	graphics.DrawBlock(0, TOP - LEVEL_HEIGHT_PIX , LEFT, SCREEN_Y - TOP * 2 + LEVEL_HEIGHT_PIX, D3DCOLOR_XRGB(0,0,0)); //left
-	
-	graphics.DrawBlock(LEFT + LEVEL_WIDTH_PIX * LEVEL_WIDTH_BLOCK, TOP - 7, LEFT, SCREEN_Y - TOP * 2, D3DCOLOR_XRGB(0,0,0)); //right
-	//graphics.DrawBlock(0, TOP + LEVEL_HEIGHT_PIX * LEVEL_HEIGHT_BLOCK, SCREEN_X, TOP, D3DCOLOR_XRGB(0,0,0));	//bottom
-	}
-
-	//health
 	for(int i = 0; i < prince->getHealth(); i++ ) {
-		
 		graphics.DrawSprite(LEFT + i * healthFull.width, TOP + LEVEL_HEIGHT_PIX * 3, &healthFull );
-
 	}
 
 	for(int i = prince->getHealth(); i < prince->getMaxHealth(); i++ ) {
-		
 		graphics.DrawSprite(LEFT + i * healthFull.width, TOP + LEVEL_HEIGHT_PIX * 3, &healthEmpty );
-
+	}
+}
+void Game::DrawBackground() {
+	std::list<Entity>* torches = level->getTorchEntities();
+	for(std::list<Entity>::iterator i = torches->begin(); i != torches->end(); i++) {
+		i->Animate(&graphics);	
 	}
 
-	prince->Animate(&graphics);
+	int yOff;
+	int xOff;
+
+	for(int i = 3; i >= 0; i--){
+		for(int j = 0; j < 11; j++){
+
+			yOff = TOP + LEVEL_HEIGHT_PIX * i;
+			xOff = - LEVEL_WIDTH_PIX + LEFT + LEVEL_WIDTH_PIX * j;
+
+			switch(level->getCodeByBlock(i, j)) {
+
+			case 'I':
+				//this is fine
+				graphics.DrawSprite(xOff, yOff - block.height, &block);
+				break;
+			case 'T':
+				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
+				graphics.DrawSprite(xOff, yOff - columnBack.height - 15, &columnBack);
+				break;
+			case ']':
+				//this is fine
+				graphics.DrawSprite(xOff, yOff - blockCornerRight.height, &blockCornerRight);
+				break;
+			case '[':
+				//this is fine
+				graphics.DrawSprite(xOff, yOff - blockCornerLeft.height, &blockCornerLeft);
+				break;
+			case '_':
+				//this is fine
+				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
+				break;
+			case '^':
+				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
+
+				break;
+			case '#':
+				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
+				graphics.DrawSprite(xOff, yOff - bricks.height, &bricks);
+			case '*':
+				graphics.DrawSprite(xOff, yOff - bricks.height, &bricks);
+			case ' ':
+				break;
+
+			}
+		}
+	}
+
 }
+void Game::DrawForeground() {
+	int yOff;
+	int xOff;
+
+	for(int i = 3; i >= 0; i--){
+		for(int j = 0; j < 11; j++){
+
+			yOff = TOP + LEVEL_HEIGHT_PIX * i;
+			xOff = - LEVEL_WIDTH_PIX + LEFT + LEVEL_WIDTH_PIX * j;
+
+			switch(level->getCodeByBlock(i, j)) {
+
+			case 'T':
+				graphics.DrawSprite(xOff, yOff - columnFront.height, &columnFront);
+				break;
+			}
+		}
+	}
+}
+
+Game::~Game() {}
+
+
+
+
+
+/* Debug information 
+if(DEBUG) {
+	std::string s;
+	s = "P: " + std::to_string((long double)xFoot) + '.' + std::to_string((long double)yFoot);
+	s += " | ";
+	s += "B:" + std::to_string((long double)nBlockX) + '.' + std::to_string((long double)nBlockY);
+	s += " | ";
+
+	if(nBlockY >= 0 && nBlockX >= 0) {
+		std::string g(1,scene[nBlockY][nBlockX - 1]);
+		s += "M: " + g;
+		std::string h(1,scene[nBlockY][nBlockX]);
+		s += h;
+		std::string j(1,scene[nBlockY][nBlockX + 1]);
+		s += j;
+	}
+	s += "\n";
+
+	OutputDebugStringA(s.c_str());
+}
+
+*/
+
+
+/*
 void Game::DrawLevelManualy() {
 	int yOff;
 
@@ -384,75 +434,4 @@ void Game::DrawLevelManualy() {
 		}
 
 }
-void Game::DrawLevelBySchematic() {
-	
-	/*
-	___________
-	_   _____[I
-	]___T [IIII
-	 III]_T___[
-	*/
-
-	int yOff;
-	int xOff;
-
-	for(int i = 3; i >= 0; i--){
-		for(int j = 0; j < 11; j++){
-
-			yOff = TOP +  LEVEL_HEIGHT_PIX * i;
-			xOff = - LEVEL_WIDTH_PIX + LEFT + LEVEL_WIDTH_PIX * j;
-
-			switch(level->getCode(i, j)) {
-
-			case 'I':
-				//this is fine
-				graphics.DrawSprite(xOff, yOff - block.height, &block);
-				break;
-			case 'T':
-				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
-				graphics.DrawSprite(xOff, yOff - columnFront.height, &columnFront);
-				graphics.DrawSprite(xOff, yOff - columnBack.height - 15, &columnBack);
-				break;
-			case ']':
-				//this is fine
-				graphics.DrawSprite(xOff, yOff - blockCornerRight.height, &blockCornerRight);
-				break;
-			case '[':
-				//this is fine
-				graphics.DrawSprite(xOff, yOff - blockCornerLeft.height, &blockCornerLeft);
-				break;
-			case '_':
-				//this is fine
-				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
-				break;
-			case ' ':
-				break;
-
-			}
-		}
-	}
-
-
-	if(DEBUG) {
-		for(int i = 0; i < 5; i++){
-			for(int j = 0; j < 12; j++){
-
-				yOff = TOP +  LEVEL_HEIGHT_PIX * i;
-				xOff = - LEVEL_WIDTH_PIX + LEFT + LEVEL_WIDTH_PIX * j;
-			
-			
-				std::string s = std::to_string((long double)j) + "." + std::to_string((long double)i);
-				graphics.DrawString(s.c_str(), xOff, yOff - 25, &fixedSys, D3DCOLOR_XRGB(255,255,255 ));
-		
-			}
-		}
-	}
-
-
-
-
-
-
-}
-
-Game::~Game() {}
+*/

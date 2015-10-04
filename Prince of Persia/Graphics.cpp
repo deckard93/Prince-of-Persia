@@ -1,7 +1,6 @@
 #include "Graphics.h"
 
 
-
 //Util
 void LoadSprite(Sprite* sprite, const WCHAR* name) {
 
@@ -41,7 +40,7 @@ void LoadSprite(Sprite* sprite, const WCHAR* name) {
 	}
 }
 void LoadFont(Font* font, D3DCOLOR* surface, const char* filename,
-	unsigned int charWidth, unsigned int charHeight, int nCharsPerRow){
+unsigned int charWidth, unsigned int charHeight, int nCharsPerRow){
 
 		LoadBmp(filename, surface);
 		font->charHeight = charHeight;
@@ -168,8 +167,17 @@ void Graphics::PutPixel(int x, int y, D3DCOLOR color) {
 	assert(x <= SCREEN_X);
 	assert(y <= SCREEN_Y);
 
-	((D3DCOLOR*) backRect.pBits)[x + (backRect.Pitch >> 2) * y] = color;
+	int left = (1200 - 64 * 10) / 2;
+	int top = (675 - 126 * 3) / 2 - 7;
+	int right = left + 64 * 10;
+	int bottom = top + 126 * 3 + 7;
+	
+	if(x < left) return;
+	if(x > right) return;
+	if(y < top) return;
+	if(y > bottom) return;
 
+	((D3DCOLOR*) backRect.pBits)[x + (backRect.Pitch >> 2) * y] = color;
 }
 void Graphics::PutPixel(int x, int y, int r, int g, int b) {
 

@@ -15,7 +15,6 @@
 #include "SpriteSheet.h"
 #include "Bitmap.h"
 
-
 #define SCREEN_X 1200
 #define SCREEN_Y 675
 
@@ -75,4 +74,8 @@ private:
 	IDirect3DSurface9*	pBackBuffer;
 	D3DLOCKED_RECT		backRect;
 
+public:
+
+	static const int SCREENX = 1200;
+	static const int SCREENY = 675;
 };

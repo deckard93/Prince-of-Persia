@@ -10,19 +10,8 @@ Input::Input() {
 	space = false;
 	ctrl = false;
 
-
-	prevDown = false;
-	prevUp = false;
-	prevLeft = false;
-	prevRight = false;
-
-	prevShift = false;
-	prevSpace = false;
-	prevCtrl = false;
-
 	upMessageSent = false;
 }
-
 
 bool Input::isUpPressed() {
 
@@ -48,32 +37,7 @@ bool Input::isCtrlPressed() {
 	return ctrl;
 }
 
-bool Input::getRightPrev() {
-	return prevRight;
-}
-bool Input::getLeftPrev() {
-	return prevLeft;
-
-
-}
-bool Input::getUpPrev() {
-	return prevUp;
-}
-bool Input::getDownPrev() {
-	return prevDown;
-}
-bool Input::getShiftPrev() {
-	return prevShift;
-}
-bool Input::getSpacePrev() {
-	return prevSpace;
-}
-bool Input::getCtrlPrev() {
-	return prevCtrl;
-}
-
 void Input::setDownStatus(bool status) {
-	prevDown = down;
 	down = status;
 	if(status == false) 
 	{
@@ -81,7 +45,6 @@ void Input::setDownStatus(bool status) {
 	}
 }
 void Input::setUpStatus(bool status) {
-	prevUp = up;
 	up = status;
 	if(status == false) 
 	{
@@ -89,23 +52,18 @@ void Input::setUpStatus(bool status) {
 	}
 }
 void Input::setLeftStatus(bool status) {
-	prevLeft = left;
 	left = status;
 }
 void Input::setRightStatus(bool status) {
-	prevRight = right;
 	right = status;
 }
 void Input::setShiftStatus(bool status) {
-	prevShift = shift;
 	shift = status;
 }
 void Input::setCtrlStatus(bool status) {
-	prevCtrl = ctrl;
 	ctrl = status;
 }
 void Input::setSpaceStatus(bool status) {
-	prevSpace = space;
 	space = status;
 }
 
