@@ -80,6 +80,8 @@ void Prince::Animate(Graphics* graphics) {
 			this->getAnim()->Play();
 		}
 
+
+
 	} else if(this->getAnim()->getCurrentFrame() != 0) {
 
 		//side effects during animation
@@ -103,7 +105,7 @@ void Prince::Animate(Graphics* graphics) {
 			if(facingRight) {
 				moveX -= 3;	//MoveX(-3);
 			} else {
-				moveY += 3;	//MoveX(3);
+				moveX += 3;	//MoveX(3);
 			}
 		}
 
@@ -174,6 +176,16 @@ void Prince::HandlePrince(Input* input) {
 			if(input->isShiftPressed()){ this->setCurrentAnim(hang); }
 
 			if(input->isUpPressed()) { this->setCurrentAnim(climbUp); }
+		}
+
+		if(this->getAnim() == runningTurn) {
+			this->setCurrentAnim(running);
+			this->getAnim()->setCurrentFrame(5);
+		}
+
+		if(this->getAnim() == runningJump) {
+			this->setCurrentAnim(running);
+			this->getAnim()->setCurrentFrame(12);
 		}
 	
 	} else {

@@ -132,6 +132,7 @@ void Game::CheckCollision() {
 		int bar = (TOP + LEVEL_HEIGHT_PIX * nBlockY);
 
 		if(DEBUG) graphics.DrawLine(0, bar, 1200, bar, 255, 255, 255);
+	
 
 		if(yFoot < bar - 20) {
 			mY += prince->setFall();
@@ -150,12 +151,13 @@ void Game::CheckCollision() {
 		}
 	}
 
-	if(mX > 0 && level->getCodeByBlock(nBlockY,nBlockX) == '[') {
-		int bar = (LEFT + LEVEL_WIDTH_PIX * (nBlockX - 1));
+	if(mX > 0 && level->getCodeByBlock(nBlockY,nBlockX + 1) == '[' ||
+				 level->getCodeByBlock(nBlockY,nBlockX) == '[' ) {
+		int bar = (LEFT + LEVEL_WIDTH_PIX * (nBlockX) - 27);
 
-		//graphics.DrawLine(0, bar, 1200, bar, 255, 255, 255);
+		//graphics.DrawLine(bar, yFoot, bar, 200, 255, 255, 255);
 
-		if(xFoot + mX > bar) {
+		if(xFoot + mX > bar ) {
 			mX = 0;
 		}
 	}
@@ -270,10 +272,6 @@ void Game::DrawBackground() {
 				//this is fine
 				graphics.DrawSprite(xOff, yOff - blockCornerRight.height, &blockCornerRight);
 				break;
-			case '[':
-				//this is fine
-				graphics.DrawSprite(xOff, yOff - blockCornerLeft.height, &blockCornerLeft);
-				break;
 			case '_':
 				//this is fine
 				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
@@ -309,6 +307,10 @@ void Game::DrawForeground() {
 
 			case 'T':
 				graphics.DrawSprite(xOff, yOff - columnFront.height, &columnFront);
+				break;
+			case '[':
+				//this is fine
+				graphics.DrawSprite(xOff, yOff - blockCornerLeft.height, &blockCornerLeft);
 				break;
 			}
 		}
