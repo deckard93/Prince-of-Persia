@@ -38,9 +38,16 @@ Game::Game(HWND hwnd, Input* in) :
 	LoadSprite(&columnFront, L"Assets//column_front.png");
 	LoadSprite(&columnBack, L"Assets//column_back.png");
 
+	LoadSprite(&rubble_front, L"Assets//rubble_back.png");
+	LoadSprite(&rubble_back, L"Assets//rubble_front.png");
+
 	LoadSprite(&tileCornerLeft, L"Assets//tile_corner_left.png");
 
 	LoadSprite(&torch,L"Assets//torch.png");
+
+	LoadSprite(&deadSk,L"Assets//deadSk.png");
+
+	LoadSprite(&gate, L"Assets//gate.png");
 
 
 	LoadSprite(&test, L"Assets//prince//climbUp.png");
@@ -128,6 +135,7 @@ void Game::CheckCollision() {
 	if(level->getCodeByBlock(nBlockY, nBlockX) == '_' || 
 	   level->getCodeByBlock(nBlockY, nBlockX) == '#' ||
 	   level->getCodeByBlock(nBlockY, nBlockX) == '^' ||
+	   level->getCodeByBlock(nBlockY, nBlockX) == '$' ||
 	   level->getCodeByBlock(nBlockY, nBlockX) == '_' ) {
 		int bar = (TOP + LEVEL_HEIGHT_PIX * nBlockY);
 
@@ -140,6 +148,7 @@ void Game::CheckCollision() {
 			prince->getAnim()->Play();
 		}
 	}
+
 
 	if(mX < 0 && level->getCodeByBlock(nBlockY, nBlockX) == ']') {
 		int bar = (LEFT + LEVEL_WIDTH_PIX * (nBlockX));
@@ -276,13 +285,23 @@ void Game::DrawBackground() {
 				//this is fine
 				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
 				break;
+			case 'S':
+				graphics.DrawSprite(xOff, yOff - deadSk.height, &deadSk);
+				break;
 			case '^':
 				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
-
+				break;
+			case 'G':
+				graphics.DrawSprite(xOff, yOff - gate.height, &gate);
 				break;
 			case '#':
 				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
 				graphics.DrawSprite(xOff, yOff - bricks.height, &bricks);
+				break;
+			case '$':
+				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
+				graphics.DrawSprite(xOff, yOff - rubble_front.height, &rubble_front);
+				break;
 			case '*':
 				graphics.DrawSprite(xOff, yOff - bricks.height, &bricks);
 			case ' ':
@@ -304,7 +323,9 @@ void Game::DrawForeground() {
 			xOff = - LEVEL_WIDTH_PIX + LEFT + LEVEL_WIDTH_PIX * j;
 
 			switch(level->getCodeByBlock(i, j)) {
-
+			case '$':
+				graphics.DrawSprite(xOff, yOff - rubble_back.height, &rubble_back);
+				break;
 			case 'T':
 				graphics.DrawSprite(xOff, yOff - columnFront.height, &columnFront);
 				break;

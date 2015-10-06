@@ -25,9 +25,11 @@ Prince::Prince() {
 	runningJump = new Animation(L"Assets//prince//runningJump.png", 11	);
 	runningTurn = new Animation(L"Assets//prince//runningTurn.png", 9	);
 	fall        = new Animation(L"Assets//prince//fall.png"       , 5	);
+	drop        = new Animation(L"Assets//prince//drop.png"       , 6	);
 
 	fall->setDisplayTime(70);
 	step->setDisplayTime(49);
+	drop->setDisplayTime(49);
 	turn->setDisplayTime(49);
 	hang->setDisplayTime(100);
 	crouch->setDisplayTime(49);
@@ -37,6 +39,7 @@ Prince::Prince() {
 	staticJump->setDisplayTime(65);
 	runningJump->setDisplayTime(49);
 	runningTurn->setDisplayTime(49);
+	
 	
 	runningJump->setReverse();
 	runningTurn->setReverse();
@@ -88,15 +91,15 @@ void Prince::Animate(Graphics* graphics) {
 		if(this->getAnim() == running) {
 			if(getAnim()->getCurrentFrame() > 5 && getAnim()->getCurrentFrame() < 13) {
 				if(facingRight) {
-					moveX += runningSpeedX;	//this->MoveX(runningSpeedX);
+					moveX += 4;	//this->MoveX(runningSpeedX);
 				} else {
-					moveX -= runningSpeedX;	//this->MoveX(-runningSpeedX);
+					moveX -= 4;	//this->MoveX(-runningSpeedX);
 				}
 			} else if(getAnim()->getCurrentFrame() < 19){
 				if(facingRight) {
-					moveX += 2;	//this->MoveX(4);
+					moveX += 3;	//this->MoveX(4);
 				} else {
-					moveX -= 2;	//this->MoveX(-4);
+					moveX -= 3;	//this->MoveX(-4);
 				}
 			}
 		}
@@ -122,9 +125,9 @@ void Prince::Animate(Graphics* graphics) {
 		if(this->getAnim() == runningJump) {
 			if(getAnim()->getCurrentFrame() > 0 && getAnim()->getCurrentFrame() < 12) {
 				if(facingRight) {	
-					moveX += 5;	//this->MoveX(13);
+					moveX += 8;	//this->MoveX(13);
 				} else {
-					moveX -= 5;	//this->MoveX(-13);
+					moveX -= 8;	//this->MoveX(-13);
 				}
 			}
 		}
@@ -217,7 +220,9 @@ void Prince::HandlePrince(Input* input) {
 				}
 			}
 
-			if((input->isUpPressed())) {
+			if(input->isUpPressed() && 
+				getAnim()->getCurrentFrame() > 10 &&
+				getAnim()->getCurrentFrame() < 14) {
 				this->setCurrentAnim(runningJump);
 			}
 		}
