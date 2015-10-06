@@ -86,6 +86,13 @@ private:
 	Sprite columnFront;
 	Sprite columnBack;
 
+	Sprite rubble_front;
+	Sprite rubble_back;
+
+	Sprite deadSk;
+
+	Sprite gate;
+
 	Sprite tileCornerLeft;
 
 	int dummy;

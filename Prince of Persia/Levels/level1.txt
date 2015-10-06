@@ -3,12 +3,12 @@
 10
 92
 ____________________________________________________________________________________________
-]]    T____T [IIIIIIIIIIIIIIIII]   _____TT________TT^_^___*__   _#_#_[I                     
-]T    [IIII]_T [IIIIIIII]  T__TT___T__[IIIIIIIIIIIIIIIII]T []^^#T [IIII                     
-]T    [IIIIII]_T_____T__T__[IIII]T_T__[IIIIIIIIIIIII]^_#_T_[IIII]_T __[_____________________
-]T    T_________  _T__           __T__T__     *_#__^#_ T_#^_T* [II]* [IIIIIIIIII]_    *   [I
-]T    T____TT__T  [II]___________T_T  [I]____*_T__[II] [IIII]^_T^_T__T_T#_^#^__#TT#^__^_#_[I
-I]____T [IIIIII]_ [IIIIIII] [IIII]_T__T_[II]* [IIIIII]__[IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
-I]  __T_T_ [IIII] [IIIIIII] [IIII]_T_^* [II]* [IIII                                         
-I]  [IIII]_TT___T_T__TT__T   [IIIIII]T* [II]*  [III                                         
-I]__[IIIIIIIIIIIIIIIIIIII]___[IIIIIII]__TT_T___[III                                         
+]]    T__^#T [IIIIIIIIIIIIIIIII]*  ____#TT#_^#^___TT^_^___*_G   _#_#_[I                     
+]T *  [IIII]$T [IIIIIIII]* T^#TT^^_T__[IIIIIIIIIIIIIIIII]T []^^#T [IIII                     
+]T *  [IIIIII]_T_^#__T^#T$$[IIII]T_T__[IIIIIIIIIIIII]^_#_T$[IIII]$T #_[_____________________
+]T *  T___#_____* _T__ *     *   __T__T^_     *_#__^#_ T_#^_T* [II]* [IIIIIIIIII]_    *   [I
+]T *  T^^__TT__T* [II]^#^____##^_T_T* [I]^^__*_T__[II] [IIII]^_T^_T__T_T#_^#^__#TT#^__^_#_[I
+I]__S$T [IIIIII]_ [IIIIIII] [IIII]_T__T_[II]* [IIIIII]__[IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+I]* __T_T_ [IIII] [IIIIIII] [IIII]_T_^* [II]* [IIII                                         
+I]* [IIII]$TT_^^T_T_^TT_^T*  [IIIIII]T* [II]*  [III                                         
+I]__[IIIIIIIIIIIIIIIIIIII]#_$[IIIIIII]__TTST_$_[III                                         

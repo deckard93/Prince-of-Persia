@@ -21,6 +21,7 @@ private:
 	Animation* runningJump;
 	Animation* runningTurn;
 	Animation* fall;
+	Animation* drop;
 
 	bool isAnimating;
 	bool facingRight;
