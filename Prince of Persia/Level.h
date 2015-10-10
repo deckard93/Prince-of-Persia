@@ -38,11 +38,14 @@ public:
 	int getBlockXByCoord(int yCoord);
 	int getBlockYByCoord(int xCoord);
 
+	void setCodeByCoord(int x, int y, char c);
+
 	void drawLevel();
 	void changeScene();
 	void loadLevel(int level);
 	void loadEntities();
 	std::list<Entity>* getTorchEntities();
+	std::list<Entity>* getPotionEntities();
 	
 	char getCodeByBlock(int i, int j);
 	char getCodeByCoord(int x, int y);
@@ -72,6 +75,7 @@ private:
 	char level[1024][1024]; //try to dynamically allocate this
 
 	std::list<Entity> *torchList;
+	std::list<Entity> *potionList;
 
 	//Level Sprites
 	Sprite block;

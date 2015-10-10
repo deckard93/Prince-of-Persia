@@ -6,7 +6,7 @@ SpriteSheet::SpriteSheet(Sprite* sprite, int width) {
 
 	sheet = sprite;
 	frameWidth = width;
-	frameHeight = 0;
+	frameHeight = sprite->height;
 	frameNum = sprite->width / width;
 
 }	
@@ -23,7 +23,7 @@ SpriteSheet::SpriteSheet(Sprite* sprite, int width, int height) {
 SpriteSheet::SpriteSheet(const WCHAR* spriteName, int frames) {
 	sheet = LoadSprite(spriteName);
 	frameWidth = sheet->width / frames;
-	frameHeight = 0;
+	frameHeight = sheet->height;
 	frameNum = frames;
 
 }

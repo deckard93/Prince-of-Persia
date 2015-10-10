@@ -221,6 +221,26 @@ void Game::HandleInput() {
 		level->changeScene(U);
 	}
 
+
+	if(input->isShiftPressed()) {
+
+		std::string s = "Code: ";
+		std::string g(1, level->getCodeByCoord(prince->getMidX(), prince->getMidY()));
+		s += g + "\n";
+		OutputDebugStringA(s.c_str());
+
+
+
+		if(level->getCodeByCoord(prince->getMidX(), prince->getMidY()) == 'P') {
+			
+			
+			if(prince->Drink()) {
+				level->setCodeByCoord(prince->getMidX(), prince->getMidY(), '_');
+				prince->Heal();
+			}
+		}
+	}
+
 	prince->HandlePrince(input);
 }
 void Game::DrawGraphics() {
@@ -238,9 +258,13 @@ void Game::DrawGraphics() {
 void Game::ComposeFrame() {
 	DrawBackground();
 
+	if(DEBUG) { graphics.DrawCircle(prince->getMidX(), prince->getMidY(), 5, 255, 255, 255);}
+
 	prince->Animate(&graphics);
 
 	DrawForeground();
+
+	DrawHealth();
 }
 void Game::DrawHealth() {
 
@@ -253,10 +277,7 @@ void Game::DrawHealth() {
 	}
 }
 void Game::DrawBackground() {
-	std::list<Entity>* torches = level->getTorchEntities();
-	for(std::list<Entity>::iterator i = torches->begin(); i != torches->end(); i++) {
-		i->Animate(&graphics);	
-	}
+
 
 	int yOff;
 	int xOff;
@@ -298,6 +319,9 @@ void Game::DrawBackground() {
 				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
 				graphics.DrawSprite(xOff, yOff - bricks.height, &bricks);
 				break;
+			case 'P':
+				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
+				break;
 			case '$':
 				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
 				graphics.DrawSprite(xOff, yOff - rubble_front.height, &rubble_front);
@@ -311,6 +335,10 @@ void Game::DrawBackground() {
 		}
 	}
 
+	std::list<Entity>* torches = level->getTorchEntities();
+	for(std::list<Entity>::iterator i = torches->begin(); i != torches->end(); i++) {
+		i->Animate(&graphics);	
+	}
 }
 void Game::DrawForeground() {
 	int yOff;
@@ -335,6 +363,11 @@ void Game::DrawForeground() {
 				break;
 			}
 		}
+	}
+
+	std::list<Entity>* potions = level->getPotionEntities();
+	for(std::list<Entity>::iterator i = potions->begin(); i != potions->end(); i++) {
+		i->Animate(&graphics);	
 	}
 }
 

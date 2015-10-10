@@ -37,9 +37,16 @@ void Level::loadLevel(int l) {
 	}
 
 	torchList = new std::list<Entity>();
+	potionList = new std::list<Entity>();
+
 	loadEntities();
 
 	fclose (file);
+}
+
+void Level::setCodeByCoord(int x, int y, char c) {
+	level[scene_y + getBlockYByCoord(y - Game::TOP_MARGIN)][scene_x + getBlockXByCoord(x - Game::LEFT_MARGIN)] = c;
+	loadEntities();
 }
 
 char Level::getCodeByBlock(int i, int j) {
@@ -47,7 +54,10 @@ char Level::getCodeByBlock(int i, int j) {
 }
 
 char Level::getCodeByCoord(int x, int y) {
-	return level[getBlockXByCoord(x)][getBlockYByCoord(y)];
+	int blockX = getBlockXByCoord(x - Game::LEFT_MARGIN);
+	int blockY = getBlockXByCoord(y - Game::TOP_MARGIN);
+
+	return getCodeByBlock(blockY, blockX);
 }
 
 int Level::getBlockXByCoord(int xCoord) {
@@ -61,6 +71,7 @@ int Level::getBlockYByCoord(int yCoord) {
 void Level::loadEntities() {
 
 	torchList->clear();
+	potionList->clear();
 
 	for(int i = 0; i < LEVEL_HEIGHT_BLOCK; i++)  {
 		for(int j = 0; j < LEVEL_WIDTH_BLOCK; j++) {
@@ -76,6 +87,19 @@ void Level::loadEntities() {
 				torchEntity->getAnim()->Play();
 
 				torchList->push_back(*torchEntity);
+			} 
+			if(getCodeByBlock(i,j) == 'P') {
+				int x = Game::LEFT_MARGIN + j * LEVEL_WIDTH_PIX - 20;
+				int y = Game::TOP_MARGIN + LEVEL_HEIGHT_PIX * i - 60;
+
+				Entity* potionEntity = new Entity (new Animation(L"Assets//healthPotion.png", 6), x, y );
+
+				potionEntity->getAnim()->setCurrentFrame(rand() % 6);
+				potionEntity->getAnim()->setDisplayTime(80.0);
+				potionEntity->getAnim()->setLoop(true);
+				potionEntity->getAnim()->Play();
+
+				potionList->push_back(*potionEntity);
 			}
 		}
 	}
@@ -109,4 +133,9 @@ void Level::changeScene(direction dir) {
 std::list<Entity>* Level::getTorchEntities() {
 
 	return torchList;
+}
+
+std::list<Entity>* Level::getPotionEntities() {
+
+	return potionList;
 }
