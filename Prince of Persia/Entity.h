@@ -34,6 +34,9 @@ public:
 	int getX();
 	int getY();
 
+	int getMidX();
+	int getMidY();
+
 	int getDefferX();
 	int getDefferY();
 	

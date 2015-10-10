@@ -49,6 +49,12 @@ int Entity::getX() {
 int Entity::getY() {
 	return yPos;
 }
+int Entity::getMidX() {
+	return xPos + currentAnim->getSheet()->getFrameWidth() / 2;
+}
+int Entity::getMidY() {
+	return yPos + currentAnim->getSheet()->getFrameHeight() / 2;
+}
 int Entity::getDefferX() {
 	int temp = defferX;
 	defferX = 0;

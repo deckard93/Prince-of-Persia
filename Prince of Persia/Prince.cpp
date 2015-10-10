@@ -26,12 +26,14 @@ Prince::Prince() {
 	runningTurn = new Animation(L"Assets//prince//runningTurn.png", 9	);
 	fall        = new Animation(L"Assets//prince//fall.png"       , 5	);
 	drop        = new Animation(L"Assets//prince//drop.png"       , 6	);
+	drink       = new Animation(L"Assets//prince//drink.png"      , 15	);
 
 	fall->setDisplayTime(70);
 	step->setDisplayTime(49);
 	drop->setDisplayTime(49);
 	turn->setDisplayTime(49);
 	hang->setDisplayTime(100);
+	drink->setDisplayTime(60);
 	crouch->setDisplayTime(49);
 	climbUp->setDisplayTime(49);
 	running->setDisplayTime(49);
@@ -43,6 +45,7 @@ Prince::Prince() {
 	
 	runningJump->setReverse();
 	runningTurn->setReverse();
+	drink->setReverse();
 
 	setCurrentAnim(idle);
 
@@ -67,7 +70,6 @@ void Prince::Animate(Graphics* graphics) {
 	int moveY = 0;
 
 	if(this->getAnim()->isFinished()) {
-
 		//side effects at the end of an animation
 		if(this->getAnim() == climbUp) { 
 			if(climbUp->isReversed()){		
@@ -83,10 +85,8 @@ void Prince::Animate(Graphics* graphics) {
 			this->getAnim()->Play();
 		}
 
-
-
+		
 	} else if(this->getAnim()->getCurrentFrame() != 0) {
-
 		//side effects during animation
 		if(this->getAnim() == running) {
 			if(getAnim()->getCurrentFrame() > 5 && getAnim()->getCurrentFrame() < 13) {
@@ -143,7 +143,6 @@ void Prince::Animate(Graphics* graphics) {
 				}
 			}
 		}
-
 	} else {
 		if(this->getAnim() == jumpGrab) {
 			//moveY -= LEVEL_HEIGHT_PIX;  
@@ -154,8 +153,6 @@ void Prince::Animate(Graphics* graphics) {
 			//moveY -= LEVEL_HEIGHT_PIX;	
 			this->MoveY(-LEVEL_HEIGHT_PIX);
 		}
-
-
 	}
 
 	defferMoveX(moveX);
@@ -192,7 +189,6 @@ void Prince::HandlePrince(Input* input) {
 		}
 	
 	} else {
-
 		//input during animation
 		if(this->getAnim() == crouch && this->getAnim()->getCurrentFrame() == 3) { 
 			if(input->isDownPressed()){
@@ -278,14 +274,25 @@ void Prince::HandlePrince(Input* input) {
 			}
 		}
 
+	
 	}
 
+}
+int Prince::Drink() {
+	if(this->getAnim() == idle) {
+		this->setCurrentAnim(drink);
+	
+		return 1;
+	}
+	return 0;
 }
 void Prince::Hurt() {
 	currentHealth--;
 }
 void Prince::Heal() {
-	currentHealth++;
+	if(currentHealth < maxHealth) {
+		currentHealth++;
+	}
 }
 void Prince::increaseMaxHealth() {
 	maxHealth++;
@@ -347,6 +354,7 @@ void Prince::switchFacing() {
 		runningJump->setFlipped(false);
 		fall->setFlipped(false);
 		runningTurn->setFlipped(true);
+		drink->setFlipped(false);
 
 		facingRight = false;
 	
@@ -364,6 +372,7 @@ void Prince::switchFacing() {
 		fall->setFlipped(true);
 		runningJump->setFlipped(true);
 		runningTurn->setFlipped(false);
+		drink->setFlipped(true);
 				
 		facingRight = true;
 

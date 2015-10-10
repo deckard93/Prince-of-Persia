@@ -22,6 +22,7 @@ private:
 	Animation* runningTurn;
 	Animation* fall;
 	Animation* drop;
+	Animation* drink;
 
 	bool isAnimating;
 	bool facingRight;
@@ -53,6 +54,7 @@ public:
 	void HandlePrince(Input* input);
 	void Hurt();
 	void Heal();
+	int Drink();
 	void increaseMaxHealth();
 	void Animate(Graphics* graphics);
 	int setFall();
