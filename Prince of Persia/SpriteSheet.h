@@ -5,7 +5,6 @@
 #include "Sprite.h"
 
 
-
 class SpriteSheet {
 
 //variables

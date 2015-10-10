@@ -14,9 +14,7 @@ Input::Input() {
 }
 
 bool Input::isUpPressed() {
-
 	return up;
-	
 }
 bool Input::isDownPressed() {
 	return down;
@@ -46,8 +44,7 @@ void Input::setDownStatus(bool status) {
 }
 void Input::setUpStatus(bool status) {
 	up = status;
-	if(status == false) 
-	{
+	if(status == false) {
 		upMessageSent = false;
 	}
 }
@@ -67,32 +64,22 @@ void Input::setSpaceStatus(bool status) {
 	space = status;
 }
 
-bool Input::hasUpBeenPressed()
-{
-	if (up == true) 
-	{
-		if(!upMessageSent) 
-		{
+bool Input::hasUpBeenPressed() {
+	if (up == true) {
+		if(!upMessageSent) {
 			upMessageSent = true;
 			return true;
-			
 		}
 	}
-
 	return false;
 }
-bool Input::hasDownBeenPressed()
-{
-	if (down == true) 
-	{
-		if(!downMessageSent) 
-		{
+bool Input::hasDownBeenPressed() {
+	if (down == true) {
+		if(!downMessageSent) {
 			downMessageSent = true;
-			return true;
-			
+			return true;	
 		}
 	}
-
 	return false;
 }
 

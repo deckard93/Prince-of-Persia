@@ -19,13 +19,6 @@ struct levelBlock {
 	//  dungeon: I | T | ] | [ | _ |   |
 };
 
-#define LEVEL_HEIGHT_PIX	126
-#define LEVEL_WIDTH_PIX		64
-#define LEVEL_HEIGHT_BLOCK	3
-#define LEVEL_WIDTH_BLOCK	10
-#define FOOT_FLOAT			11
-#define TORCH_FLOAT			60
-#define TORCH_FLOAT_LEFT	20
 
 class Level {
 
@@ -44,8 +37,12 @@ public:
 	void changeScene();
 	void loadLevel(int level);
 	void loadEntities();
+
 	std::list<Entity>* getTorchEntities();
 	std::list<Entity>* getPotionEntities();
+	std::list<Entity>* getSpikeEntities();
+	std::list<Entity>* getGuilotineEntities();
+	std::list<Entity>* getGateEntities();
 	
 	char getCodeByBlock(int i, int j);
 	char getCodeByCoord(int x, int y);
@@ -55,13 +52,11 @@ private:
 							
 //variales
 public:
-
 	static const int SCENE_WIDTH = 10;
 	static const int SCENE_HEIGHT = 3;
 
 	static const int MAX_LEVEL_WIDTH = 1024;
 	static const int MAX_LEVEL_HEIGHT = 1024;
-
 
 private:
 	int scene_x;
@@ -76,6 +71,9 @@ private:
 
 	std::list<Entity> *torchList;
 	std::list<Entity> *potionList;
+	std::list<Entity> *spikeList;
+	std::list<Entity> *guilotineList;
+	std::list<Entity> *gateList;
 
 	//Level Sprites
 	Sprite block;
@@ -94,5 +92,14 @@ private:
 	Sprite columnBack;
 
 	Sprite tileCornerLeft;
+
+public:
+	static const int LEVEL_HEIGHT_PIX   = 126;
+	static const int LEVEL_WIDTH_PIX    = 64;
+	static const int LEVEL_HEIGHT_BLOCK	= 3;
+	static const int LEVEL_WIDTH_BLOCK	= 10;
+	static const int FOOT_FLOAT			= 11;
+	static const int TORCH_FLOAT		= 125;
+	static const int TORCH_FLOAT_LEFT	= 20;
 
 };

@@ -169,7 +169,7 @@ void Graphics::PutPixel(int x, int y, D3DCOLOR color) {
 
 	int left = (1200 - 64 * 10) / 2;
 	int top = (675 - 126 * 3) / 2 - 7;
-	int right = left + 64 * 10;
+	int right = left + 64 * 10 - 1;
 	int bottom = top + 126 * 3 + 7 + 100;
 	
 	if(x < left) return;

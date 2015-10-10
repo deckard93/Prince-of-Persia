@@ -29,8 +29,5 @@ void LoadBmp(const char* filename, D3DCOLOR * surface) {
 
 	}
 
-
 	fclose(bmpFile);
-
-
 }

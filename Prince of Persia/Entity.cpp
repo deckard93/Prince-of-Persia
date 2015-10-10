@@ -3,7 +3,6 @@
 
 //constructor
 Entity::Entity(Animation* a,int x, int y) {
-
 	currentAnim = a;
 
 	xPos = x;
@@ -11,7 +10,6 @@ Entity::Entity(Animation* a,int x, int y) {
 
 	defferX = 0;
 	defferY = 0;
-
 }
 Entity::Entity() {
 	xPos = 0;
