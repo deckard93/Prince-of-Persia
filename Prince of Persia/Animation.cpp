@@ -10,14 +10,15 @@ Animation::Animation(SpriteSheet* s) {
 	defaultDisplayTime = 0;
 
 	playForward = true;
-	finished = true;
-	loop = false;
-	flipped = false;
+	finished    = true;
+	loop        = false;
+	flipped     = false;
 
 	currentFrame = 0;
 	inc = 1;
 
 	timer.StartWatch();
+
 }
 Animation::Animation(const WCHAR* spriteName,int frames) {
 
@@ -25,29 +26,25 @@ Animation::Animation(const WCHAR* spriteName,int frames) {
 
 	frameDisplayTime = NULL;
 	defaultDisplayTime = 0;
+	currentFrame = 0;
 
 	playForward = true;
 	finished = true;
 	loop = false;
 	flipped = false;
 
-	currentFrame = 0;
-
 	timer.StartWatch();
+
 }
 
 //Getters
 float Animation::getDefaultDisplayTime() {
-
 	return defaultDisplayTime;
-
 }
 float Animation::getCurrentDisplayTime() {
-
 	return timer.GetTimeMilli();
 }
 float Animation::getFrameDisplayTIme() {
-
 	return frameDisplayTime[currentFrame];
 }
 SpriteSheet* Animation::getSheet() {
@@ -59,26 +56,18 @@ int Animation::getCurrentFrame() {
 
 //Setters
 void Animation::setForward() {
-
 	currentFrame = 0;
 	playForward = true;
-
 }
 void Animation::setReverse() {
-
 	currentFrame = sheet->getFrameCount() - 1;
 	playForward = false;
-
 }
 void Animation::setLoop(bool in) {
-
 	loop = in;
-
 }
 void Animation::setFlipped(bool in) {
-
 	flipped = in;
-
 }
 void Animation::setDisplayTime(float dispTim) {
 	defaultDisplayTime = dispTim;
@@ -89,31 +78,24 @@ void Animation::setDisplayTime(float* dispTim) {
 
 //Functions
 void Animation::Play() {
-
 	finished = false;
 	inc = 1;
-
 }
 void Animation::Stop() {
-
 	finished = true;
-
 }
 void Animation::Update(Graphics* graphics, int x, int y) {
-
-	Display(graphics, x, y);	//draw
+	Display(graphics, x, y);		//draw
 	
 	if(!finished) {
 		NextFrame();				//update animation
 	}
-
 }
 void Animation::NextFrame() {
 
 	if(frameDisplayTime == NULL) {
 
 		if(timer.GetTimeMilli() > defaultDisplayTime) {
-
 			timer.StopWatch();
 			timer.StartWatch();
 
@@ -137,9 +119,7 @@ void Animation::NextFrame() {
 
 }
 void Animation::setCurrentFrame(int frame) {
-
 	currentFrame = frame;
-
 }
 void Animation::Freeze() {
 	inc = 0;
@@ -147,9 +127,7 @@ void Animation::Freeze() {
 
 //drawing
 void Animation::Display(Graphics* graphics, int x, int y) {
-
 	graphics->DrawFrame(x, y, sheet, currentFrame, flipped);
-
 }
 void Animation::DisplayFrame(Graphics* graphics,int x, int y, int index) {
 
@@ -168,12 +146,11 @@ bool Animation::isReversed() {
 Animation::~Animation() {
 
 	if(sheet != NULL) {
-
 		delete sheet;
 	}
 
 	if(frameDisplayTime != NULL) {
-
 		free(frameDisplayTime);
 	}
+
 }

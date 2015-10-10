@@ -6,7 +6,9 @@ class Character {
 //Functions
 public:
 	Character();
+
 private:
+
 
 //variables
 private:
@@ -20,10 +22,5 @@ private:
 	int accY;
 
 public:
-
-
-
-
-
 
 };

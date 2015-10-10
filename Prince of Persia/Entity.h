@@ -51,6 +51,5 @@ public:
 
 	//destructor
 	~Entity();
-private:
 
 };

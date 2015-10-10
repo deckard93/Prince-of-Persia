@@ -2,6 +2,7 @@
 
 class Benchmark {
 
+public:
 	Benchmark();
 	~Benchmark();
 

@@ -75,7 +75,7 @@ void Prince::Animate(Graphics* graphics) {
 			if(climbUp->isReversed()){		
 				climbUp->setForward();
 				//moveY += LEVEL_HEIGHT_PIX; 
-				this->MoveY(LEVEL_HEIGHT_PIX);
+				this->MoveY(Level::LEVEL_HEIGHT_PIX);
 			}
 		}
 
@@ -146,12 +146,12 @@ void Prince::Animate(Graphics* graphics) {
 	} else {
 		if(this->getAnim() == jumpGrab) {
 			//moveY -= LEVEL_HEIGHT_PIX;  
-			this->MoveY(-LEVEL_HEIGHT_PIX);
+			this->MoveY(-Level::LEVEL_HEIGHT_PIX);
 		}
 
 		if(this->getAnim() == hang) {
 			//moveY -= LEVEL_HEIGHT_PIX;	
-			this->MoveY(-LEVEL_HEIGHT_PIX);
+			this->MoveY(-Level::LEVEL_HEIGHT_PIX);
 		}
 	}
 

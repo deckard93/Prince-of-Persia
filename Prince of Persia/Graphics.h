@@ -75,7 +75,6 @@ private:
 	D3DLOCKED_RECT		backRect;
 
 public:
-
 	static const int SCREENX = 1200;
 	static const int SCREENY = 675;
 };

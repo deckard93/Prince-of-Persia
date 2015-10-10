@@ -35,9 +35,10 @@ private:
 	int climbSpeedX;
 
 	int* princeSpeedX;
+
 public:
 	
-	
+
 //methods
 public:
 	//constructors
@@ -67,4 +68,5 @@ private:
 	void handleInput();
 	void switchFacing();
 	void doAnimationEffects();
+
 };

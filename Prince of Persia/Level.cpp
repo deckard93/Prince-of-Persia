@@ -38,6 +38,9 @@ void Level::loadLevel(int l) {
 
 	torchList = new std::list<Entity>();
 	potionList = new std::list<Entity>();
+	spikeList = new std::list<Entity>();
+	guilotineList = new std::list<Entity>();
+	gateList = new std::list<Entity>();
 
 	loadEntities();
 
@@ -52,7 +55,6 @@ void Level::setCodeByCoord(int x, int y, char c) {
 char Level::getCodeByBlock(int i, int j) {
 	return level[scene_y + i][scene_x + j];
 }
-
 char Level::getCodeByCoord(int x, int y) {
 	int blockX = getBlockXByCoord(x - Game::LEFT_MARGIN);
 	int blockY = getBlockXByCoord(y - Game::TOP_MARGIN);
@@ -63,7 +65,6 @@ char Level::getCodeByCoord(int x, int y) {
 int Level::getBlockXByCoord(int xCoord) {
 	return (xCoord + LEVEL_WIDTH_PIX) / LEVEL_WIDTH_PIX; //????
 }
-
 int Level::getBlockYByCoord(int yCoord) {
 	return (yCoord + LEVEL_HEIGHT_PIX) / LEVEL_HEIGHT_PIX; //????
 }
@@ -72,9 +73,26 @@ void Level::loadEntities() {
 
 	torchList->clear();
 	potionList->clear();
+	spikeList->clear();
+	guilotineList->clear();
 
-	for(int i = 0; i < LEVEL_HEIGHT_BLOCK; i++)  {
-		for(int j = 0; j < LEVEL_WIDTH_BLOCK; j++) {
+	for(int i = 0; i <= LEVEL_HEIGHT_BLOCK; i++)  {
+		for(int j = 0; j <= LEVEL_WIDTH_BLOCK; j++) {
+			if(getCodeByBlock(i,j) == '/') {
+				OutputDebugString(L"HERE!\n");
+
+				int x = Game::LEFT_MARGIN + (j - 1) * LEVEL_WIDTH_PIX;
+				int y = Game::TOP_MARGIN + LEVEL_HEIGHT_PIX * (i - 1) + 26;	//TODO: Why i - 1 //TODO make 27 float
+
+				Entity* spikeEntity = new Entity (new Animation(L"Assets//spikes.png", 5), x, y );
+
+				spikeEntity->getAnim()->setCurrentFrame(rand() % 5);
+				spikeEntity->getAnim()->setDisplayTime(90);
+				spikeEntity->getAnim()->setLoop(true);
+				spikeEntity->getAnim()->Play();
+
+				spikeList->push_back(*spikeEntity);
+			}
 			if(getCodeByBlock(i,j) == '^') {
 				int x = Game::LEFT_MARGIN + j * LEVEL_WIDTH_PIX + TORCH_FLOAT_LEFT;
 				int y = Game::TOP_MARGIN + LEVEL_HEIGHT_PIX * i - TORCH_FLOAT;
@@ -95,11 +113,38 @@ void Level::loadEntities() {
 				Entity* potionEntity = new Entity (new Animation(L"Assets//healthPotion.png", 6), x, y );
 
 				potionEntity->getAnim()->setCurrentFrame(rand() % 6);
-				potionEntity->getAnim()->setDisplayTime(80.0);
+				potionEntity->getAnim()->setDisplayTime(100);
 				potionEntity->getAnim()->setLoop(true);
 				potionEntity->getAnim()->Play();
 
 				potionList->push_back(*potionEntity);
+			}
+			if(getCodeByBlock(i,j) == '!') {
+				int x = Game::LEFT_MARGIN + (j - 1) * LEVEL_WIDTH_PIX;
+				int y = Game::TOP_MARGIN + LEVEL_HEIGHT_PIX * (i - 1);	//TODO: Why i - 1 //TODO make 27 float
+
+				Entity* guilotineEntity = new Entity (new Animation(L"Assets//guilotine.png", 5), x, y );
+
+				guilotineEntity->getAnim()->setCurrentFrame(rand() % 5);
+				guilotineEntity->getAnim()->setDisplayTime(90);
+				guilotineEntity->getAnim()->setLoop(true);
+				guilotineEntity->getAnim()->Play();
+
+				guilotineList->push_back(*guilotineEntity);
+			}
+
+			if(getCodeByBlock(i,j) == 'G') {
+				int x = Game::LEFT_MARGIN + (j - 1) * LEVEL_WIDTH_PIX;
+				int y = Game::TOP_MARGIN + LEVEL_HEIGHT_PIX * (i - 1);	//TODO: Why i - 1 //TODO make 27 float
+
+				Entity* gateEntity = new Entity (new Animation(L"Assets//gate.png", 7), x, y );
+
+				gateEntity->getAnim()->setCurrentFrame(rand() % 5);
+				gateEntity->getAnim()->setDisplayTime(90);
+				gateEntity->getAnim()->setLoop(true);
+				gateEntity->getAnim()->Play();
+
+				guilotineList->push_back(*gateEntity);
 			}
 		}
 	}
@@ -131,11 +176,17 @@ void Level::changeScene(direction dir) {
 }
 
 std::list<Entity>* Level::getTorchEntities() {
-
 	return torchList;
 }
-
 std::list<Entity>* Level::getPotionEntities() {
-
 	return potionList;
+}
+std::list<Entity>* Level::getSpikeEntities() {
+	return spikeList;
+}
+std::list<Entity>* Level::getGuilotineEntities() {
+	return guilotineList;
+}
+std::list<Entity>* Level::getGateEntities() {
+	return gateList;
 }

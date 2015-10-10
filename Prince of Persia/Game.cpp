@@ -15,8 +15,8 @@ Game::Game(HWND hwnd, Input* in) :
 	level = new Level();
 	level->loadLevel(1);
 
-	TOP = (SCREEN_Y - LEVEL_HEIGHT_PIX * LEVEL_HEIGHT_BLOCK) / 2;
-	LEFT = (SCREEN_X - LEVEL_WIDTH_PIX * LEVEL_WIDTH_BLOCK) / 2;
+	TOP = (SCREEN_Y - Level::LEVEL_HEIGHT_PIX * Level::LEVEL_HEIGHT_BLOCK) / 2;
+	LEFT = (SCREEN_X - Level::LEVEL_WIDTH_PIX * Level::LEVEL_WIDTH_BLOCK) / 2;
 
 	int currentFrame;
 
@@ -41,6 +41,9 @@ Game::Game(HWND hwnd, Input* in) :
 	LoadSprite(&rubble_front, L"Assets//rubble_back.png");
 	LoadSprite(&rubble_back, L"Assets//rubble_front.png");
 
+	LoadSprite(&gateFrameBack, L"Assets//doorFrameBack.png");
+	LoadSprite(&gateFrameFront, L"Assets//doorFrameFront.png");
+
 	LoadSprite(&tileCornerLeft, L"Assets//tile_corner_left.png");
 
 	LoadSprite(&torch,L"Assets//torch.png");
@@ -49,13 +52,17 @@ Game::Game(HWND hwnd, Input* in) :
 
 	LoadSprite(&gate, L"Assets//gate.png");
 
+	LoadSprite(&holyFloor, L"Assets//holy_floor.png");
+
+
+
 
 	LoadSprite(&test, L"Assets//prince//climbUp.png");
 
 	dummy = 0;
 
-	int x = LEFT + 2 * LEVEL_WIDTH_PIX + TORCH_FLOAT_LEFT;
-	int y = TOP - torch.height - TORCH_FLOAT + LEVEL_HEIGHT_PIX * 2;
+	int x = LEFT + 2 * Level::LEVEL_WIDTH_PIX + Level::TORCH_FLOAT_LEFT;
+	int y = TOP - torch.height - Level::TORCH_FLOAT + Level::LEVEL_HEIGHT_PIX * 2;
 
 	torchEntity = new Entity (new Animation(L"Assets//torch.png", 5), x, y );
 
@@ -68,8 +75,8 @@ Game::Game(HWND hwnd, Input* in) :
 	//load prince
 	prince = new Prince();
 
-	prince->setX(LEFT + 2 * LEVEL_WIDTH_PIX);
-	prince->setY(TOP - prince->getAnim()->getSheet()->getSprite()->height + LEVEL_HEIGHT_PIX * 2 - FOOT_FLOAT);
+	prince->setX(LEFT + 2 * Level::LEVEL_WIDTH_PIX);
+	prince->setY(TOP - prince->getAnim()->getSheet()->getSprite()->height + Level::LEVEL_HEIGHT_PIX * 2 - Level::FOOT_FLOAT);
 
 
 	prince->getAnim()->setLoop(true);
@@ -80,13 +87,11 @@ Game::Game(HWND hwnd, Input* in) :
 
 }
 
-void Game::GameLoop() {
-	
+void Game::GameLoop() {	
 	graphics.BeginFrame();
 	
 	//ControlAI
 	DrawGraphics();
-
 
 	HandleInput();
 	CheckCollision();
@@ -134,10 +139,11 @@ void Game::CheckCollision() {
 	/* fall */
 	if(level->getCodeByBlock(nBlockY, nBlockX) == '_' || 
 	   level->getCodeByBlock(nBlockY, nBlockX) == '#' ||
+	   level->getCodeByBlock(nBlockY, nBlockX) == '/' ||
 	   level->getCodeByBlock(nBlockY, nBlockX) == '^' ||
 	   level->getCodeByBlock(nBlockY, nBlockX) == '$' ||
 	   level->getCodeByBlock(nBlockY, nBlockX) == '_' ) {
-		int bar = (TOP + LEVEL_HEIGHT_PIX * nBlockY);
+		int bar = (TOP + Level::LEVEL_HEIGHT_PIX * nBlockY);
 
 		if(DEBUG) graphics.DrawLine(0, bar, 1200, bar, 255, 255, 255);
 	
@@ -151,7 +157,7 @@ void Game::CheckCollision() {
 
 
 	if(mX < 0 && level->getCodeByBlock(nBlockY, nBlockX) == ']') {
-		int bar = (LEFT + LEVEL_WIDTH_PIX * (nBlockX));
+		int bar = (LEFT + Level::LEVEL_WIDTH_PIX * (nBlockX));
 
 		//graphics.DrawLine(0, bar, 1200, bar, 255, 255, 255);
 
@@ -162,7 +168,7 @@ void Game::CheckCollision() {
 
 	if(mX > 0 && level->getCodeByBlock(nBlockY,nBlockX + 1) == '[' ||
 				 level->getCodeByBlock(nBlockY,nBlockX) == '[' ) {
-		int bar = (LEFT + LEVEL_WIDTH_PIX * (nBlockX) - 27);
+		int bar = (LEFT + Level::LEVEL_WIDTH_PIX * (nBlockX) - 27);
 
 		//graphics.DrawLine(bar, yFoot, bar, 200, 255, 255, 255);
 
@@ -178,24 +184,24 @@ void Game::CheckCollision() {
 
 
 	//Change Scenes
-	if(yFoot - 120 / 2 > TOP + LEVEL_HEIGHT_PIX * 3) {
+	if(yFoot - 120 / 2 > TOP + Level::LEVEL_HEIGHT_PIX * 3) {
 		level->changeScene(D);
 		prince->setY(TOP - 120 / 2);
 	}
 
 	if(yFoot < TOP) {
 		level->changeScene(U);
-		prince->setY(TOP + LEVEL_HEIGHT_PIX * 3);
+		prince->setY(TOP + Level::LEVEL_HEIGHT_PIX * 3);
 	}
 
-	if(xFoot + 60 > LEFT + LEVEL_WIDTH_PIX * 10 + 5) {
+	if(xFoot + 60 > LEFT + Level::LEVEL_WIDTH_PIX * 10 + 5) {
 		level->changeScene(R);
 		prince->setX(LEFT - 30);
 	}
 
 	if(xFoot < LEFT - 5) {
 		level->changeScene(L);
-		prince->setX(LEFT + LEVEL_WIDTH_PIX * 9 - 30);
+		prince->setX(LEFT + Level::LEVEL_WIDTH_PIX * 9 - 30);
 	}
 
 
@@ -253,47 +259,81 @@ void Game::DrawGraphics() {
 
 }
 
-
 //util
 void Game::ComposeFrame() {
 	DrawBackground();
 
 	if(DEBUG) { graphics.DrawCircle(prince->getMidX(), prince->getMidY(), 5, 255, 255, 255);}
 
+	std::list<Entity>* torches = level->getTorchEntities();
+	for(std::list<Entity>::iterator i = torches->begin(); i != torches->end(); i++) {
+		i->Animate(&graphics);	
+	}
+
+
+
+	std::list<Entity>* potions = level->getPotionEntities();
+	for(std::list<Entity>::iterator i = potions->begin(); i != potions->end(); i++) {
+		i->Animate(&graphics);	
+	}
+
 	prince->Animate(&graphics);
 
+
+	std::list<Entity>* guilotines = level->getGuilotineEntities();
+	for(std::list<Entity>::iterator i = guilotines->begin(); i != guilotines->end(); i++) {
+		i->Animate(&graphics);	
+	}
+
+	std::list<Entity>* spikes = level->getSpikeEntities();
+	for(std::list<Entity>::iterator i = spikes->begin(); i != spikes->end(); i++) {
+		i->Animate(&graphics);	
+	}
+
+	std::list<Entity>* gates = level->getGateEntities();
+	for(std::list<Entity>::iterator i = gates->begin(); i != gates->end(); i++) {
+		i->Animate(&graphics);	
+	}
+
+
 	DrawForeground();
+
+
+
+	
+
+
+	std::string s;
+	s += std::to_string((long double)spikes->size());
+	s += "\n";
+
+	//OutputDebugStringA(s.c_str());
+	
 
 	DrawHealth();
 }
 void Game::DrawHealth() {
 
 	for(int i = 0; i < prince->getHealth(); i++ ) {
-		graphics.DrawSprite(LEFT + i * healthFull.width, TOP + LEVEL_HEIGHT_PIX * 3, &healthFull );
+		graphics.DrawSprite(LEFT + i * healthFull.width, TOP + Level::LEVEL_HEIGHT_PIX * 3, &healthFull );
 	}
 
 	for(int i = prince->getHealth(); i < prince->getMaxHealth(); i++ ) {
-		graphics.DrawSprite(LEFT + i * healthFull.width, TOP + LEVEL_HEIGHT_PIX * 3, &healthEmpty );
+		graphics.DrawSprite(LEFT + i * healthFull.width, TOP + Level::LEVEL_HEIGHT_PIX * 3, &healthEmpty );
 	}
 }
 void Game::DrawBackground() {
-
-
 	int yOff;
 	int xOff;
 
 	for(int i = 3; i >= 0; i--){
 		for(int j = 0; j < 11; j++){
 
-			yOff = TOP + LEVEL_HEIGHT_PIX * i;
-			xOff = - LEVEL_WIDTH_PIX + LEFT + LEVEL_WIDTH_PIX * j;
+			yOff = TOP + Level::LEVEL_HEIGHT_PIX * i;
+			xOff = - Level::LEVEL_WIDTH_PIX + LEFT + Level::LEVEL_WIDTH_PIX * j;
 
 			switch(level->getCodeByBlock(i, j)) {
 
-			case 'I':
-				//this is fine
-				graphics.DrawSprite(xOff, yOff - block.height, &block);
-				break;
 			case 'T':
 				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
 				graphics.DrawSprite(xOff, yOff - columnBack.height - 15, &columnBack);
@@ -313,7 +353,7 @@ void Game::DrawBackground() {
 				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
 				break;
 			case 'G':
-				graphics.DrawSprite(xOff, yOff - gate.height, &gate);
+				graphics.DrawSprite(xOff, yOff - gateFrameBack.height, &gateFrameBack);
 				break;
 			case '#':
 				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
@@ -328,16 +368,18 @@ void Game::DrawBackground() {
 				break;
 			case '*':
 				graphics.DrawSprite(xOff, yOff - bricks.height, &bricks);
+				break;
+			case '/':
+				graphics.DrawSprite(xOff, yOff - holyFloor.height, &holyFloor);
+				break;
+			case '!':
+				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
+				break;
 			case ' ':
 				break;
 
 			}
 		}
-	}
-
-	std::list<Entity>* torches = level->getTorchEntities();
-	for(std::list<Entity>::iterator i = torches->begin(); i != torches->end(); i++) {
-		i->Animate(&graphics);	
 	}
 }
 void Game::DrawForeground() {
@@ -347,8 +389,8 @@ void Game::DrawForeground() {
 	for(int i = 3; i >= 0; i--){
 		for(int j = 0; j < 11; j++){
 
-			yOff = TOP + LEVEL_HEIGHT_PIX * i;
-			xOff = - LEVEL_WIDTH_PIX + LEFT + LEVEL_WIDTH_PIX * j;
+			yOff = TOP + Level::LEVEL_HEIGHT_PIX * i;
+			xOff = - Level::LEVEL_WIDTH_PIX + LEFT + Level::LEVEL_WIDTH_PIX * j;
 
 			switch(level->getCodeByBlock(i, j)) {
 			case '$':
@@ -361,21 +403,20 @@ void Game::DrawForeground() {
 				//this is fine
 				graphics.DrawSprite(xOff, yOff - blockCornerLeft.height, &blockCornerLeft);
 				break;
+			case 'G':
+				graphics.DrawSprite(xOff, yOff - gateFrameFront.height, &gateFrameFront);
+				break;
+			case 'I':
+				//this is fine
+				graphics.DrawSprite(xOff, yOff - block.height, &block);
+				break;
 			}
-		}
-	}
 
-	std::list<Entity>* potions = level->getPotionEntities();
-	for(std::list<Entity>::iterator i = potions->begin(); i != potions->end(); i++) {
-		i->Animate(&graphics);	
+		}
 	}
 }
 
 Game::~Game() {}
-
-
-
-
 
 /* Debug information 
 if(DEBUG) {

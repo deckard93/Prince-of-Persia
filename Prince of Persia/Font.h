@@ -2,8 +2,7 @@
 
 #include <d3d9.h>
 
-struct Font
-{
+struct Font {
 	int charWidth;
 	int charHeight;
 	int nCharsPerRow;

@@ -1,15 +1,13 @@
 #pragma once
 #include <d3d9.h>
 
-struct BitmapFileHeader
-{                
+struct BitmapFileHeader {                
    unsigned int fileSize;                       
    unsigned short int reserved1, reserved2;
    unsigned int offsetToPixelData;                     
 };
 
-struct Pixel24 
-{
+struct Pixel24 {
 	unsigned char blue;
 	unsigned char green;
 	unsigned char red;
