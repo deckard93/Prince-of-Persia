@@ -11,6 +11,12 @@ private:
 	int xPos;
 	int yPos;
 
+	int levelX;
+	int levelY;
+
+	int sceneX;
+	int sceneY;
+
 	int defferX;
 	int defferY;
 
@@ -24,6 +30,12 @@ public:
 	void setX(int x);
 	void setY(int y);
 
+	void setLevelX(int x);
+	void setLevelY(int y);
+
+	void setSceneX(int x);
+	void setSceneY(int y);
+
 	void defferMoveX(int x);
 	void defferMoveY(int y);
 
@@ -33,6 +45,12 @@ public:
 	Animation* getAnim();
 	int getX();
 	int getY();
+
+	int getLevelX();
+	int getLevelY();
+
+	int getSceneX();
+	int getSceneY();
 
 	int getMidX();
 	int getMidY();

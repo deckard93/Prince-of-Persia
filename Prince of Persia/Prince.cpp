@@ -42,7 +42,6 @@ Prince::Prince() {
 	runningJump->setDisplayTime(49);
 	runningTurn->setDisplayTime(49);
 	
-	
 	runningJump->setReverse();
 	runningTurn->setReverse();
 	drink->setReverse();

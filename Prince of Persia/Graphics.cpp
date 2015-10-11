@@ -23,8 +23,6 @@ void LoadSprite(Sprite* sprite, const WCHAR* name) {
 
 	for( int y = 0; y < bitHeight; y++) {
 		for( int x = 0; x < bitWidth; x++)	{
-
-		
 			//OutputDebugStringW(L"\n");
 
 			bitmap.GetPixel(x,y, &pixel);

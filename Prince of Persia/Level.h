@@ -8,6 +8,7 @@
 
 #include "Entity.h"
 #include "Graphics.h"
+#include "Gate.h"
 
 
 enum direction { U, D, L, R }; 
@@ -42,7 +43,7 @@ public:
 	std::list<Entity>* getPotionEntities();
 	std::list<Entity>* getSpikeEntities();
 	std::list<Entity>* getGuilotineEntities();
-	std::list<Entity>* getGateEntities();
+	std::list<Gate>* getGateEntities();
 	
 	char getCodeByBlock(int i, int j);
 	char getCodeByCoord(int x, int y);
@@ -73,7 +74,7 @@ private:
 	std::list<Entity> *potionList;
 	std::list<Entity> *spikeList;
 	std::list<Entity> *guilotineList;
-	std::list<Entity> *gateList;
+	std::list<Gate> *gateList;
 
 	//Level Sprites
 	Sprite block;

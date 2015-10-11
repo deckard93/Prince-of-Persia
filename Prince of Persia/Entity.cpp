@@ -26,6 +26,21 @@ void Entity::setX(int x) {
 void Entity::setY(int y) {
 	yPos = y;
 }
+
+void Entity::setLevelX(int x) {
+	levelX = x;
+}
+void Entity::setLevelY(int y) {
+	levelY = y;
+}
+
+void Entity::setSceneX(int x) {
+	sceneX = x;
+}
+void Entity::setSceneY(int y) {
+	sceneY = y;
+}
+
 void Entity::defferMoveX(int x) {
 	defferX = x;
 }
@@ -53,6 +68,20 @@ int Entity::getMidX() {
 int Entity::getMidY() {
 	return yPos + currentAnim->getSheet()->getFrameHeight() / 2;
 }
+int Entity::getLevelX() {
+	return levelX;
+}
+int Entity::getLevelY() {
+	return levelY;
+}
+int Entity::getSceneX() {
+	return sceneX;
+}
+int Entity::getSceneY() {
+	return sceneY;
+}
+
+
 int Entity::getDefferX() {
 	int temp = defferX;
 	defferX = 0;

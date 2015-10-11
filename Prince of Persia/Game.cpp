@@ -31,6 +31,8 @@ Game::Game(HWND hwnd, Input* in) :
 	LoadSprite(&separatorCorner, L"Assets//separator_corner.png");
 
 	LoadSprite(&floor, L"Assets//floor.png");
+	LoadSprite(&trap, L"Assets//trap.png");
+	LoadSprite(&activate, L"Assets//activate.png");
 
 	LoadSprite(&healthFull, L"Assets//health-full.png");
 	LoadSprite(&healthEmpty, L"Assets//health-empty.png");
@@ -53,8 +55,6 @@ Game::Game(HWND hwnd, Input* in) :
 	LoadSprite(&gate, L"Assets//gate.png");
 
 	LoadSprite(&holyFloor, L"Assets//holy_floor.png");
-
-
 
 
 	LoadSprite(&test, L"Assets//prince//climbUp.png");
@@ -228,6 +228,16 @@ void Game::HandleInput() {
 	}
 
 
+	if(input->hasBeenPressed('O')) {
+			std::list<Gate>* gates = level->getGateEntities();
+			for(std::list<Gate>::iterator i = gates->begin(); i != gates->end(); i++) {
+				i->Open();	
+			}
+	}
+
+
+
+
 	if(input->isShiftPressed()) {
 
 		std::string s = "Code: ";
@@ -290,9 +300,11 @@ void Game::ComposeFrame() {
 		i->Animate(&graphics);	
 	}
 
-	std::list<Entity>* gates = level->getGateEntities();
-	for(std::list<Entity>::iterator i = gates->begin(); i != gates->end(); i++) {
+	std::list<Gate>* gates = level->getGateEntities();
+	for(std::list<Gate>::iterator i = gates->begin(); i != gates->end(); i++) {
 		i->Animate(&graphics);	
+
+
 	}
 
 
@@ -303,11 +315,7 @@ void Game::ComposeFrame() {
 	
 
 
-	std::string s;
-	s += std::to_string((long double)spikes->size());
-	s += "\n";
 
-	//OutputDebugStringA(s.c_str());
 	
 
 	DrawHealth();
@@ -336,15 +344,26 @@ void Game::DrawBackground() {
 
 			case 'T':
 				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
-				graphics.DrawSprite(xOff, yOff - columnBack.height - 15, &columnBack);
+				graphics.DrawSprite(xOff - 1, yOff - columnBack.height - 15, &columnBack);
 				break;
 			case ']':
-				//this is fine
 				graphics.DrawSprite(xOff, yOff - blockCornerRight.height, &blockCornerRight);
 				break;
 			case '_':
-				//this is fine
 				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
+				break;
+			case '-':
+				if(level->getCodeByCoord(prince->getMidX(), prince->getMidY()) == '-') {
+					/*TODO: this need sto be fixed */
+					//if(level->getBlockXByCoord(prince->getMidX()) == j && level->getBlockYByCoord(prince->getMidY() == i) ) {
+					OutputDebugString(L"HOW\n");
+					graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
+				}else {
+					graphics.DrawSprite(xOff, yOff - activate.height, &activate);
+				}
+				break;
+			case '=':
+				graphics.DrawSprite(xOff, yOff - trap.height, &trap);
 				break;
 			case 'S':
 				graphics.DrawSprite(xOff, yOff - deadSk.height, &deadSk);
@@ -397,7 +416,7 @@ void Game::DrawForeground() {
 				graphics.DrawSprite(xOff, yOff - rubble_back.height, &rubble_back);
 				break;
 			case 'T':
-				graphics.DrawSprite(xOff, yOff - columnFront.height, &columnFront);
+				graphics.DrawSprite(xOff, yOff - columnFront.height - 1, &columnFront);
 				break;
 			case '[':
 				//this is fine
