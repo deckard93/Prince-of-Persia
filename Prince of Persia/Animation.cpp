@@ -92,7 +92,6 @@ void Animation::Update(Graphics* graphics, int x, int y) {
 	}
 }
 void Animation::NextFrame() {
-
 	if(frameDisplayTime == NULL) {
 
 		if(timer.GetTimeMilli() > defaultDisplayTime) {
@@ -123,6 +122,12 @@ void Animation::setCurrentFrame(int frame) {
 }
 void Animation::Freeze() {
 	inc = 0;
+}
+bool Animation::isFrozen() {
+	if(inc == 0) {
+		return true;
+	} 
+	return false;
 }
 
 //drawing

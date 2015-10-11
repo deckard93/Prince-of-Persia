@@ -54,6 +54,7 @@ public:
 	void NextFrame();
 	void setCurrentFrame(int frame);
 	void Freeze();
+	bool isFrozen();
 
 	//drawing
 	void Display(Graphics* graphics, int x, int y);
