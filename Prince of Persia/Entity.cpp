@@ -94,6 +94,7 @@ int Entity::getDefferY() {
 	defferY = 0;
 	return temp;
 }
+
 //functions
 void Entity::Animate(Graphics* graphics, int& moveX, int& moveY) {
 	currentAnim->Update(graphics, xPos, yPos);
