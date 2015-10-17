@@ -42,6 +42,8 @@ void Level::loadLevel(int l) {
 	guilotineList = new std::list<Entity>();
 	gateList = new std::list<Gate>();
 
+	entities = new std::map<std::string, Entity*>();
+
 	loadEntities();
 
 	fclose (file);
@@ -76,6 +78,7 @@ void Level::loadEntities() {
 	spikeList->clear();
 	guilotineList->clear();
 	gateList->clear();
+	entities->clear();
 
 	for(int i = 0; i <= LEVEL_HEIGHT_BLOCK; i++)  {
 		for(int j = 0; j <= LEVEL_WIDTH_BLOCK; j++) {
@@ -83,7 +86,7 @@ void Level::loadEntities() {
 				int x = Game::LEFT_MARGIN + (j - 1) * LEVEL_WIDTH_PIX;
 				int y = Game::TOP_MARGIN + LEVEL_HEIGHT_PIX * (i - 1) + 26;	//TODO: Why i - 1 //TODO make 27 float
 
-				Entity* spikeEntity = new Entity (new Animation(L"Assets//spikes.png", 5), x, y );
+				Entity* spikeEntity = new Entity (new Animation(L"Assets//spikes.png", 5), x, y, spikeT);
 
 				spikeEntity->getAnim()->setCurrentFrame(rand() % 5);
 				spikeEntity->getAnim()->setDisplayTime(90);
@@ -91,12 +94,13 @@ void Level::loadEntities() {
 				spikeEntity->getAnim()->Play();
 
 				spikeList->push_back(*spikeEntity);
+				//entities->insert(std::make_pair(i, j), spikeEntity);
 			}
 			if(getCodeByBlock(i,j) == '^') {
 				int x = Game::LEFT_MARGIN + j * LEVEL_WIDTH_PIX + TORCH_FLOAT_LEFT;
 				int y = Game::TOP_MARGIN + LEVEL_HEIGHT_PIX * i - TORCH_FLOAT;
 
-				Entity* torchEntity = new Entity (new Animation(L"Assets//torch.png", 5), x, y );
+				Entity* torchEntity = new Entity (new Animation(L"Assets//torch.png", 5), x, y, torchT);
 
 				torchEntity->getAnim()->setCurrentFrame(rand() % 5);
 				torchEntity->getAnim()->setDisplayTime(80.0);
@@ -104,12 +108,13 @@ void Level::loadEntities() {
 				torchEntity->getAnim()->Play();
 
 				torchList->push_back(*torchEntity);
+				//entities->insert(std::make_pair(i, j), torchEntity);
 			} 
 			if(getCodeByBlock(i,j) == 'P') {
 				int x = Game::LEFT_MARGIN + j * LEVEL_WIDTH_PIX - 20;
 				int y = Game::TOP_MARGIN + LEVEL_HEIGHT_PIX * i - 60;
 
-				Entity* potionEntity = new Entity (new Animation(L"Assets//healthPotion.png", 6), x, y );
+				Entity* potionEntity = new Entity (new Animation(L"Assets//healthPotion.png", 6), x, y, potionT);
 
 				potionEntity->getAnim()->setCurrentFrame(rand() % 6);
 				potionEntity->getAnim()->setDisplayTime(100);
@@ -117,19 +122,39 @@ void Level::loadEntities() {
 				potionEntity->getAnim()->Play();
 
 				potionList->push_back(*potionEntity);
+				//entities->insert(std::make_pair(i, j), potionEntity);
 			}
 			if(getCodeByBlock(i,j) == '!') {
 				int x = Game::LEFT_MARGIN + (j - 1) * LEVEL_WIDTH_PIX;
 				int y = Game::TOP_MARGIN + LEVEL_HEIGHT_PIX * (i - 1);	//TODO: Why i - 1 //TODO make 27 float
 
-				Entity* guilotineEntity = new Entity (new Animation(L"Assets//guilotine.png", 5), x, y );
+				Entity* guilotineEntity = new Entity(new Animation(L"Assets//guilotine.png", 5), x, y, guilotineT);
 
 				guilotineEntity->getAnim()->setCurrentFrame(rand() % 5);
 				guilotineEntity->getAnim()->setDisplayTime(90);
 				guilotineEntity->getAnim()->setLoop(true);
 				guilotineEntity->getAnim()->Play();
 
-				guilotineList->push_back(*guilotineEntity);
+
+				std::string result;          // string which will contain the result
+				std::ostringstream convert;   // stream used for the conversion
+
+				convert << i;      // insert the textual representation of 'Number' in the characters in the stream
+				convert << j;
+
+				result = convert.str(); // set 'Result' to the contents of the stream
+				
+			
+
+				std::pair<std::string, Entity*>* mapElement = new std::pair<std::string, Entity*>(result, guilotineEntity);
+				entities->insert(*mapElement);
+
+
+
+				//(*entities)[result] = *guilotineEntity;
+
+				//guilotineList->push_back(*guilotineEntity);
+				//entities->insert(std::make_pair(i, j), guilotineEntity);
 			}
 
 			if(getCodeByBlock(i,j) == 'G') {
@@ -140,7 +165,21 @@ void Level::loadEntities() {
 				Gate* gate = new Gate(x, y, scene_x + i, scene_y + j);
 				//Entity* gate = new Entity (new Animation(L"Assets//gate.png", 1), x, y );
 
-				gateList->push_back(*gate);
+
+				std::string result;          // string which will contain the result
+				std::ostringstream convert;   // stream used for the conversion
+
+				convert << i;      // insert the textual representation of 'Number' in the characters in the stream
+				convert << j;
+
+				result = convert.str(); // set 'Result' to the contents of the stream
+
+				std::pair<std::string, Entity*>* mapElement = new std::pair<std::string, Entity*>(result, gate);
+				entities->insert(*mapElement);
+
+
+				//gateList->push_back(*gate);
+			
 			}
 		}
 	}
@@ -185,4 +224,8 @@ std::list<Entity>* Level::getGuilotineEntities() {
 }
 std::list<Gate>* Level::getGateEntities() {
 	return gateList;
+}
+
+std::map<std::string, Entity*>* Level::getEntities() {
+	return entities;
 }

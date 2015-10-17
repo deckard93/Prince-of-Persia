@@ -229,9 +229,19 @@ void Game::HandleInput() {
 
 
 	if(input->hasBeenPressed('O')) {
+		/*
 			std::list<Gate>* gates = level->getGateEntities();
 			for(std::list<Gate>::iterator i = gates->begin(); i != gates->end(); i++) {
 				i->Open();	
+			}
+			*/
+
+			std::map<std::string, Entity*>* entitites = level->getEntities();
+			for (std::map<std::string, Entity*>::iterator i = entitites->begin(); i != entitites->end(); i++) {
+				if (i->second->getType() == gateT) {
+					Gate* g = static_cast<Gate*>(i->second);
+					g->Open();
+				}
 			}
 	}
 
@@ -274,7 +284,7 @@ void Game::ComposeFrame() {
 	DrawBackground();
 
 	if(DEBUG) { graphics.DrawCircle(prince->getMidX(), prince->getMidY(), 5, 255, 255, 255);}
-
+	
 	std::list<Entity>* torches = level->getTorchEntities();
 	for(std::list<Entity>::iterator i = torches->begin(); i != torches->end(); i++) {
 		i->Animate(&graphics);	
@@ -286,14 +296,17 @@ void Game::ComposeFrame() {
 	for(std::list<Entity>::iterator i = potions->begin(); i != potions->end(); i++) {
 		i->Animate(&graphics);	
 	}
+	
+
 
 	prince->Animate(&graphics);
 
-
+	/*
 	std::list<Entity>* guilotines = level->getGuilotineEntities();
 	for(std::list<Entity>::iterator i = guilotines->begin(); i != guilotines->end(); i++) {
 		i->Animate(&graphics);	
 	}
+	*/
 
 	std::list<Entity>* spikes = level->getSpikeEntities();
 	for(std::list<Entity>::iterator i = spikes->begin(); i != spikes->end(); i++) {
@@ -303,9 +316,19 @@ void Game::ComposeFrame() {
 	std::list<Gate>* gates = level->getGateEntities();
 	for(std::list<Gate>::iterator i = gates->begin(); i != gates->end(); i++) {
 		i->Animate(&graphics);	
-
-
 	}
+	
+
+
+	
+	std::map<std::string, Entity*>* entitites = level->getEntities();
+	for (std::map<std::string, Entity*>::iterator i = entitites->begin(); i != entitites->end(); i++) {
+		i->second->Animate(&graphics);
+	}
+	
+	
+	
+	
 
 
 	DrawForeground();

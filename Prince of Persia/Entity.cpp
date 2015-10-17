@@ -2,7 +2,9 @@
 
 
 //constructor
-Entity::Entity(Animation* a,int x, int y) {
+Entity::Entity(Animation* a,int x, int y, entityType t) {
+	type = t;
+	
 	currentAnim = a;
 
 	xPos = x;
@@ -111,6 +113,12 @@ void Entity::MoveX(int x) {
 }
 void Entity::MoveY(int y) {
 	yPos += y;
+}
+void Entity::setType(entityType t) {
+	type = t;
+}
+entityType Entity::getType() {
+	return type;
 }
 
 //destructor
