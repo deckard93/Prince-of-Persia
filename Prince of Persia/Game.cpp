@@ -208,6 +208,9 @@ void Game::CheckCollision() {
 	//move prince
 	prince->MoveX(mX);
 	prince->MoveY(mY);
+
+
+	
 }
 void Game::HandleInput() {
 	
@@ -239,9 +242,21 @@ void Game::HandleInput() {
 			std::map<std::string, Entity*>* entitites = level->getEntities();
 			for (std::map<std::string, Entity*>::iterator i = entitites->begin(); i != entitites->end(); i++) {
 				if (i->second->getType() == gateT) {
-					Gate* g = static_cast<Gate*>(i->second);
-					g->Open();
+					//Gate* g = dynamic_cast<Gate*>(i->second);
+					//g->Open();
 				}
+
+				/*
+				Gate* g = dynamic_cast<Gate*>(i->second);
+				if (g != NULL) {
+					std::string blah = typeid(g).name();
+					OutputDebugStringA(blah.c_str());
+				}
+				else {
+					std::string blah = typeid(i->second).name();
+					OutputDebugStringA(blah.c_str());
+				}
+				*/
 			}
 	}
 
@@ -255,11 +270,8 @@ void Game::HandleInput() {
 		s += g + "\n";
 		OutputDebugStringA(s.c_str());
 
-
-
 		if(level->getCodeByCoord(prince->getMidX(), prince->getMidY()) == 'P') {
-			
-			
+				
 			if(prince->Drink()) {
 				level->setCodeByCoord(prince->getMidX(), prince->getMidY(), '_');
 				prince->Heal();
@@ -357,13 +369,13 @@ void Game::DrawBackground() {
 	int yOff;
 	int xOff;
 
-	for(int i = 3; i >= 0; i--){
-		for(int j = 0; j < 11; j++){
+	for(int j = Level::LEVEL_HEIGHT_BLOCK; j >= 0; j--){
+		for(int i = 0; i <= Level::LEVEL_WIDTH_BLOCK; i++){
 
-			yOff = TOP + Level::LEVEL_HEIGHT_PIX * i;
-			xOff = - Level::LEVEL_WIDTH_PIX + LEFT + Level::LEVEL_WIDTH_PIX * j;
+			yOff = TOP + Level::LEVEL_HEIGHT_PIX * j;
+			xOff = - Level::LEVEL_WIDTH_PIX + LEFT + Level::LEVEL_WIDTH_PIX * i;
 
-			switch(level->getCodeByBlock(i, j)) {
+			switch(level->getCodeByBlock(j, i)) {
 
 			case 'T':
 				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
@@ -377,11 +389,36 @@ void Game::DrawBackground() {
 				break;
 			case '-':
 				if(level->getCodeByCoord(prince->getMidX(), prince->getMidY()) == '-') {
+
+					std::map<std::string, Entity*>* entitites = level->getEntities();
+					std::map<std::pair<int, int>, std::pair<int, int> >* mechanism = level->getMec();
+
+					int absI = level->getAbsBlockX(i);
+					int absJ = level->getAbsBlockY(j - 1);
+
+					std::pair<int, int> p(absI, absJ);
+					
+					std::pair<int, int> k = (*mechanism)[p];
+
+					std::string result;          // string which will contain the result
+					std::ostringstream convert;   // stream used for the conversion
+
+					convert << k.first;      // insert the textual representation of 'Number' in the characters in the stream
+					convert << k.second;
+
+					result = convert.str(); // set 'Result' to the contents of the stream
+
+					Entity* e = (*entitites)[result];
+
+					Gate* g = dynamic_cast<Gate*>(e);
+					g->Open();
+
+
 					/*TODO: this need sto be fixed */
 					//if(level->getBlockXByCoord(prince->getMidX()) == j && level->getBlockYByCoord(prince->getMidY() == i) ) {
 					OutputDebugString(L"HOW\n");
 					graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
-				}else {
+				} else {
 					graphics.DrawSprite(xOff, yOff - activate.height, &activate);
 				}
 				break;

@@ -36,6 +36,24 @@ void Level::loadLevel(int l) {
 		}
 	}
 
+	int platX;
+	int platY;
+
+	int gateX;
+	int gateY;
+
+	mechanism = new std::map< std::pair<int, int>, std::pair<int, int> >();
+
+	while (fscanf(file, "%d", &platX) > 0 && fscanf(file, "%d", &platY) > 0 &&
+		   fscanf(file, "%d", &gateX) > 0 && fscanf(file, "%d", &gateY) > 0) {
+
+		std::pair<int, int> plat(platY, platX);
+		std::pair<int, int> gate(gateY, gateX);
+
+		(*mechanism)[plat] = gate;
+		
+	}
+
 	torchList = new std::list<Entity>();
 	potionList = new std::list<Entity>();
 	spikeList = new std::list<Entity>();
@@ -69,6 +87,13 @@ int Level::getBlockXByCoord(int xCoord) {
 }
 int Level::getBlockYByCoord(int yCoord) {
 	return (yCoord + LEVEL_HEIGHT_PIX) / LEVEL_HEIGHT_PIX; //????
+}
+
+int Level::getAbsBlockX(int x) {
+	return scene_x + x;
+}
+int Level::getAbsBlockY(int y) {
+	return scene_y + y;
 }
 
 void Level::loadEntities() {
@@ -139,8 +164,11 @@ void Level::loadEntities() {
 				std::string result;          // string which will contain the result
 				std::ostringstream convert;   // stream used for the conversion
 
-				convert << i;      // insert the textual representation of 'Number' in the characters in the stream
-				convert << j;
+				int absI = getAbsBlockX(i);
+				int absJ = getAbsBlockY(j);
+
+				convert << absI;      // insert the textual representation of 'Number' in the characters in the stream
+				convert << absJ;
 
 				result = convert.str(); // set 'Result' to the contents of the stream
 				
@@ -169,10 +197,17 @@ void Level::loadEntities() {
 				std::string result;          // string which will contain the result
 				std::ostringstream convert;   // stream used for the conversion
 
-				convert << i;      // insert the textual representation of 'Number' in the characters in the stream
-				convert << j;
+				int absI = getAbsBlockX(i);
+				int absJ = getAbsBlockY(j);
+
+				convert << absI;      // insert the textual representation of 'Number' in the characters in the stream
+				convert << absJ;
+
+				
 
 				result = convert.str(); // set 'Result' to the contents of the stream
+
+				OutputDebugStringA(result.c_str());
 
 				std::pair<std::string, Entity*>* mapElement = new std::pair<std::string, Entity*>(result, gate);
 				entities->insert(*mapElement);
@@ -228,4 +263,7 @@ std::list<Gate>* Level::getGateEntities() {
 
 std::map<std::string, Entity*>* Level::getEntities() {
 	return entities;
+}
+std::map<std::pair<int, int>, std::pair<int, int> >* Level::getMec() {
+	return mechanism;
 }

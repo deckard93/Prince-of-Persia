@@ -32,6 +32,9 @@ public:
 	int getBlockXByCoord(int yCoord);
 	int getBlockYByCoord(int xCoord);
 
+	int getAbsBlockX(int x);
+	int getAbsBlockY(int y);
+
 	void setCodeByCoord(int x, int y, char c);
 
 	void drawLevel();
@@ -46,6 +49,7 @@ public:
 	std::list<Gate>* getGateEntities();
 
 	std::map<std::string, Entity*>* getEntities();
+	std::map<std::pair<int, int>, std::pair<int, int> >* getMec();
 	
 	char getCodeByBlock(int i, int j);
 	char getCodeByCoord(int x, int y);
@@ -79,6 +83,7 @@ private:
 	std::list<Gate> *gateList;
 
 	std::map<std::string, Entity*>* entities;
+	std::map<std::pair<int, int>, std::pair<int, int> >* mechanism;
 
 	//Level Sprites
 	Sprite block;
