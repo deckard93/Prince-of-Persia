@@ -5,8 +5,8 @@
 #include <string>
 #include <sstream>
 #include <list>
+#include <map>
 
-#include "Entity.h"
 #include "Graphics.h"
 #include "Gate.h"
 
@@ -44,6 +44,8 @@ public:
 	std::list<Entity>* getSpikeEntities();
 	std::list<Entity>* getGuilotineEntities();
 	std::list<Gate>* getGateEntities();
+
+	std::map<std::string, Entity*>* getEntities();
 	
 	char getCodeByBlock(int i, int j);
 	char getCodeByCoord(int x, int y);
@@ -75,6 +77,8 @@ private:
 	std::list<Entity> *spikeList;
 	std::list<Entity> *guilotineList;
 	std::list<Gate> *gateList;
+
+	std::map<std::string, Entity*>* entities;
 
 	//Level Sprites
 	Sprite block;

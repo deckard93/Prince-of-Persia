@@ -2,6 +2,7 @@
 
 
 //Constructors
+
 Animation::Animation(SpriteSheet* s) {
 
 	sheet = s;
@@ -20,7 +21,7 @@ Animation::Animation(SpriteSheet* s) {
 	timer.StartWatch();
 
 }
-Animation::Animation(const WCHAR* spriteName,int frames) {
+Animation::Animation(const WCHAR* spriteName,int frames) : sheet(NULL) {
 
 	sheet = new SpriteSheet(spriteName, frames);
 

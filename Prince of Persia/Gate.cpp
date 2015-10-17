@@ -3,6 +3,8 @@
 
 Gate::Gate(int x, int y, int levelX, int levelY) {
 
+	type = gateT;
+
 	setX(x);
 	setY(y);
 
@@ -56,9 +58,7 @@ void Gate::Animate(Graphics* graphics) {
 		if(this->getAnim()->isFinished()) {
 			this->getAnim()->setCurrentFrame(6);
 		}
-	}
-	
-	
+	}	
 	
 	Entity::Animate(graphics);
 }
