@@ -4,86 +4,74 @@
 
 #define BORDERS 0
 
+
+hash_map<string, Sprite*>* Game::assets = new hash_map<string, Sprite*>();
+
+
 Game::Game(HWND hwnd, Input* in) : 
 		graphics(hwnd),
-		input(in),
-		TOP(30),
-		BOTTOM(56),
-		LEFT(20),
-		RIGHT(0) {
+		input(in) {
 
-	level = new Level();
-	level->loadLevel(1);
+	LoadFont(&fixedSys, fontSurf, "Assets//fixedsys16x28.bmp", 16, 28, 32);
 
-	TOP = (SCREEN_Y - Level::LEVEL_HEIGHT_PIX * Level::LEVEL_HEIGHT_BLOCK) / 2;
-	LEFT = (SCREEN_X - Level::LEVEL_WIDTH_PIX * Level::LEVEL_WIDTH_BLOCK) / 2;
+	//assets
+	RegisterSprite("block");
+	RegisterSprite("blockCornerLeft");
+	RegisterSprite("blockCornerRight");
+	RegisterSprite("bricks");
+	RegisterSprite("separator");
+	RegisterSprite("separator_corner");
+	RegisterSprite("floor");
+	RegisterSprite("trap");
+	RegisterSprite("activate");
+	RegisterSprite("healthFull");
+	RegisterSprite("healthEmpty");
+	RegisterSprite("columnFront");
+	RegisterSprite("columnBack");
+	RegisterSprite("rubbleBack");
+	RegisterSprite("rubbleFront");
+	RegisterSprite("doorFrameBack");
+	RegisterSprite("doorFrameFront");
+	RegisterSprite("tileCornerLeft");
+	RegisterSprite("deadSk");
+	RegisterSprite("gate");
+	RegisterSprite("holyFloor");
 
-	int currentFrame;
-
-	LoadSprite(&block, L"Assets//block.png");
-	LoadSprite(&blockCornerLeft, L"Assets//block_corner_left.png");
-	LoadSprite(&blockCornerRight, L"Assets//block_corner_right.png");
-
-	LoadSprite(&bricks, L"Assets//bricks.png");
-	LoadSprite(&torch, L"Assets//torch.png");
-
-	LoadSprite(&separator, L"Assets//separator.png");
-	LoadSprite(&separatorCorner, L"Assets//separator_corner.png");
-
-	LoadSprite(&floor, L"Assets//floor.png");
-	LoadSprite(&trap, L"Assets//trap.png");
-	LoadSprite(&activate, L"Assets//activate.png");
-
-	LoadSprite(&healthFull, L"Assets//health-full.png");
-	LoadSprite(&healthEmpty, L"Assets//health-empty.png");
-
-	LoadSprite(&columnFront, L"Assets//column_front.png");
-	LoadSprite(&columnBack, L"Assets//column_back.png");
-
-	LoadSprite(&rubble_front, L"Assets//rubble_back.png");
-	LoadSprite(&rubble_back, L"Assets//rubble_front.png");
-
-	LoadSprite(&gateFrameBack, L"Assets//doorFrameBack.png");
-	LoadSprite(&gateFrameFront, L"Assets//doorFrameFront.png");
-
-	LoadSprite(&tileCornerLeft, L"Assets//tile_corner_left.png");
-
-	LoadSprite(&torch,L"Assets//torch.png");
-
-	LoadSprite(&deadSk,L"Assets//deadSk.png");
-
-	LoadSprite(&gate, L"Assets//gate.png");
-
-	LoadSprite(&holyFloor, L"Assets//holy_floor.png");
-
-
-	LoadSprite(&test, L"Assets//prince//climbUp.png");
-
-	dummy = 0;
-
-	int x = LEFT + 2 * Level::LEVEL_WIDTH_PIX + Level::TORCH_FLOAT_LEFT;
-	int y = TOP - torch.height - Level::TORCH_FLOAT + Level::LEVEL_HEIGHT_PIX * 2;
-
-	torchEntity = new Entity (new Animation(L"Assets//torch.png", 5), x, y );
-
-	torchEntity->getAnim()->setDisplayTime(80.0);
-	torchEntity->getAnim()->setLoop(true);
-	torchEntity->getAnim()->Play();
+	//entities
+	RegisterSprite("spikes");
+	RegisterSprite("torch");
+	RegisterSprite("healthPotion");
+	RegisterSprite("guilotine");
+	RegisterSprite("gate");
 	
-	//torchSheet = new SpriteSheet(torch, 23);
+	//sprite sheets
+	RegisterSprite("idle"       , "Assets//prince//");
+	RegisterSprite("turn"       , "Assets//prince//");
+	RegisterSprite("running"    , "Assets//prince//");
+	RegisterSprite("climbUp"    , "Assets//prince//");
+	RegisterSprite("jumpGrab"   , "Assets//prince//");
+	RegisterSprite("crouch"     , "Assets//prince//");
+	RegisterSprite("staticJump" , "Assets//prince//");
+	RegisterSprite("step"       , "Assets//prince//");
+	RegisterSprite("hang"       , "Assets//prince//");
+	RegisterSprite("runningJump", "Assets//prince//");
+	RegisterSprite("runningTurn", "Assets//prince//");
+	RegisterSprite("fall"       , "Assets//prince//");
+	RegisterSprite("drop"       , "Assets//prince//");
+	RegisterSprite("drink"      , "Assets//prince//");
 
-	//load prince
+
+	//objects
+	level = new Level();
 	prince = new Prince();
 
-	prince->setX(LEFT + 2 * Level::LEVEL_WIDTH_PIX);
-	prince->setY(TOP - prince->getAnim()->getSheet()->getSprite()->height + Level::LEVEL_HEIGHT_PIX * 2 - Level::FOOT_FLOAT);
+	level->loadLevel(1);
 
+	prince->setX(2 * Level::BLOCK_WIDTH_PX);
+	prince->setY(prince->getAnim()->getSheet()->getFrameHeight() - Level::FOOT_FLOAT);
 
 	prince->getAnim()->setLoop(true);
 	prince->getAnim()->Play();
-
-
-	LoadFont(&fixedSys, fontSurf, "Assets//fixedsys16x28.bmp", 16, 28, 32);
 
 }
 
@@ -99,67 +87,60 @@ void Game::GameLoop() {
 	graphics.EndFrame();
 }
 
+void Game::RegisterSprite(string name, string path) {
+	Sprite * sprite = new Sprite();
+	std::wstring item = std::wstring(path.begin(), path.end()) + std::wstring(name.begin(), name.end()) + L".png";
+	LoadSprite(sprite, item.c_str());
+	assets->insert(make_pair(name, sprite));
+}
+Sprite* Game::getSprite(string name) {
+	return (*assets)[name];
+}
+
 //control
 void Game::CheckCollision() {
 
 	//calculate foot position
-	//int xFoot = prince->getX() + prince->getAnim()->getSheet()->getSprite()->width / 2 - 32;
-	//int yFoot = prince->getY() + prince->getAnim()->getSheet()->getSprite()->height - 9;
-	int xFoot = prince->getX() + 120 / 2 - 32;
-	int yFoot = prince->getY() + 120 - 9;
+	int xFoot = prince->getX() + prince->getAnim()->getSheet()->getFrameWidth() / 2 - 36;
+	int yFoot = prince->getY() + prince->getAnim()->getSheet()->getFrameHeight() - 9;
 
-	//will store displacement coords
+	if (DEBUG) { graphics.DrawCircle(xFoot, yFoot, 5, 255, 255, 255); }
+
 	int mX = prince->getDefferX();
 	int mY = prince->getDefferY();
 
-	int x_increment = 10;
-
-	/*======== Handle Input ==========*/
-	if(input->isLeftPressed()) {
-		//mX -= 2;
-	}
-	
-	if(input->isRightPressed()) {
-		//mX += 2;	
-	}
-
-	if(input->hasUpBeenPressed() || input->isUpPressed()) {
-		//mY -= 2;  //-LEVEL_HEIGHT_PIX
-	}
-
-	if(input->hasDownBeenPressed() || input->isDownPressed()) {
-		//mY += 2;  //LEVEL_HEIGHT_PIX
-	}
-
-	//determine where in the level we are
-	int nBlockX = level->getBlockXByCoord(xFoot - LEFT);
-	int nBlockY = level->getBlockYByCoord(yFoot - TOP);
+	int nBlockX = level->getBlockXByCoord(xFoot);
+	int nBlockY = level->getBlockYByCoord(yFoot);
 
 	
-	/* fall */
+	//===================== Fall ==========================
 	if(level->getCodeByBlock(nBlockY, nBlockX) == '_' || 
 	   level->getCodeByBlock(nBlockY, nBlockX) == '#' ||
 	   level->getCodeByBlock(nBlockY, nBlockX) == '/' ||
 	   level->getCodeByBlock(nBlockY, nBlockX) == '^' ||
 	   level->getCodeByBlock(nBlockY, nBlockX) == '$' ||
 	   level->getCodeByBlock(nBlockY, nBlockX) == '_' ) {
-		int bar = (TOP + Level::LEVEL_HEIGHT_PIX * nBlockY);
 
-		if(DEBUG) graphics.DrawLine(0, bar, 1200, bar, 255, 255, 255);
+		int bar = (Level::BLOCK_HEIGHT_PX * nBlockY);
+		if(DEBUG) graphics.DrawLine(0, bar, Graphics::SCREENX, bar, 255, 255, 255);
 	
-
 		if(yFoot < bar - 20) {
 			mY += prince->setFall();
 		} else {
 			prince->getAnim()->Play();
 		}
 	}
+	if (level->getCodeByBlock(nBlockY, nBlockX) == ' ' ||
+		level->getCodeByBlock(nBlockY, nBlockX) == '*') {
+		mY += prince->setFall();
+	}
 
 
+	//=============== Collision With Walls =====================
 	if(mX < 0 && level->getCodeByBlock(nBlockY, nBlockX) == ']') {
-		int bar = (LEFT + Level::LEVEL_WIDTH_PIX * (nBlockX));
+		int bar = (Level::BLOCK_WIDTH_PX * (nBlockX));
 
-		//graphics.DrawLine(0, bar, 1200, bar, 255, 255, 255);
+		if (DEBUG) graphics.DrawLine(0, bar, Graphics::SCREENX, bar, 255, 255, 255);
 
 		if(xFoot + mX < bar) {
 			mX = 0;
@@ -168,49 +149,71 @@ void Game::CheckCollision() {
 
 	if(mX > 0 && level->getCodeByBlock(nBlockY,nBlockX + 1) == '[' ||
 				 level->getCodeByBlock(nBlockY,nBlockX) == '[' ) {
-		int bar = (LEFT + Level::LEVEL_WIDTH_PIX * (nBlockX) - 27);
 
-		//graphics.DrawLine(bar, yFoot, bar, 200, 255, 255, 255);
+		int bar = (Level::BLOCK_WIDTH_PX * (nBlockX) - 27);
+		if (DEBUG) graphics.DrawLine(bar, yFoot, bar, Level::BLOCK_HEIGHT_PX, 255, 255, 255);
 
 		if(xFoot + mX > bar ) {
 			mX = 0;
 		}
 	}
 
-	if( level->getCodeByBlock(nBlockY, nBlockX) == ' ' || 
-		level->getCodeByBlock(nBlockY, nBlockX) == '*' ) {
-		mY += prince->setFall();
-	}
-
-
-	//Change Scenes
-	if(yFoot - 120 / 2 > TOP + Level::LEVEL_HEIGHT_PIX * 3) {
+	//===================== Change Scenes =====================
+	if(yFoot - 20 > Level::BLOCK_HEIGHT_PX * 3) {
 		level->changeScene(D);
-		prince->setY(TOP - 120 / 2);
+		prince->setY(-60);
 	}
 
-	if(yFoot < TOP) {
-		level->changeScene(U);
-		prince->setY(TOP + Level::LEVEL_HEIGHT_PIX * 3);
+	if(yFoot < 0) {
+		//level->changeScene(U);
+		//prince->setY(Level::BLOCK_HEIGHT_PX * 3);
 	}
 
-	if(xFoot + 60 > LEFT + Level::LEVEL_WIDTH_PIX * 10 + 5) {
+	if(xFoot + 60 > Level::BLOCK_WIDTH_PX * 10 + 5) {
 		level->changeScene(R);
-		prince->setX(LEFT - 30);
+		prince->setX( -30);
 	}
 
-	if(xFoot < LEFT - 5) {
+	if(xFoot < -5) {
 		level->changeScene(L);
-		prince->setX(LEFT + Level::LEVEL_WIDTH_PIX * 9 - 30);
+		prince->setX(Level::BLOCK_WIDTH_PX * 9 - 30);
 	}
 
 
-	//move prince
+	//===================== Move Prince =====================
 	prince->MoveX(mX);
 	prince->MoveY(mY);
 
+	char code = level->getCodeByCoord(prince->getMidX(), prince->getMidY());
 
-	
+	////================== Open/Close Gates ==================
+	if (code == '-' || 
+		code == '=') {
+
+		std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
+		std::map<std::pair<int, int>, std::pair<int, int> >* mechanism = level->getMec();
+
+		int absI = level->getAbsBlockX(level->getBlockXByCoord(prince->getMidX()));
+		int absJ = level->getAbsBlockY(level->getBlockYByCoord(prince->getMidY()));
+
+		std::pair<int, int> p(absI, absJ - 1);
+
+		std::pair<int, int> k = (*mechanism)[p];
+
+		if (entitites->find(k) == entitites->end()) {
+			return;
+		}
+
+		Entity* e = (*entitites)[k];
+
+		Gate* g = dynamic_cast<Gate*>(e);
+
+		if (code == '-') {
+			g->Open();
+		} else {
+			g->Close();
+		}
+	}
 }
 void Game::HandleInput() {
 	
@@ -229,38 +232,6 @@ void Game::HandleInput() {
 	if(input->hasBeenPressed('W')) {
 		level->changeScene(U);
 	}
-
-
-	if(input->hasBeenPressed('O')) {
-		/*
-			std::list<Gate>* gates = level->getGateEntities();
-			for(std::list<Gate>::iterator i = gates->begin(); i != gates->end(); i++) {
-				i->Open();	
-			}
-			*/
-
-			std::map<std::string, Entity*>* entitites = level->getEntities();
-			for (std::map<std::string, Entity*>::iterator i = entitites->begin(); i != entitites->end(); i++) {
-				if (i->second->getType() == gateT) {
-					//Gate* g = dynamic_cast<Gate*>(i->second);
-					//g->Open();
-				}
-
-				/*
-				Gate* g = dynamic_cast<Gate*>(i->second);
-				if (g != NULL) {
-					std::string blah = typeid(g).name();
-					OutputDebugStringA(blah.c_str());
-				}
-				else {
-					std::string blah = typeid(i->second).name();
-					OutputDebugStringA(blah.c_str());
-				}
-				*/
-			}
-	}
-
-
 
 
 	if(input->isShiftPressed()) {
@@ -293,166 +264,98 @@ void Game::DrawGraphics() {
 
 //util
 void Game::ComposeFrame() {
+
 	DrawBackground();
 
 	if(DEBUG) { graphics.DrawCircle(prince->getMidX(), prince->getMidY(), 5, 255, 255, 255);}
 	
-	std::list<Entity>* torches = level->getTorchEntities();
-	for(std::list<Entity>::iterator i = torches->begin(); i != torches->end(); i++) {
-		i->Animate(&graphics);	
-	}
-
-
-
-	std::list<Entity>* potions = level->getPotionEntities();
-	for(std::list<Entity>::iterator i = potions->begin(); i != potions->end(); i++) {
-		i->Animate(&graphics);	
-	}
-	
-
-
-	prince->Animate(&graphics);
-
-	/*
-	std::list<Entity>* guilotines = level->getGuilotineEntities();
-	for(std::list<Entity>::iterator i = guilotines->begin(); i != guilotines->end(); i++) {
-		i->Animate(&graphics);	
-	}
-	*/
-
-	std::list<Entity>* spikes = level->getSpikeEntities();
-	for(std::list<Entity>::iterator i = spikes->begin(); i != spikes->end(); i++) {
-		i->Animate(&graphics);	
-	}
-
-	std::list<Gate>* gates = level->getGateEntities();
-	for(std::list<Gate>::iterator i = gates->begin(); i != gates->end(); i++) {
-		i->Animate(&graphics);	
-	}
-	
-
-
-	
-	std::map<std::string, Entity*>* entitites = level->getEntities();
-	for (std::map<std::string, Entity*>::iterator i = entitites->begin(); i != entitites->end(); i++) {
+	std::map<std::pair<int,int>, Entity*>* entitites = level->getEntities();
+	for (std::map<std::pair<int,int>, Entity*>::iterator i = entitites->begin(); i != entitites->end(); i++) {
 		i->second->Animate(&graphics);
 	}
 	
+	prince->Animate(&graphics);
 	
-	
-	
-
-
 	DrawForeground();
-
-
-
-	
-
-
-
-	
 
 	DrawHealth();
 }
 void Game::DrawHealth() {
 
 	for(int i = 0; i < prince->getHealth(); i++ ) {
-		graphics.DrawSprite(LEFT + i * healthFull.width, TOP + Level::LEVEL_HEIGHT_PIX * 3, &healthFull );
+		//graphics.DrawSprite(i * healthFull.width, Level::BLOCK_HEIGHT_PX * 3, &healthFull );
+		graphics.DrawSprite(i * getSprite("healthFull")->width, Level::BLOCK_HEIGHT_PX * 3, getSprite("healthFull"));
+
 	}
 
 	for(int i = prince->getHealth(); i < prince->getMaxHealth(); i++ ) {
-		graphics.DrawSprite(LEFT + i * healthFull.width, TOP + Level::LEVEL_HEIGHT_PIX * 3, &healthEmpty );
+		//graphics.DrawSprite(i * healthFull.width,  Level::BLOCK_HEIGHT_PX * 3, &healthEmpty );
+		graphics.DrawSprite(i * getSprite("healthEmpty")->width, Level::BLOCK_HEIGHT_PX * 3, getSprite("healthEmpty"));
 	}
 }
 void Game::DrawBackground() {
-	int yOff;
-	int xOff;
+	int yOff = 0;
+	int xOff = 0;
 
-	for(int j = Level::LEVEL_HEIGHT_BLOCK; j >= 0; j--){
-		for(int i = 0; i <= Level::LEVEL_WIDTH_BLOCK; i++){
+	for(int j = Level::SCENE_HEIGHT_BLK; j >= 0; j--){
+		for(int i = 0; i <= Level::SCENE_WIDTH_BLK; i++){
 
-			yOff = TOP + Level::LEVEL_HEIGHT_PIX * j;
-			xOff = - Level::LEVEL_WIDTH_PIX + LEFT + Level::LEVEL_WIDTH_PIX * i;
+			yOff = Level::BLOCK_HEIGHT_PX * j;
+			xOff = - Level::BLOCK_WIDTH_PX + Level::BLOCK_WIDTH_PX * i;
 
 			switch(level->getCodeByBlock(j, i)) {
 
 			case 'T':
-				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
-				graphics.DrawSprite(xOff - 1, yOff - columnBack.height - 15, &columnBack);
+				graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
+				graphics.DrawSprite(xOff - 1, yOff - getSprite("columnBack")->height - 15, getSprite("columnBack"));
 				break;
 			case ']':
-				graphics.DrawSprite(xOff, yOff - blockCornerRight.height, &blockCornerRight);
+				graphics.DrawSprite(xOff, yOff - getSprite("blockCornerRight")->height, getSprite("blockCornerRight"));
 				break;
 			case '_':
-				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
+				graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
 				break;
 			case '-':
 				if(level->getCodeByCoord(prince->getMidX(), prince->getMidY()) == '-') {
 
-					std::map<std::string, Entity*>* entitites = level->getEntities();
-					std::map<std::pair<int, int>, std::pair<int, int> >* mechanism = level->getMec();
-
-					int absI = level->getAbsBlockX(i);
-					int absJ = level->getAbsBlockY(j - 1);
-
-					std::pair<int, int> p(absI, absJ);
-					
-					std::pair<int, int> k = (*mechanism)[p];
-
-					std::string result;          // string which will contain the result
-					std::ostringstream convert;   // stream used for the conversion
-
-					convert << k.first;      // insert the textual representation of 'Number' in the characters in the stream
-					convert << k.second;
-
-					result = convert.str(); // set 'Result' to the contents of the stream
-
-					Entity* e = (*entitites)[result];
-
-					Gate* g = dynamic_cast<Gate*>(e);
-					g->Open();
-
-
-					/*TODO: this need sto be fixed */
+					/*TODO: this needs to be fixed */
 					//if(level->getBlockXByCoord(prince->getMidX()) == j && level->getBlockYByCoord(prince->getMidY() == i) ) {
-					OutputDebugString(L"HOW\n");
-					graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
+					graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
 				} else {
-					graphics.DrawSprite(xOff, yOff - activate.height, &activate);
+					graphics.DrawSprite(xOff, yOff - getSprite("activate")->height, getSprite("activate"));
 				}
 				break;
 			case '=':
-				graphics.DrawSprite(xOff, yOff - trap.height, &trap);
+				graphics.DrawSprite(xOff, yOff - getSprite("trap")->height, getSprite("trap"));
 				break;
 			case 'S':
-				graphics.DrawSprite(xOff, yOff - deadSk.height, &deadSk);
+				graphics.DrawSprite(xOff, yOff - getSprite("deadSk")->height, getSprite("deadSk"));
 				break;
 			case '^':
-				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
+				graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
 				break;
 			case 'G':
-				graphics.DrawSprite(xOff, yOff - gateFrameBack.height, &gateFrameBack);
+				graphics.DrawSprite(xOff, yOff - getSprite("doorFrameBack")->height, getSprite("doorFrameBack"));
 				break;
 			case '#':
-				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
-				graphics.DrawSprite(xOff, yOff - bricks.height, &bricks);
+				graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
+				graphics.DrawSprite(xOff, yOff - getSprite("bricks")->height, getSprite("bricks"));
 				break;
 			case 'P':
-				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
+				graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
 				break;
 			case '$':
-				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
-				graphics.DrawSprite(xOff, yOff - rubble_front.height, &rubble_front);
+				graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
+				graphics.DrawSprite(xOff, yOff - getSprite("rubbleBack")->height, getSprite("rubbleBack"));
 				break;
 			case '*':
-				graphics.DrawSprite(xOff, yOff - bricks.height, &bricks);
+				graphics.DrawSprite(xOff, yOff - getSprite("bricks")->height, getSprite("bricks"));
 				break;
 			case '/':
-				graphics.DrawSprite(xOff, yOff - holyFloor.height, &holyFloor);
+				graphics.DrawSprite(xOff, yOff - getSprite("holyFloor")->height, getSprite("holyFloor"));
 				break;
 			case '!':
-				graphics.DrawSprite(xOff, yOff - tileCornerLeft.height, &tileCornerLeft);
+				graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
 				break;
 			case ' ':
 				break;
@@ -468,29 +371,26 @@ void Game::DrawForeground() {
 	for(int i = 3; i >= 0; i--){
 		for(int j = 0; j < 11; j++){
 
-			yOff = TOP + Level::LEVEL_HEIGHT_PIX * i;
-			xOff = - Level::LEVEL_WIDTH_PIX + LEFT + Level::LEVEL_WIDTH_PIX * j;
+			yOff = Level::BLOCK_HEIGHT_PX * i;
+			xOff = - Level::BLOCK_WIDTH_PX + Level::BLOCK_WIDTH_PX * j;
 
 			switch(level->getCodeByBlock(i, j)) {
 			case '$':
-				graphics.DrawSprite(xOff, yOff - rubble_back.height, &rubble_back);
+				graphics.DrawSprite(xOff, yOff - getSprite("rubbleFront")->height, getSprite("rubbleFront"));
 				break;
 			case 'T':
-				graphics.DrawSprite(xOff, yOff - columnFront.height - 1, &columnFront);
+				graphics.DrawSprite(xOff, yOff - getSprite("columnFront")->height, getSprite("columnFront"));
 				break;
 			case '[':
-				//this is fine
-				graphics.DrawSprite(xOff, yOff - blockCornerLeft.height, &blockCornerLeft);
+				graphics.DrawSprite(xOff, yOff - getSprite("blockCornerLeft")->height, getSprite("blockCornerLeft"));
 				break;
 			case 'G':
-				graphics.DrawSprite(xOff, yOff - gateFrameFront.height, &gateFrameFront);
+				graphics.DrawSprite(xOff, yOff - getSprite("doorFrameFront")->height, getSprite("doorFrameFront"));
 				break;
 			case 'I':
-				//this is fine
-				graphics.DrawSprite(xOff, yOff - block.height, &block);
+				graphics.DrawSprite(xOff, yOff - getSprite("block")->height, getSprite("block"));
 				break;
 			}
-
 		}
 	}
 }
@@ -526,88 +426,113 @@ void Game::DrawLevelManualy() {
 	int yOff;
 
 	//level 1
-	yOff = TOP + LEVEL_HEIGHT_PIX * 3;
+	yOff = TOP_MARGIN + BLOCK_HEIGHT_PX * 3;
 
 		//blocks
 		for(int i = 0; i< 3; i++) {
-			graphics.DrawSprite(i  * LEVEL_WIDTH_PIX, yOff - block.height, &block);
+			graphics.DrawSprite(i  * BLOCK_WIDTH_PX, yOff - block.height, &block);
 		}
-		graphics.DrawSprite(3 * LEVEL_WIDTH_PIX - 1, yOff - blockCornerRight.height + 2, &blockCornerRight);
+		graphics.DrawSprite(3 * BLOCK_WIDTH_PX - 1, yOff - blockCornerRight.height + 2, &blockCornerRight);
 
 		//separatrs
 		for(int i = 0; i< 5; i++) {
-			graphics.DrawSprite((4 + i) * LEVEL_WIDTH_PIX - 2, yOff - separator.height, &separator);
+			graphics.DrawSprite((4 + i) * BLOCK_WIDTH_PX - 2, yOff - separator.height, &separator);
 		}
 
 		//floors
 		for(int i = 0; i< 5; i++) {
-			graphics.DrawSprite((4+ i) * LEVEL_WIDTH_PIX, yOff + 1 - separator.height - floor.height, &floor);
+			graphics.DrawSprite((4+ i) * BLOCK_WIDTH_PX, yOff + 1 - separator.height - floor.height, &floor);
 		}
 
 		//columns
-		graphics.DrawSprite(5 * LEVEL_WIDTH_PIX + 15, yOff - columnFront.height - separator.height + 1, &columnFront);
-		graphics.DrawSprite(5 * LEVEL_WIDTH_PIX + 14 + columnFront.width, yOff - columnBack.height - separator.height - 7 + 1, &columnBack);
+		graphics.DrawSprite(5 * BLOCK_WIDTH_PX + 15, yOff - columnFront.height - separator.height + 1, &columnFront);
+		graphics.DrawSprite(5 * BLOCK_WIDTH_PX + 14 + columnFront.width, yOff - columnBack.height - separator.height - 7 + 1, &columnBack);
 
 		//blocks
-		graphics.DrawSprite(9 * LEVEL_WIDTH_PIX, yOff - blockCornerLeft.height, &blockCornerLeft);
+		graphics.DrawSprite(9 * BLOCK_WIDTH_PX, yOff - blockCornerLeft.height, &blockCornerLeft);
 
 
 	//level 2
-	yOff = TOP + LEVEL_HEIGHT_PIX * 2;
+	yOff = TOP_MARGIN + BLOCK_HEIGHT_PX * 2;
 
 		//blocks
 		for(int i = 0; i < 4; i++) {
-			graphics.DrawSprite(0 + (9 - i) * LEVEL_WIDTH_PIX, yOff - block.height, &block);
+			graphics.DrawSprite(0 + (9 - i) * BLOCK_WIDTH_PX, yOff - block.height, &block);
 		}
 
-		graphics.DrawSprite(0 + 5 * LEVEL_WIDTH_PIX, yOff - blockCornerLeft.height, &blockCornerLeft);
-		graphics.DrawSprite(0  - LEVEL_WIDTH_PIX - 1, yOff - blockCornerRight.height, &blockCornerRight);
+		graphics.DrawSprite(0 + 5 * BLOCK_WIDTH_PX, yOff - blockCornerLeft.height, &blockCornerLeft);
+		graphics.DrawSprite(0  - BLOCK_WIDTH_PX - 1, yOff - blockCornerRight.height, &blockCornerRight);
 
 		//separators
 		for(int i = 0; i< 3; i++) {
-			graphics.DrawSprite(i * LEVEL_WIDTH_PIX - 2, yOff - separator.height, &separator);
+			graphics.DrawSprite(i * BLOCK_WIDTH_PX - 2, yOff - separator.height, &separator);
 		}
-		graphics.DrawSprite(3 * LEVEL_WIDTH_PIX - 4, yOff - separatorCorner.height + 2, &separatorCorner);
+		graphics.DrawSprite(3 * BLOCK_WIDTH_PX - 4, yOff - separatorCorner.height + 2, &separatorCorner);
 		
 		//floors
 		for(int i = 0; i< 3; i++) {
-			graphics.DrawSprite(i * LEVEL_WIDTH_PIX, yOff + 1 - separator.height - floor.height, &floor);
+			graphics.DrawSprite(i * BLOCK_WIDTH_PX, yOff + 1 - separator.height - floor.height, &floor);
 		}
-		graphics.DrawSprite(3 * LEVEL_WIDTH_PIX, yOff + 1 - separator.height - floor.height, &floor);
+		graphics.DrawSprite(3 * BLOCK_WIDTH_PX, yOff + 1 - separator.height - floor.height, &floor);
 		
 		//columns
-		graphics.DrawSprite(3 * LEVEL_WIDTH_PIX + 15, yOff - columnFront.height - separator.height + 1, &columnFront);
-		graphics.DrawSprite(3 * LEVEL_WIDTH_PIX + 14 + columnFront.width, yOff - columnBack.height - separator.height - 7 + 1, &columnBack);
+		graphics.DrawSprite(3 * BLOCK_WIDTH_PX + 15, yOff - columnFront.height - separator.height + 1, &columnFront);
+		graphics.DrawSprite(3 * BLOCK_WIDTH_PX + 14 + columnFront.width, yOff - columnBack.height - separator.height - 7 + 1, &columnBack);
 
 
 	//level 3
-	yOff = TOP + LEVEL_HEIGHT_PIX;
+	yOff = TOP_MARGIN + BLOCK_HEIGHT_PX;
 
 		//separators
-		graphics.DrawSprite(0  - LEVEL_WIDTH_PIX, yOff + 1 - separator.height - floor.height, &floor);
-		graphics.DrawSprite(0  - LEVEL_WIDTH_PIX - 4, yOff - separatorCorner.height + 2, &separatorCorner);
+		graphics.DrawSprite(0  - BLOCK_WIDTH_PX, yOff + 1 - separator.height - floor.height, &floor);
+		graphics.DrawSprite(0  - BLOCK_WIDTH_PX - 4, yOff - separatorCorner.height + 2, &separatorCorner);
 
 		for(int i = 0; i< 5; i++) {
-			graphics.DrawSprite(0 + (7 - i) * LEVEL_WIDTH_PIX, yOff - separator.height, &separator);
+			graphics.DrawSprite(0 + (7 - i) * BLOCK_WIDTH_PX, yOff - separator.height, &separator);
 			
 		}
 
 		//floors
 		for(int i = 0; i< 5; i++) {
-			graphics.DrawSprite(1 + (i + 3) * LEVEL_WIDTH_PIX, yOff + 1 - separator.height - floor.height, &floor);
+			graphics.DrawSprite(1 + (i + 3) * BLOCK_WIDTH_PX, yOff + 1 - separator.height - floor.height, &floor);
 		}
 
 		//blocks
-		graphics.DrawSprite(0 + 9 * LEVEL_WIDTH_PIX, yOff - block.height, &block);
-		graphics.DrawSprite(0 + 8 * LEVEL_WIDTH_PIX, yOff - blockCornerLeft.height, &blockCornerLeft);
+		graphics.DrawSprite(0 + 9 * BLOCK_WIDTH_PX, yOff - block.height, &block);
+		graphics.DrawSprite(0 + 8 * BLOCK_WIDTH_PX, yOff - blockCornerLeft.height, &blockCornerLeft);
 
 
 	//Level 4
 
 		//separators
-		for(int i =0; i < LEVEL_WIDTH_BLOCK; i++) {
-			graphics.DrawSprite(i * LEVEL_WIDTH_PIX, TOP - separator.height, &separator);
+		for(int i =0; i < SCENE_WIDTH_BLK; i++) {
+			graphics.DrawSprite(i * BLOCK_WIDTH_PX, TOP_MARGIN - separator.height, &separator);
 		}
 
 }
+*/
+
+
+/*
+LoadSprite(&block,            L"Assets//block.png"             );
+LoadSprite(&blockCornerLeft,  L"Assets//blockCornerLeft.png"   );
+LoadSprite(&blockCornerRight, L"Assets//blockCornerRight.png"  );
+LoadSprite(&bricks,           L"Assets//bricks.png"            );
+LoadSprite(&separator,        L"Assets//separator.png"         );
+LoadSprite(&separatorCorner,  L"Assets//separator_corner.png"  );
+LoadSprite(&floor,            L"Assets//floor.png"             );
+LoadSprite(&trap,             L"Assets//trap.png"              );
+LoadSprite(&activate,         L"Assets//activate.png"          );
+LoadSprite(&healthFull,       L"Assets//healthFull.png"        );
+LoadSprite(&healthEmpty,      L"Assets//healthEmpty.png"       );
+LoadSprite(&columnFront,      L"Assets//columnFront.png"       );
+LoadSprite(&columnBack,       L"Assets//columnBack.png"        );
+LoadSprite(&rubbleFront,      L"Assets//rubbleBack.png"        );
+LoadSprite(&rubbleBack,       L"Assets//rubbleFront.png"       );
+LoadSprite(&gateFrameBack,    L"Assets//doorFrameBack.png"     );
+LoadSprite(&gateFrameFront,   L"Assets//doorFrameFront.png"    );
+LoadSprite(&tileCornerLeft,   L"Assets//tileCornerLeft.png"    );
+LoadSprite(&deadSk,           L"Assets//deadSk.png"            );
+LoadSprite(&gate,             L"Assets//gate.png"              );
+LoadSprite(&holyFloor,        L"Assets//holyFloor.png"         );
 */

@@ -15,15 +15,7 @@
 #include "SpriteSheet.h"
 #include "Bitmap.h"
 
-#define SCREEN_X 1200
-#define SCREEN_Y 675
-
-//#define SCREEN_X 640
-//#define SCREEN_Y 480
-
-//#define SCREEN_X 800
-//#define SCREEN_Y 600
-
+using std::string;
 
 Sprite* LoadSprite(const WCHAR* name);
 void LoadSprite(Sprite* sprite, const WCHAR* name);
@@ -75,6 +67,16 @@ private:
 	D3DLOCKED_RECT		backRect;
 
 public:
+
 	static const int SCREENX = 1200;
 	static const int SCREENY = 675;
+
+	//static const int SCREENX = 640;
+	//static const int SCREENY = 480;
+
+	static const int OFFSET_Y = (SCREENY - 126 * 3) / 2;
+	static const int OFFSET_X = (SCREENX - 64 * 10) / 2;
+
+	//static const int OFFSET_X = 0;
+	//static const int OFFSET_Y = 0;
 };

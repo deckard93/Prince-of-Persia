@@ -54,13 +54,7 @@ void Level::loadLevel(int l) {
 		
 	}
 
-	torchList = new std::list<Entity>();
-	potionList = new std::list<Entity>();
-	spikeList = new std::list<Entity>();
-	guilotineList = new std::list<Entity>();
-	gateList = new std::list<Gate>();
-
-	entities = new std::map<std::string, Entity*>();
+	entities = new std::map<std::pair<int, int>, Entity*>();
 
 	loadEntities();
 
@@ -68,7 +62,7 @@ void Level::loadLevel(int l) {
 }
 
 void Level::setCodeByCoord(int x, int y, char c) {
-	level[scene_y + getBlockYByCoord(y - Game::TOP_MARGIN)][scene_x + getBlockXByCoord(x - Game::LEFT_MARGIN)] = c;
+	level[scene_y + getBlockYByCoord(y)][scene_x + getBlockXByCoord(x)] = c;
 	loadEntities();
 }
 
@@ -76,17 +70,17 @@ char Level::getCodeByBlock(int i, int j) {
 	return level[scene_y + i][scene_x + j];
 }
 char Level::getCodeByCoord(int x, int y) {
-	int blockX = getBlockXByCoord(x - Game::LEFT_MARGIN);
-	int blockY = getBlockXByCoord(y - Game::TOP_MARGIN);
+	int blockX = getBlockXByCoord(x);
+	int blockY = getBlockXByCoord(y);
 
 	return getCodeByBlock(blockY, blockX);
 }
 
 int Level::getBlockXByCoord(int xCoord) {
-	return (xCoord + LEVEL_WIDTH_PIX) / LEVEL_WIDTH_PIX; //????
+	return (xCoord + BLOCK_WIDTH_PX) / BLOCK_WIDTH_PX; //????
 }
 int Level::getBlockYByCoord(int yCoord) {
-	return (yCoord + LEVEL_HEIGHT_PIX) / LEVEL_HEIGHT_PIX; //????
+	return (yCoord + BLOCK_HEIGHT_PX) / BLOCK_HEIGHT_PX; //????
 }
 
 int Level::getAbsBlockX(int x) {
@@ -98,32 +92,39 @@ int Level::getAbsBlockY(int y) {
 
 void Level::loadEntities() {
 
-	torchList->clear();
-	potionList->clear();
-	spikeList->clear();
-	guilotineList->clear();
-	gateList->clear();
 	entities->clear();
 
-	for(int i = 0; i <= LEVEL_HEIGHT_BLOCK; i++)  {
-		for(int j = 0; j <= LEVEL_WIDTH_BLOCK; j++) {
-			if(getCodeByBlock(i,j) == '/') {
-				int x = Game::LEFT_MARGIN + (j - 1) * LEVEL_WIDTH_PIX;
-				int y = Game::TOP_MARGIN + LEVEL_HEIGHT_PIX * (i - 1) + 26;	//TODO: Why i - 1 //TODO make 27 float
+	for(int i = 0; i <= SCENE_HEIGHT_BLK; i++)  {
+		for(int j = 0; j <= SCENE_WIDTH_BLK; j++) {
 
-				Entity* spikeEntity = new Entity (new Animation(L"Assets//spikes.png", 5), x, y, spikeT);
+			int x = (j - 1) * BLOCK_WIDTH_PX;
+			int y = BLOCK_HEIGHT_PX * (i - 1);
+
+			if(getCodeByBlock(i,j) == '/') {
+	
+				x += SPIKE_OFFSET_X;
+				y += SPIKE_OFFSET_Y;	//TODO: Why i - 1 
+
+				Entity* spikeEntity = new Entity (new Animation(Game::getSprite("spikes"), 5), x, y, spikeT);
 
 				spikeEntity->getAnim()->setCurrentFrame(rand() % 5);
 				spikeEntity->getAnim()->setDisplayTime(90);
 				spikeEntity->getAnim()->setLoop(true);
 				spikeEntity->getAnim()->Play();
 
-				spikeList->push_back(*spikeEntity);
-				//entities->insert(std::make_pair(i, j), spikeEntity);
+				int absI = getAbsBlockX(i);
+				int absJ = getAbsBlockY(j);
+
+				std::pair<int, int> result(absI, absJ);
+				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, spikeEntity);
+				entities->insert(*mapElement);
 			}
 			if(getCodeByBlock(i,j) == '^') {
-				int x = Game::LEFT_MARGIN + j * LEVEL_WIDTH_PIX + TORCH_FLOAT_LEFT;
-				int y = Game::TOP_MARGIN + LEVEL_HEIGHT_PIX * i - TORCH_FLOAT;
+				int x = (j) * BLOCK_WIDTH_PX;
+				int y = BLOCK_HEIGHT_PX * (i);
+
+				x += TORCH_OFFSET_X;
+				y -= TORCH_OFFSET_Y;
 
 				Entity* torchEntity = new Entity (new Animation(L"Assets//torch.png", 5), x, y, torchT);
 
@@ -132,12 +133,16 @@ void Level::loadEntities() {
 				torchEntity->getAnim()->setLoop(true);
 				torchEntity->getAnim()->Play();
 
-				torchList->push_back(*torchEntity);
-				//entities->insert(std::make_pair(i, j), torchEntity);
+				int absI = getAbsBlockX(i);
+				int absJ = getAbsBlockY(j);
+
+				std::pair<int, int> result(absI, absJ);
+				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, torchEntity);
+				entities->insert(*mapElement);
 			} 
 			if(getCodeByBlock(i,j) == 'P') {
-				int x = Game::LEFT_MARGIN + j * LEVEL_WIDTH_PIX - 20;
-				int y = Game::TOP_MARGIN + LEVEL_HEIGHT_PIX * i - 60;
+				x += POTION_OFFSET_X;
+				y += POTION_OFFSET_Y;
 
 				Entity* potionEntity = new Entity (new Animation(L"Assets//healthPotion.png", 6), x, y, potionT);
 
@@ -146,13 +151,14 @@ void Level::loadEntities() {
 				potionEntity->getAnim()->setLoop(true);
 				potionEntity->getAnim()->Play();
 
-				potionList->push_back(*potionEntity);
-				//entities->insert(std::make_pair(i, j), potionEntity);
+				int absI = getAbsBlockX(i);
+				int absJ = getAbsBlockY(j);
+
+				std::pair<int, int> result(absI, absJ);
+				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, potionEntity);
+				entities->insert(*mapElement);
 			}
 			if(getCodeByBlock(i,j) == '!') {
-				int x = Game::LEFT_MARGIN + (j - 1) * LEVEL_WIDTH_PIX;
-				int y = Game::TOP_MARGIN + LEVEL_HEIGHT_PIX * (i - 1);	//TODO: Why i - 1 //TODO make 27 float
-
 				Entity* guilotineEntity = new Entity(new Animation(L"Assets//guilotine.png", 5), x, y, guilotineT);
 
 				guilotineEntity->getAnim()->setCurrentFrame(rand() % 5);
@@ -160,61 +166,23 @@ void Level::loadEntities() {
 				guilotineEntity->getAnim()->setLoop(true);
 				guilotineEntity->getAnim()->Play();
 
-
-				std::string result;          // string which will contain the result
-				std::ostringstream convert;   // stream used for the conversion
-
 				int absI = getAbsBlockX(i);
 				int absJ = getAbsBlockY(j);
-
-				convert << absI;      // insert the textual representation of 'Number' in the characters in the stream
-				convert << absJ;
-
-				result = convert.str(); // set 'Result' to the contents of the stream
 				
-			
-
-				std::pair<std::string, Entity*>* mapElement = new std::pair<std::string, Entity*>(result, guilotineEntity);
+				std::pair<int, int> result(absI, absJ);
+				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, guilotineEntity);
 				entities->insert(*mapElement);
-
-
-
-				//(*entities)[result] = *guilotineEntity;
-
-				//guilotineList->push_back(*guilotineEntity);
-				//entities->insert(std::make_pair(i, j), guilotineEntity);
 			}
 
 			if(getCodeByBlock(i,j) == 'G') {
-
-				int x = Game::LEFT_MARGIN + (j - 1) * LEVEL_WIDTH_PIX;
-				int y = Game::TOP_MARGIN + LEVEL_HEIGHT_PIX * (i - 1);	//TODO: Why i - 1 //TODO make 27 float
-
 				Gate* gate = new Gate(x, y, scene_x + i, scene_y + j);
-				//Entity* gate = new Entity (new Animation(L"Assets//gate.png", 1), x, y );
-
-
-				std::string result;          // string which will contain the result
-				std::ostringstream convert;   // stream used for the conversion
 
 				int absI = getAbsBlockX(i);
 				int absJ = getAbsBlockY(j);
 
-				convert << absI;      // insert the textual representation of 'Number' in the characters in the stream
-				convert << absJ;
-
-				
-
-				result = convert.str(); // set 'Result' to the contents of the stream
-
-				OutputDebugStringA(result.c_str());
-
-				std::pair<std::string, Entity*>* mapElement = new std::pair<std::string, Entity*>(result, gate);
-				entities->insert(*mapElement);
-
-
-				//gateList->push_back(*gate);
-			
+				std::pair<int, int> result(absI, absJ);
+				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, gate);
+				entities->insert(*mapElement);		
 			}
 		}
 	}
@@ -245,23 +213,7 @@ void Level::changeScene(direction dir) {
 	loadEntities();
 }
 
-std::list<Entity>* Level::getTorchEntities() {
-	return torchList;
-}
-std::list<Entity>* Level::getPotionEntities() {
-	return potionList;
-}
-std::list<Entity>* Level::getSpikeEntities() {
-	return spikeList;
-}
-std::list<Entity>* Level::getGuilotineEntities() {
-	return guilotineList;
-}
-std::list<Gate>* Level::getGateEntities() {
-	return gateList;
-}
-
-std::map<std::string, Entity*>* Level::getEntities() {
+std::map<std::pair<int,int>, Entity*>* Level::getEntities() {
 	return entities;
 }
 std::map<std::pair<int, int>, std::pair<int, int> >* Level::getMec() {

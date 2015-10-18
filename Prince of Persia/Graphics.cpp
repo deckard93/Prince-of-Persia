@@ -1,4 +1,5 @@
 #include "Graphics.h"
+#include "Level.h"
 
 
 //Util
@@ -160,32 +161,31 @@ void Graphics::EndFrame() {
 //Pixel Calls
 void Graphics::PutPixel(int x, int y, D3DCOLOR color) {
 
+	x += OFFSET_X;
+	y += OFFSET_Y;
+
+	x = (SCREENX + x) % SCREENX;
+	y = (SCREENY + y) % SCREENY;
+
 	assert(x >= 0);
 	assert(y >= 0);
-	assert(x <= SCREEN_X);
-	assert(y <= SCREEN_Y);
+	assert(x <= SCREENX);
+	assert(y <= SCREENY);
 
-	int left = (1200 - 64 * 10) / 2;
-	int top = (675 - 126 * 3) / 2 - 7;
-	int right = left + 64 * 10 - 1;
-	int bottom = top + 126 * 3 + 7 + 100;
+	int left = (SCREENX - Level::BLOCK_WIDTH_PX * Level::SCENE_WIDTH_BLK) / 2;
+	int top = (SCREENY - Level::BLOCK_HEIGHT_PX * Level::SCENE_HEIGHT_BLK) / 2 - 7;
+	int right = left + Level::BLOCK_WIDTH_PX * Level::SCENE_WIDTH_BLK - 1;
+	int bottom = top + Level::BLOCK_HEIGHT_PX * Level::SCENE_HEIGHT_BLK + 7 + 16;
 	
-	if(x < left) return;
-	if(x > right) return;
-	if(y < top) return;
+	if(x < left)   return;
+	if(x > right)  return;
+	if(y < top)    return;
 	if(y > bottom) return;
 
 	((D3DCOLOR*) backRect.pBits)[x + (backRect.Pitch >> 2) * y] = color;
 }
 void Graphics::PutPixel(int x, int y, int r, int g, int b) {
-
-	assert(x >= 0);
-	assert(y >= 0);
-	assert(x <= SCREEN_X);
-	assert(y <= SCREEN_Y);
-
-	((D3DCOLOR*) backRect.pBits)[x + (backRect.Pitch >> 2) * y] = D3DCOLOR_XRGB(r, g, b);
-
+	PutPixel(x, y, D3DCOLOR_XRGB(r, g, b));
 }
 
 //Shape Drawing
@@ -320,8 +320,8 @@ void Graphics::DrawSprite( int xoff,int yoff,Sprite* sprite )
 			D3DCOLOR c = sprite->surface[ x + y * sprite->width ];
 			if( c != D3DCOLOR_XRGB(100,100,100) )
 			{
-				if(x + xoff > 0 && x + xoff < SCREEN_X && 
-					y + yoff > 0 && y + yoff < SCREEN_Y )
+				//if(x + xoff > 0 && x + xoff < SCREEN_X && 
+				//	y + yoff > 0 && y + yoff < SCREEN_Y )
 				PutPixel( x + xoff,y + yoff,c );
 			}
 		}
@@ -339,8 +339,8 @@ void Graphics::DrawSprite( int xoff,int yoff,Sprite* sprite, int fromX, int from
 			{
 				int xF = x - fromX + xoff;
 				int yF = y - fromY + yoff;
-				if( xF > 0 && xF < SCREEN_X && 
-					yF > 0 && yF < SCREEN_Y )
+				//if( xF > 0 && xF < SCREEN_X && 
+				//	yF > 0 && yF < SCREEN_Y )
 				PutPixel( xF, yF,c );
 			}
 		}
@@ -359,8 +359,8 @@ void Graphics::DrawFlippedSprite( int xoff,int yoff,Sprite* sprite, int fromX, i
 			{
 				int xF = sWidth - x + xoff;
 				int yF = y + yoff;
-				if( xF > 0 && xF < SCREEN_X && 
-					 yF > 0 && yF < SCREEN_Y )
+				//if( xF > 0 && xF < SCREEN_X && 
+				//	 yF > 0 && yF < SCREEN_Y )
 				PutPixel(xF, yF,c );
 			}
 		}
@@ -375,8 +375,8 @@ void Graphics::DrawFlippedSprite( int xoff,int yoff,Sprite* sprite )
 			D3DCOLOR c = sprite->surface[ x + y * sprite->width ];
 			if( c != D3DCOLOR_XRGB(100,100,100) )
 			{
-				if(x + xoff > 0 && x + xoff < SCREEN_X && 
-					y + yoff > 0 && y + yoff < SCREEN_Y )
+				//if(x + xoff > 0 && x + xoff < SCREEN_X && 
+				//	y + yoff > 0 && y + yoff < SCREEN_Y )
 					PutPixel(xoff + sprite->width - x,y + yoff,c );
 			}
 		}
