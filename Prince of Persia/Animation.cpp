@@ -21,6 +21,23 @@ Animation::Animation(SpriteSheet* s) {
 	timer.StartWatch();
 
 }
+Animation::Animation(Sprite* sprite, int frames) : sheet(NULL) {
+
+	sheet = new SpriteSheet(sprite, frames);
+
+	frameDisplayTime = NULL;
+	defaultDisplayTime = 0;
+	currentFrame = 0;
+
+	playForward = true;
+	finished = true;
+	loop = false;
+	flipped = false;
+
+	timer.StartWatch();
+
+}
+
 Animation::Animation(const WCHAR* spriteName,int frames) : sheet(NULL) {
 
 	sheet = new SpriteSheet(spriteName, frames);

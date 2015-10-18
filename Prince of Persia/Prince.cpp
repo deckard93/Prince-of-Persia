@@ -13,20 +13,20 @@ Prince::Prince() {
 
 	princeSpeedX = &idleSpeedX;
 
-	idle		= new Animation(L"Assets//prince//base.png",		1	);
-	turn		= new Animation(L"Assets//prince//turn.png",		8	);
-	running		= new Animation(L"Assets//prince//running.png",		21	);
-	climbUp		= new Animation(L"Assets//prince//climbUp.png",		17	);
-	jumpGrab	= new Animation(L"Assets//prince//jumpGrab.png",	16	);
-	crouch		= new Animation(L"Assets//prince//crouch.png",		13	);
-	staticJump	= new Animation(L"Assets//prince//staticJump.png",	17	);
-	step		= new Animation(L"Assets//prince//step.png",		12	);
-	hang		= new Animation(L"Assets//prince//hang.png"       , 11	);
-	runningJump = new Animation(L"Assets//prince//runningJump.png", 11	);
-	runningTurn = new Animation(L"Assets//prince//runningTurn.png", 9	);
-	fall        = new Animation(L"Assets//prince//fall.png"       , 5	);
-	drop        = new Animation(L"Assets//prince//drop.png"       , 6	);
-	drink       = new Animation(L"Assets//prince//drink.png"      , 15	);
+	idle        = new Animation(Game::getSprite("idle")       , 1);
+	turn        = new Animation(Game::getSprite("turn")       , 8);
+	running     = new Animation(Game::getSprite("running")    , 21);
+	climbUp     = new Animation(Game::getSprite("climbUp")    , 17);
+	jumpGrab    = new Animation(Game::getSprite("jumpGrab")   , 16);
+	crouch      = new Animation(Game::getSprite("crouch")     , 13);
+	staticJump  = new Animation(Game::getSprite("staticJump") , 17);
+	step        = new Animation(Game::getSprite("step")       , 12);
+	hang        = new Animation(Game::getSprite("hang")       , 11);
+	runningJump = new Animation(Game::getSprite("runningJump"), 11);
+	runningTurn = new Animation(Game::getSprite("runningTurn"), 9);
+	fall        = new Animation(Game::getSprite("fall")       , 5);
+	drop        = new Animation(Game::getSprite("drop")       , 6);
+	drink       = new Animation(Game::getSprite("drink")      , 15);
 
 	fall->setDisplayTime(70);
 	step->setDisplayTime(49);
@@ -73,8 +73,8 @@ void Prince::Animate(Graphics* graphics) {
 		if(this->getAnim() == climbUp) { 
 			if(climbUp->isReversed()){		
 				climbUp->setForward();
-				//moveY += LEVEL_HEIGHT_PIX; 
-				this->MoveY(Level::LEVEL_HEIGHT_PIX);
+				//moveY += BLOCK_HEIGHT_PX; 
+				this->MoveY(Level::BLOCK_HEIGHT_PX);
 			}
 		}
 
@@ -144,13 +144,13 @@ void Prince::Animate(Graphics* graphics) {
 		}
 	} else {
 		if(this->getAnim() == jumpGrab) {
-			//moveY -= LEVEL_HEIGHT_PIX;  
-			this->MoveY(-Level::LEVEL_HEIGHT_PIX);
+			//moveY -= BLOCK_HEIGHT_PX;  
+			this->MoveY(-Level::BLOCK_HEIGHT_PX);
 		}
 
 		if(this->getAnim() == hang) {
-			//moveY -= LEVEL_HEIGHT_PIX;	
-			this->MoveY(-Level::LEVEL_HEIGHT_PIX);
+			//moveY -= BLOCK_HEIGHT_PX;	
+			this->MoveY(-Level::BLOCK_HEIGHT_PX);
 		}
 	}
 
@@ -377,3 +377,21 @@ void Prince::switchFacing() {
 
 	}
 }
+
+
+/*
+idle		= new Animation(L"Assets//prince//idle.png"       ,	1	);
+turn		= new Animation(L"Assets//prince//turn.png"       , 8	);
+running		= new Animation(L"Assets//prince//running.png"    , 21	);
+climbUp		= new Animation(L"Assets//prince//climbUp.png"    , 17	);
+jumpGrab	= new Animation(L"Assets//prince//jumpGrab.png"   , 16	);
+crouch		= new Animation(L"Assets//prince//crouch.png"     , 13	);
+staticJump	= new Animation(L"Assets//prince//staticJump.png" ,	17	);
+step		= new Animation(L"Assets//prince//step.png"       ,	12	);
+hang		= new Animation(L"Assets//prince//hang.png"       , 11	);
+runningJump = new Animation(L"Assets//prince//runningJump.png", 11	);
+runningTurn = new Animation(L"Assets//prince//runningTurn.png", 9	);
+fall        = new Animation(L"Assets//prince//fall.png"       , 5	);
+drop        = new Animation(L"Assets//prince//drop.png"       , 6	);
+drink       = new Animation(L"Assets//prince//drink.png"      , 15	);
+*/

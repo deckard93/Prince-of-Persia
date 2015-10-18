@@ -20,7 +20,7 @@ private:
 public:
 	//constructors
 	SpriteSheet(const WCHAR* spriteName, int frames);
-	SpriteSheet(Sprite* sprite, int width);			
+	SpriteSheet(Sprite* sprite, int frames);			
 	SpriteSheet(Sprite* sprite, int width, int height);	
 
 	//getters

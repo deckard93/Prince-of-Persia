@@ -21,7 +21,7 @@ Entity::Entity() {
 	defferY = 0;
 }
 
-//setters
+//coords
 void Entity::setX(int x) {
 	xPos = x;
 }
@@ -49,6 +49,7 @@ void Entity::defferMoveX(int x) {
 void Entity::defferMoveY(int y) { 
 	defferY = y;
 }
+
 void Entity::setCurrentAnim(Animation* anim) {
 	currentAnim = anim;
 	currentAnim->Play();

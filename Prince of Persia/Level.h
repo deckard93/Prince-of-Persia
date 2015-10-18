@@ -10,6 +10,7 @@
 #include "Graphics.h"
 #include "Gate.h"
 
+using std::pair;
 
 enum direction { U, D, L, R }; 
 
@@ -42,14 +43,8 @@ public:
 	void loadLevel(int level);
 	void loadEntities();
 
-	std::list<Entity>* getTorchEntities();
-	std::list<Entity>* getPotionEntities();
-	std::list<Entity>* getSpikeEntities();
-	std::list<Entity>* getGuilotineEntities();
-	std::list<Gate>* getGateEntities();
-
-	std::map<std::string, Entity*>* getEntities();
-	std::map<std::pair<int, int>, std::pair<int, int> >* getMec();
+	std::map<pair<int, int>, Entity*>* getEntities();
+	std::map<pair<int, int>, pair<int, int> >* getMec();
 	
 	char getCodeByBlock(int i, int j);
 	char getCodeByCoord(int x, int y);
@@ -76,14 +71,8 @@ private:
 	char scene[32][32];
 	char level[1024][1024]; //try to dynamically allocate this
 
-	std::list<Entity> *torchList;
-	std::list<Entity> *potionList;
-	std::list<Entity> *spikeList;
-	std::list<Entity> *guilotineList;
-	std::list<Gate> *gateList;
-
-	std::map<std::string, Entity*>* entities;
-	std::map<std::pair<int, int>, std::pair<int, int> >* mechanism;
+	std::map<pair<int, int>, Entity*>* entities;
+	std::map<pair<int, int>, pair<int, int> >* mechanism;
 
 	//Level Sprites
 	Sprite block;
@@ -104,12 +93,20 @@ private:
 	Sprite tileCornerLeft;
 
 public:
-	static const int LEVEL_HEIGHT_PIX   = 126;
-	static const int LEVEL_WIDTH_PIX    = 64;
-	static const int LEVEL_HEIGHT_BLOCK	= 3;
-	static const int LEVEL_WIDTH_BLOCK	= 10;
+	static const int BLOCK_HEIGHT_PX   = 126;
+	static const int BLOCK_WIDTH_PX    = 64;
+	static const int SCENE_HEIGHT_BLK	= 3;
+	static const int SCENE_WIDTH_BLK	= 10;
+
 	static const int FOOT_FLOAT			= 11;
-	static const int TORCH_FLOAT		= 125;
-	static const int TORCH_FLOAT_LEFT	= 20;
+
+	static const int TORCH_OFFSET_Y = 125;
+	static const int TORCH_OFFSET_X = 20;
+
+	static const int POTION_OFFSET_X = 40;
+	static const int POTION_OFFSET_Y = 60;
+
+	static const int SPIKE_OFFSET_X = 0;
+	static const int SPIKE_OFFSET_Y = 26;
 
 };

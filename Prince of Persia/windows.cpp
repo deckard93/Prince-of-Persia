@@ -108,7 +108,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 
 	RegisterClass(&wc);
 
-
 	//Find the center position for the window
 	int border_thickness = GetSystemMetrics(SM_CXSIZEFRAME);
 
@@ -154,8 +153,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 		if(PeekMessage(&msg, winHandle, NULL, NULL, PM_REMOVE)) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
-
-
 		} else {
 			game.GameLoop();
 		}

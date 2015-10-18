@@ -1,4 +1,5 @@
 #include "Gate.h"
+#include "Game.h"
 
 
 Gate::Gate(int x, int y, int levelX, int levelY) {
@@ -11,7 +12,7 @@ Gate::Gate(int x, int y, int levelX, int levelY) {
 	setLevelX(levelX);
 	setLevelY(levelY);
 
-	gate = new Animation(L"Assets//gate.png", 7);
+	gate = new Animation(Game::getSprite("gate"), 7);
 	setCurrentAnim(gate);
 	gate->Stop();
 
@@ -37,6 +38,8 @@ void Gate::Open() {
 		}
 	}
 }
+
+void Gate::Close() {}
 
 void Gate::Animate(Graphics* graphics) {
 	//at the end of animation

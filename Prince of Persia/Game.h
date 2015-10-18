@@ -12,8 +12,16 @@
 
 #include <windows.h>
 #include <string.h>
+#include <hash_map>
+
+
+using std::hash_map;
+using std::make_pair;
+using std::string;
+
 
 #define DEBUG 0
+
 
 class Prince;
 
@@ -23,7 +31,13 @@ public:
 	void GameLoop();
 	~Game();
 
+	static Sprite* getSprite(string name);
+	static void RegisterSprite(string name, string path = "Assets//");
+
 private:
+	//util
+	static void LoadAssets();
+
 	//control
 	void HandleInput();
 	void ControlAI();
@@ -32,7 +46,6 @@ private:
 
 	//Update Frame
 	void ComposeFrame();
-	void DrawLevel();
 	void DrawBackground();
 	void DrawForeground();
 	void DrawHealth();
@@ -45,62 +58,17 @@ private:
 	//Benchmark	benchmark;
 
 private:
+	static hash_map<string, Sprite*>* assets;
+
 	Level *level;
-
-	//Level Data
-	int TOP;
-	int BOTTOM;
-
-	int LEFT;
-	int RIGHT;	
-
-	Sprite block;
-	Sprite blockCornerLeft;
-	Sprite blockCornerRight;
-
-	Sprite bricks;
-	Sprite torch;
-
-	Sprite separator;
-	Sprite separatorCorner;
-
-	Sprite floor;
-	Sprite trap;
-	Sprite activate;
-
-	Sprite healthFull;
-	Sprite healthEmpty;
-
-	Sprite columnFront;
-	Sprite columnBack;
-
-	Sprite gateFrameFront;
-	Sprite gateFrameBack;
-
-	Sprite rubble_front;
-	Sprite rubble_back;
-
-	Sprite deadSk;
-	Sprite holyFloor;
-	Sprite gate;
-	Sprite tileCornerLeft;
-
-	int dummy;
-
-	//entities
-	Entity* torchEntity;
-	SpriteSheet* torchSheet;
 	Prince* prince;
-
-	Sprite test;
 
 	D3DCOLOR fontSurf[512 * 84];
 	Font fixedSys;
-	Sprite sp;
 
 public:
 
-	static const int TOP_MARGIN = (Graphics::SCREENY - Level::LEVEL_HEIGHT_PIX * Level::LEVEL_HEIGHT_BLOCK) / 2;
-	static const int LEFT_MARGIN = (Graphics::SCREENX - Level::LEVEL_WIDTH_PIX * Level::LEVEL_WIDTH_BLOCK) / 2;
+	//static const int TOP_MARGIN = (Graphics::SCREENY - Level::BLOCK_HEIGHT_PX * Level::SCENE_HEIGHT_BLK) / 2;
+	//static const int LEFT_MARGIN = (Graphics::SCREENX - Level::BLOCK_WIDTH_PX * Level::SCENE_WIDTH_BLK) / 2;
 
 };

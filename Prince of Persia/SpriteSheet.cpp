@@ -2,12 +2,12 @@
 
 
 //constructors
-SpriteSheet::SpriteSheet(Sprite* sprite, int width) {
+SpriteSheet::SpriteSheet(Sprite* sprite, int frames) {
 
 	sheet = sprite;
-	frameWidth = width;
+	frameWidth = sprite->width / frames;
 	frameHeight = sprite->height;
-	frameNum = sprite->width / width;
+	frameNum = frames;
 
 }	
 SpriteSheet::SpriteSheet(Sprite* sprite, int width, int height) {
