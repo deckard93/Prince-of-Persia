@@ -61,6 +61,14 @@ Game::Game(HWND hwnd, Input* in) :
 	RegisterSprite("drop"       , "Assets//prince//");
 	RegisterSprite("drink"      , "Assets//prince//");
 	RegisterSprite("pickSword"  , "Assets//prince//");
+
+	//fight sheets
+	RegisterSprite("fightIdle"  , "Assets//prince//");
+	RegisterSprite("fightStep"  , "Assets//prince//");
+	RegisterSprite("fightParry" , "Assets//prince//");
+	RegisterSprite("fightStart" , "Assets//prince//");
+	RegisterSprite("fightStrike", "Assets//prince//");
+	RegisterSprite("fightFinish", "Assets//prince//");
 	
 
 
@@ -236,6 +244,8 @@ void Game::HandleInput() {
 	if(input->hasBeenPressed('W')) {
 		level->changeScene(U);
 	}
+
+
 
 
 	if(input->isShiftPressed()) {
