@@ -109,4 +109,8 @@ public:
 	static const int SPIKE_OFFSET_X = 0;
 	static const int SPIKE_OFFSET_Y = 26;
 
+	static const int SWORD_OFFSET_X = 0;
+	static const int SWORD_OFFSET_Y = 95;
+
+
 };

@@ -32,6 +32,7 @@ public:
 	Animation(SpriteSheet* s);
 	Animation(const WCHAR* spriteName,int frames);
 	Animation(Sprite* sprite, int frames);
+	Animation(Sprite* sprite, int frames, float* timing);
 
 	//Getters
 	float getDefaultDisplayTime();

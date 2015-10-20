@@ -4,6 +4,7 @@
 //constructors
 Prince::Prince() {
 
+	hasSword = false;
 	maxHealth = 6;
 	currentHealth = 2;
 
@@ -27,6 +28,7 @@ Prince::Prince() {
 	fall        = new Animation(Game::getSprite("fall")       , 5);
 	drop        = new Animation(Game::getSprite("drop")       , 6);
 	drink       = new Animation(Game::getSprite("drink")      , 15);
+	pickSword   = new Animation(Game::getSprite("pickSword")  , 13);
 
 	fall->setDisplayTime(70);
 	step->setDisplayTime(49);
@@ -38,9 +40,11 @@ Prince::Prince() {
 	climbUp->setDisplayTime(49);
 	running->setDisplayTime(49);
 	jumpGrab->setDisplayTime(49);
+	pickSword->setDisplayTime(100);
 	staticJump->setDisplayTime(65);
 	runningJump->setDisplayTime(49);
 	runningTurn->setDisplayTime(49);
+	
 	
 	runningJump->setReverse();
 	runningTurn->setReverse();
@@ -52,7 +56,6 @@ Prince::Prince() {
 
 }
 
-
 //getters
 int Prince::getHealth() {
 	return currentHealth;
@@ -60,8 +63,6 @@ int Prince::getHealth() {
 int Prince::getMaxHealth() {
 	return maxHealth;
 }
-
-//setters
 
 //function
 void Prince::Animate(Graphics* graphics) {
@@ -323,10 +324,16 @@ int Prince::setFall() {
 	}
 	return 0;
 }
+int Prince::PickUpSword() {
+	if (this->getAnim() == idle) {
+		this->setCurrentAnim(pickSword);
+		return 1;
+	}
+	return 0;
+}
 
 //destructors
 Prince::~Prince() {}
-
 
 //privates
 void Prince::defaultToIdle() {
@@ -354,6 +361,7 @@ void Prince::switchFacing() {
 		fall->setFlipped(false);
 		runningTurn->setFlipped(true);
 		drink->setFlipped(false);
+		pickSword->setFlipped(false);
 
 		facingRight = false;
 	
@@ -372,6 +380,7 @@ void Prince::switchFacing() {
 		runningJump->setFlipped(true);
 		runningTurn->setFlipped(false);
 		drink->setFlipped(true);
+		pickSword->setFlipped(true);
 				
 		facingRight = true;
 
