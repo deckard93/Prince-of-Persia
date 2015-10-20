@@ -71,7 +71,7 @@ char Level::getCodeByBlock(int i, int j) {
 }
 char Level::getCodeByCoord(int x, int y) {
 	int blockX = getBlockXByCoord(x);
-	int blockY = getBlockXByCoord(y);
+	int blockY = getBlockYByCoord(y);
 
 	return getCodeByBlock(blockY, blockX);
 }
@@ -99,6 +99,34 @@ void Level::loadEntities() {
 
 			int x = (j - 1) * BLOCK_WIDTH_PX;
 			int y = BLOCK_HEIGHT_PX * (i - 1);
+
+
+		
+			if (getCodeByBlock(i, j) == '|') {
+
+				x += SWORD_OFFSET_X;
+				y += SWORD_OFFSET_Y;
+
+
+				int frames = 2;
+				float * timing = (float *) malloc(frames * sizeof(float));
+				timing[0] = 5000;
+				timing[1] = 100;
+				Entity* swordEntity = new Entity(new Animation(Game::getSprite("sword"), frames, timing), x, y, spikeT);
+
+				swordEntity->getAnim()->setCurrentFrame(rand() % 2);
+				swordEntity->getAnim()->setDisplayTime(90);
+				swordEntity->getAnim()->setLoop(true);
+				swordEntity->getAnim()->Play();
+
+
+				int absI = getAbsBlockX(i);
+				int absJ = getAbsBlockY(j);
+
+				std::pair<int, int> result(absI, absJ);
+				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, swordEntity);
+				entities->insert(*mapElement);
+			}
 
 			if(getCodeByBlock(i,j) == '/') {
 	

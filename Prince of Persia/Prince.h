@@ -23,9 +23,11 @@ private:
 	Animation* fall;
 	Animation* drop;
 	Animation* drink;
+	Animation* pickSword;
 
 	bool isAnimating;
 	bool facingRight;
+	bool hasSword;
 
 	int maxHealth;
 	int currentHealth;
@@ -59,6 +61,7 @@ public:
 	void increaseMaxHealth();
 	void Animate(Graphics* graphics);
 	int setFall();
+	int PickUpSword();
 
 	//destructors
 	~Prince();

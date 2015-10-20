@@ -21,6 +21,24 @@ Animation::Animation(SpriteSheet* s) {
 	timer.StartWatch();
 
 }
+Animation::Animation(Sprite* sprite, int frames, float* timing) : sheet(NULL) {
+
+	sheet = new SpriteSheet(sprite, frames);
+
+	frameDisplayTime = timing;
+	defaultDisplayTime = 0;
+	currentFrame = 0;
+
+	playForward = true;
+	finished = true;
+	loop = false;
+	flipped = false;
+
+	timer.StartWatch();
+
+}
+
+
 Animation::Animation(Sprite* sprite, int frames) : sheet(NULL) {
 
 	sheet = new SpriteSheet(sprite, frames);
@@ -132,6 +150,30 @@ void Animation::NextFrame() {
 				if(!loop) finished = true;
 			}
 		}
+	} else {
+
+		if (timer.GetTimeMilli() > frameDisplayTime[currentFrame]) {
+			timer.StopWatch();
+			timer.StartWatch();
+
+			if (playForward) {
+				currentFrame += inc;
+			}
+			else {
+				currentFrame -= inc;
+			}
+
+			if (currentFrame >= sheet->getFrameCount()) {
+				currentFrame = 0;
+				if (!loop) finished = true;
+			}
+
+			if (currentFrame < 0) {
+				currentFrame = sheet->getFrameCount() - 1;
+				if (!loop) finished = true;
+			}
+		}
+
 	}
 
 }

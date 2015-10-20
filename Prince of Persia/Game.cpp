@@ -43,6 +43,7 @@ Game::Game(HWND hwnd, Input* in) :
 	RegisterSprite("healthPotion");
 	RegisterSprite("guilotine");
 	RegisterSprite("gate");
+	RegisterSprite("sword");
 	
 	//sprite sheets
 	RegisterSprite("idle"       , "Assets//prince//");
@@ -59,6 +60,8 @@ Game::Game(HWND hwnd, Input* in) :
 	RegisterSprite("fall"       , "Assets//prince//");
 	RegisterSprite("drop"       , "Assets//prince//");
 	RegisterSprite("drink"      , "Assets//prince//");
+	RegisterSprite("pickSword"  , "Assets//prince//");
+	
 
 
 	//objects
@@ -119,6 +122,7 @@ void Game::CheckCollision() {
 	   level->getCodeByBlock(nBlockY, nBlockX) == '/' ||
 	   level->getCodeByBlock(nBlockY, nBlockX) == '^' ||
 	   level->getCodeByBlock(nBlockY, nBlockX) == '$' ||
+	   level->getCodeByBlock(nBlockY, nBlockX) == '|' ||
 	   level->getCodeByBlock(nBlockY, nBlockX) == '_' ) {
 
 		int bar = (Level::BLOCK_HEIGHT_PX * nBlockY);
@@ -248,6 +252,14 @@ void Game::HandleInput() {
 				prince->Heal();
 			}
 		}
+
+		if (level->getCodeByCoord(prince->getMidX(), prince->getMidY()) == '|') {
+
+			if (prince->PickUpSword()) {
+				level->setCodeByCoord(prince->getMidX(), prince->getMidY(), '_');
+			}
+		}
+
 	}
 
 	prince->HandlePrince(input);
@@ -304,7 +316,9 @@ void Game::DrawBackground() {
 			xOff = - Level::BLOCK_WIDTH_PX + Level::BLOCK_WIDTH_PX * i;
 
 			switch(level->getCodeByBlock(j, i)) {
-
+			case '|':
+				graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
+				break;
 			case 'T':
 				graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
 				graphics.DrawSprite(xOff - 1, yOff - getSprite("columnBack")->height - 15, getSprite("columnBack"));
@@ -375,6 +389,8 @@ void Game::DrawForeground() {
 			xOff = - Level::BLOCK_WIDTH_PX + Level::BLOCK_WIDTH_PX * j;
 
 			switch(level->getCodeByBlock(i, j)) {
+		
+
 			case '$':
 				graphics.DrawSprite(xOff, yOff - getSprite("rubbleFront")->height, getSprite("rubbleFront"));
 				break;
@@ -396,6 +412,8 @@ void Game::DrawForeground() {
 }
 
 Game::~Game() {}
+
+
 
 /* Debug information 
 if(DEBUG) {
@@ -419,8 +437,6 @@ if(DEBUG) {
 }
 
 */
-
-
 /*
 void Game::DrawLevelManualy() {
 	int yOff;
@@ -511,8 +527,6 @@ void Game::DrawLevelManualy() {
 
 }
 */
-
-
 /*
 LoadSprite(&block,            L"Assets//block.png"             );
 LoadSprite(&blockCornerLeft,  L"Assets//blockCornerLeft.png"   );
