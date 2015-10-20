@@ -9,7 +9,7 @@ class Prince : public Entity {
 
 //variables
 private:
-	Animation* idle;		
+	Animation* idle;
 	Animation* turn;
 	Animation* running;
 	Animation* climbUp;
@@ -25,9 +25,17 @@ private:
 	Animation* drink;
 	Animation* pickSword;
 
+	Animation* fightIdle;
+	Animation* fightStep;
+	Animation* fightParry;
+	Animation* fightStrike;
+	Animation* fightStart;
+	Animation* fightFinish;
+
 	bool isAnimating;
 	bool facingRight;
 	bool hasSword;
+	bool fightStance;
 
 	int maxHealth;
 	int currentHealth;

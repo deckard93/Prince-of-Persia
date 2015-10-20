@@ -30,6 +30,25 @@ Prince::Prince() {
 	drink       = new Animation(Game::getSprite("drink")      , 15);
 	pickSword   = new Animation(Game::getSprite("pickSword")  , 13);
 
+
+	fightIdle   = new Animation(Game::getSprite("fightIdle")  , 1);
+	fightStep   = new Animation(Game::getSprite("fightStep")  , 4);
+	fightParry  = new Animation(Game::getSprite("fightParry") , 3);
+	fightStrike = new Animation(Game::getSprite("fightStrike"), 6);
+	fightStart  = new Animation(Game::getSprite("fightStart") , 4);
+	fightFinish = new Animation(Game::getSprite("fightFinish"), 8);
+
+
+
+	fightStep->setDisplayTime(100);
+	fightParry->setDisplayTime(100);
+	fightStrike->setDisplayTime(100);
+	fightStart->setDisplayTime(100);
+	fightFinish->setDisplayTime(100);
+
+
+
+
 	fall->setDisplayTime(70);
 	step->setDisplayTime(49);
 	drop->setDisplayTime(49);
@@ -50,9 +69,19 @@ Prince::Prince() {
 	runningTurn->setReverse();
 	drink->setReverse();
 
-	setCurrentAnim(idle);
+
+	fightStep->setReverse();
+	fightParry->setReverse();
+	fightStrike->setReverse();
+	fightStart->setReverse();
+	fightFinish->setReverse();
+
 
 	facingRight = false;
+	fightStance = false;
+
+
+	setCurrentAnim(idle);
 
 }
 
@@ -166,7 +195,48 @@ void Prince::HandlePrince(Input* input) {
 	int moveX = 0;
 	int moveY = 0;
 
+
+	if (fightStance) {
+		OutputDebugString(L"FIGHT!\n");
+
+
+	
+
+
+		if (this->getAnim()->isFinished()) {
+			//input at the end of an animation
+		} else {
+			//input during animation
+		}
+
+
+
+		defaultToIdle();
+
+		if (this->getAnim() == fightIdle) {
+
+			if (input->hasBeenPressed('Z')) { this->setCurrentAnim(fightIdle);   }
+			if (input->hasBeenPressed('X')) { this->setCurrentAnim(fightStep);   }
+			if (input->hasBeenPressed('C')) { this->setCurrentAnim(fightParry);  }
+			if (input->hasBeenPressed('V')) { this->setCurrentAnim(fightStrike); }
+			if (input->hasBeenPressed('B')) { this->setCurrentAnim(fightStart);  }
+			if (input->hasBeenPressed('N')) { this->setCurrentAnim(fightFinish); }
+
+			
+			if (input->hasBeenPressed('K')) {
+				fightStance = false;
+			}
+		}
+
+		
+
+		return;
+	}
+
+	OutputDebugString(L"PASSIVE!\n");
+
 	if(this->getAnim()->isFinished()) {
+
 		//input at the end of an animation
 		if(this->getAnim() == hang) {
 			if(input->isShiftPressed()) { this->getAnim()->Play(); }
@@ -274,7 +344,14 @@ void Prince::HandlePrince(Input* input) {
 			}
 		}
 
+		if (input->hasBeenPressed('K')) { 
+			fightStance = true; 
+			setCurrentAnim(fightIdle);  
+		}
+
+
 	
+
 	}
 
 }
@@ -340,9 +417,14 @@ void Prince::defaultToIdle() {
 	/* Must be called after checking for
 	animation side effects upon finishing
 	*/
-
-	if(this->getAnim()->isFinished()) { 
-		setCurrentAnim(idle); 
+	if (fightStance) {
+		if (this->getAnim()->isFinished()) {
+			setCurrentAnim(fightIdle);
+		}
+	} else {
+		if(this->getAnim()->isFinished()) { 
+			setCurrentAnim(idle); 
+		}
 	}
 }
 void Prince::switchFacing() {
@@ -364,6 +446,14 @@ void Prince::switchFacing() {
 		pickSword->setFlipped(false);
 
 		facingRight = false;
+
+		fightIdle->setFlipped(false);
+		fightStep->setFlipped(false);
+		fightParry->setFlipped(false);
+		fightStrike->setFlipped(false);
+		fightStart->setFlipped(false);
+		fightFinish->setFlipped(false);
+		
 	
 	} else {
 
@@ -383,6 +473,13 @@ void Prince::switchFacing() {
 		pickSword->setFlipped(true);
 				
 		facingRight = true;
+
+		fightIdle->setFlipped(true);
+		fightStep->setFlipped(true);
+		fightParry->setFlipped(true);
+		fightStrike->setFlipped(true);
+		fightStart->setFlipped(true);
+		fightFinish->setFlipped(true);
 
 	}
 }
