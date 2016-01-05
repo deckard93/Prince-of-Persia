@@ -70,6 +70,7 @@ public:
 	void Animate(Graphics* graphics);
 	int setFall();
 	int PickUpSword();
+	void Land(); //TODO: remove thos
 
 	//destructors
 	~Prince();

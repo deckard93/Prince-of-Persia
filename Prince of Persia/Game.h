@@ -9,6 +9,7 @@
 #include "Prince.h"
 #include "Level.h"
 #include "Gate.h"
+#include "Spikes.h"
 
 #include <windows.h>
 #include <string.h>
@@ -37,6 +38,7 @@ public:
 private:
 	//util
 	static void LoadAssets();
+	void Reset();
 
 	//control
 	void HandleInput();

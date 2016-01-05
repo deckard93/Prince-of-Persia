@@ -9,6 +9,7 @@
 
 #include "Graphics.h"
 #include "Gate.h"
+#include "Spikes.h"
 
 using std::pair;
 

@@ -2,7 +2,6 @@
 
 
 //Constructors
-
 Animation::Animation(SpriteSheet* s) {
 
 	sheet = s;
@@ -17,9 +16,6 @@ Animation::Animation(SpriteSheet* s) {
 
 	currentFrame = 0;
 	inc = 1;
-
-	timer.StartWatch();
-
 }
 Animation::Animation(Sprite* sprite, int frames, float* timing) : sheet(NULL) {
 
@@ -37,8 +33,6 @@ Animation::Animation(Sprite* sprite, int frames, float* timing) : sheet(NULL) {
 	timer.StartWatch();
 
 }
-
-
 Animation::Animation(Sprite* sprite, int frames) : sheet(NULL) {
 
 	sheet = new SpriteSheet(sprite, frames);
@@ -55,7 +49,6 @@ Animation::Animation(Sprite* sprite, int frames) : sheet(NULL) {
 	timer.StartWatch();
 
 }
-
 Animation::Animation(const WCHAR* spriteName,int frames) : sheet(NULL) {
 
 	sheet = new SpriteSheet(spriteName, frames);
@@ -74,6 +67,13 @@ Animation::Animation(const WCHAR* spriteName,int frames) : sheet(NULL) {
 }
 
 //Getters
+int Animation::getLastFrameNr() {
+	return sheet->getFrameCount() - 1;
+}
+bool Animation::isEffectPending() { 
+	if (effectPending) { OutputDebugString(L"waiting!\n"); } else { OutputDebugString(L"done!\n"); }
+	return effectPending; 
+}
 float Animation::getDefaultDisplayTime() {
 	return defaultDisplayTime;
 }
@@ -91,6 +91,7 @@ int Animation::getCurrentFrame() {
 }
 
 //Setters
+void Animation::setEffectDone() { effectPending = false; }
 void Animation::setForward() {
 	currentFrame = 0;
 	playForward = true;
@@ -116,6 +117,8 @@ void Animation::setDisplayTime(float* dispTim) {
 void Animation::Play() {
 	finished = false;
 	inc = 1;
+	timer.StartWatch();
+	//effectPending = true;
 }
 void Animation::Stop() {
 	finished = true;
@@ -136,8 +139,10 @@ void Animation::NextFrame() {
 
 			if(playForward) {
 				currentFrame+=inc;
+				effectPending = true;
 			} else {
 				currentFrame-=inc;
+				effectPending = true;
 			}
 
 			if(currentFrame >= sheet->getFrameCount()) {
@@ -158,9 +163,11 @@ void Animation::NextFrame() {
 
 			if (playForward) {
 				currentFrame += inc;
+				effectPending = true;
 			}
 			else {
 				currentFrame -= inc;
+				effectPending = true;
 			}
 
 			if (currentFrame >= sheet->getFrameCount()) {
