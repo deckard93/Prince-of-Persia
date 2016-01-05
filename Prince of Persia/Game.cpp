@@ -38,6 +38,8 @@ Game::Game(HWND hwnd, Input* in) :
 	RegisterSprite("holyFloor");
 
 	//entities
+	RegisterSprite("spikesBackground");
+	RegisterSprite("spikesForeground");
 	RegisterSprite("spikes");
 	RegisterSprite("torch");
 	RegisterSprite("healthPotion");
@@ -50,15 +52,19 @@ Game::Game(HWND hwnd, Input* in) :
 	RegisterSprite("turn"       , "Assets//prince//");
 	RegisterSprite("running"    , "Assets//prince//");
 	RegisterSprite("climbUp"    , "Assets//prince//");
+	RegisterSprite("newClimbUp" , "Assets//prince//");
 	RegisterSprite("jumpGrab"   , "Assets//prince//");
+	RegisterSprite("newJumpGrab", "Assets//prince//");
 	RegisterSprite("crouch"     , "Assets//prince//");
 	RegisterSprite("staticJump" , "Assets//prince//");
 	RegisterSprite("step"       , "Assets//prince//");
 	RegisterSprite("hang"       , "Assets//prince//");
+	RegisterSprite("newHang"    , "Assets//prince//");
 	RegisterSprite("runningJump", "Assets//prince//");
 	RegisterSprite("runningTurn", "Assets//prince//");
 	RegisterSprite("fall"       , "Assets//prince//");
 	RegisterSprite("drop"       , "Assets//prince//");
+	RegisterSprite("newDrop"    , "Assets//prince//");
 	RegisterSprite("drink"      , "Assets//prince//");
 	RegisterSprite("pickSword"  , "Assets//prince//");
 
@@ -76,10 +82,7 @@ Game::Game(HWND hwnd, Input* in) :
 	level = new Level();
 	prince = new Prince();
 
-	level->loadLevel(1);
-
-	prince->setX(2 * Level::BLOCK_WIDTH_PX);
-	prince->setY(prince->getAnim()->getSheet()->getFrameHeight() - Level::FOOT_FLOAT);
+	Reset();
 
 	prince->getAnim()->setLoop(true);
 	prince->getAnim()->Play();
@@ -115,13 +118,18 @@ void Game::CheckCollision() {
 	int xFoot = prince->getX() + prince->getAnim()->getSheet()->getFrameWidth() / 2 - 36;
 	int yFoot = prince->getY() + prince->getAnim()->getSheet()->getFrameHeight() - 9;
 
-	if (DEBUG) { graphics.DrawCircle(xFoot, yFoot, 5, 255, 255, 255); }
+	int xFootReal = prince->getX() + prince->getAnim()->getSheet()->getFrameWidth() / 2;
+	int yFootReal = prince->getY() + prince->getAnim()->getSheet()->getFrameHeight() - 9;
+
+
+	if (DEBUG) { graphics.DrawCircle(xFootReal, yFootReal, 5, 255, 255, 255); }
 
 	int mX = prince->getDefferX();
 	int mY = prince->getDefferY();
 
 	int nBlockX = level->getBlockXByCoord(xFoot);
 	int nBlockY = level->getBlockYByCoord(yFoot);
+	//nBlockX = level->getBlockXByCoord(xFootReal - 23);
 
 	
 	//===================== Fall ==========================
@@ -139,14 +147,15 @@ void Game::CheckCollision() {
 		if(yFoot < bar - 20) {
 			mY += prince->setFall();
 		} else {
-			prince->getAnim()->Play();
+			//prince->getAnim()->Play(); ???????????????
+			prince->Land();
 		}
 	}
+
 	if (level->getCodeByBlock(nBlockY, nBlockX) == ' ' ||
 		level->getCodeByBlock(nBlockY, nBlockX) == '*') {
 		mY += prince->setFall();
 	}
-
 
 	//=============== Collision With Walls =====================
 	if(mX < 0 && level->getCodeByBlock(nBlockY, nBlockX) == ']') {
@@ -197,19 +206,18 @@ void Game::CheckCollision() {
 	prince->MoveY(mY);
 
 	char code = level->getCodeByCoord(prince->getMidX(), prince->getMidY());
+	int absI = level->getAbsBlockX(level->getBlockXByCoord(prince->getMidX()));
+	int absJ = level->getAbsBlockY(level->getBlockYByCoord(prince->getMidY()));
+	std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
 
 	////================== Open/Close Gates ==================
 	if (code == '-' || 
 		code == '=') {
 
-		std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
+		
 		std::map<std::pair<int, int>, std::pair<int, int> >* mechanism = level->getMec();
 
-		int absI = level->getAbsBlockX(level->getBlockXByCoord(prince->getMidX()));
-		int absJ = level->getAbsBlockY(level->getBlockYByCoord(prince->getMidY()));
-
 		std::pair<int, int> p(absI, absJ - 1);
-
 		std::pair<int, int> k = (*mechanism)[p];
 
 		if (entitites->find(k) == entitites->end()) {
@@ -226,6 +234,18 @@ void Game::CheckCollision() {
 			g->Close();
 		}
 	}
+
+	////============== Spikes ==============
+	if (code == '/') {
+		std::pair<int, int> p(absJ, absI);
+		Entity* e = (*entitites)[p];
+		Spikes* spikes = dynamic_cast<Spikes*>(e);
+		spikes->On();
+	}
+
+	////============== Guilotine ==============
+
+
 }
 void Game::HandleInput() {
 	
@@ -244,6 +264,46 @@ void Game::HandleInput() {
 	if(input->hasBeenPressed('W')) {
 		level->changeScene(U);
 	}
+
+
+	if (input->hasBeenPressed('R')) {
+		Reset();
+	}
+
+	if (input->getKeyStatus('P')) {
+		prince->defferMoveX(1);
+	}
+
+	if (input->getKeyStatus('O')) {
+		prince->defferMoveX(-1);
+	}
+
+
+
+
+
+	if (input->hasBeenPressed('H')) {
+		std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
+		for (std::map<std::pair<int, int>, Entity*>::iterator i = entitites->begin(); i != entitites->end(); i++) {
+			Entity* entity = i->second;
+			if (entity->getType() == spikeT) {
+				Spikes* spikes = dynamic_cast<Spikes*>(entity);
+				if (spikes != NULL) { spikes->On(); }
+			}
+		}
+	}
+
+	if (input->hasBeenPressed('J')) {
+		std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
+		for (std::map<std::pair<int, int>, Entity*>::iterator i = entitites->begin(); i != entitites->end(); i++) {
+			Entity* entity = i->second;
+			if (entity->getType() == spikeT) {
+				Spikes* spikes = dynamic_cast<Spikes*>(entity);
+				if (spikes != NULL) { spikes->Off(); }
+			}
+		}
+	}
+
 
 
 
@@ -278,7 +338,37 @@ void Game::DrawGraphics() {
 
 	//graphics.BeginFrame();
 
-	ComposeFrame();
+	std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
+
+	DrawBackground();
+	for (std::map<std::pair<int, int>, Entity*>::iterator i = entitites->begin(); i != entitites->end(); i++) {
+		Entity* entity = i->second;
+		Spikes* spikes = dynamic_cast<Spikes*>(entity);
+		if (spikes != NULL) {
+			spikes->AnimateBackground(&graphics);
+		}
+	}
+	if (DEBUG) { graphics.DrawCircle(prince->getMidX(), prince->getMidY(), 5, 255, 255, 255); }
+	if (DEBUG) { graphics.DrawCircle(prince->getX(), prince->getY(), 5, 255, 255, 255); }
+	
+	for (std::map<std::pair<int, int>, Entity*>::iterator i = entitites->begin(); i != entitites->end(); i++) {
+		if (i->second->getType() == spikeT) { continue; }
+
+		i->second->Animate(&graphics);
+	}
+
+	prince->Animate(&graphics);
+
+	DrawForeground();
+	for (std::map<std::pair<int, int>, Entity*>::iterator i = entitites->begin(); i != entitites->end(); i++) {
+		Entity* entity = i->second;
+		Spikes* spikes = dynamic_cast<Spikes*>(entity);
+		if(spikes != NULL) { 
+			spikes->AnimateForeground(&graphics);
+		}
+	}
+
+	DrawHealth();
 
 	//graphics.EndFrame();
 
@@ -287,20 +377,6 @@ void Game::DrawGraphics() {
 //util
 void Game::ComposeFrame() {
 
-	DrawBackground();
-
-	if(DEBUG) { graphics.DrawCircle(prince->getMidX(), prince->getMidY(), 5, 255, 255, 255);}
-	
-	std::map<std::pair<int,int>, Entity*>* entitites = level->getEntities();
-	for (std::map<std::pair<int,int>, Entity*>::iterator i = entitites->begin(); i != entitites->end(); i++) {
-		i->second->Animate(&graphics);
-	}
-	
-	prince->Animate(&graphics);
-	
-	DrawForeground();
-
-	DrawHealth();
 }
 void Game::DrawHealth() {
 
@@ -420,10 +496,14 @@ void Game::DrawForeground() {
 		}
 	}
 }
+void Game::Reset() {
+	level->loadLevel(1);
+
+	prince->setX(2 * Level::BLOCK_WIDTH_PX);
+	prince->setY(prince->getAnim()->getSheet()->getFrameHeight() - Level::FOOT_FLOAT);
+}
 
 Game::~Game() {}
-
-
 
 /* Debug information 
 if(DEBUG) {

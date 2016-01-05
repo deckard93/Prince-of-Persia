@@ -22,6 +22,7 @@ private:
 	bool playForward;
 	bool finished;
 	bool loop;
+	bool effectPending;
 
 	float defaultDisplayTime;
 	float* frameDisplayTime;
@@ -35,13 +36,16 @@ public:
 	Animation(Sprite* sprite, int frames, float* timing);
 
 	//Getters
+	bool isEffectPending();
 	float getDefaultDisplayTime();
 	float getCurrentDisplayTime();
 	float getFrameDisplayTIme();
+	int getLastFrameNr();
 	SpriteSheet* getSheet();
 	int getCurrentFrame();
 
 	//Setters
+	void setEffectDone();
 	void setForward();
 	void setReverse();
 	void setLoop(bool in);

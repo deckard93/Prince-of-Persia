@@ -112,7 +112,7 @@ void Level::loadEntities() {
 				float * timing = (float *) malloc(frames * sizeof(float));
 				timing[0] = 5000;
 				timing[1] = 100;
-				Entity* swordEntity = new Entity(new Animation(Game::getSprite("sword"), frames, timing), x, y, spikeT);
+				Entity* swordEntity = new Entity(new Animation(Game::getSprite("sword"), frames, timing), x, y, swordT);
 
 				swordEntity->getAnim()->setCurrentFrame(rand() % 2);
 				swordEntity->getAnim()->setDisplayTime(90);
@@ -120,8 +120,8 @@ void Level::loadEntities() {
 				swordEntity->getAnim()->Play();
 
 
-				int absI = getAbsBlockX(i);
-				int absJ = getAbsBlockY(j);
+				int absI = getAbsBlockY(i);
+				int absJ = getAbsBlockX(j);
 
 				std::pair<int, int> result(absI, absJ);
 				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, swordEntity);
@@ -130,15 +130,16 @@ void Level::loadEntities() {
 
 			if(getCodeByBlock(i,j) == '/') {
 	
+				/*
 				x += SPIKE_OFFSET_X;
 				y += SPIKE_OFFSET_Y;	//TODO: Why i - 1 
 
-				Entity* spikeEntity = new Entity (new Animation(Game::getSprite("spikes"), 5), x, y, spikeT);
+				Entity* spikeEntity = new Entity (new Animation(Game::getSprite("spikes"), 6), x, y, spikeT);
 
 				spikeEntity->getAnim()->setCurrentFrame(rand() % 5);
 				spikeEntity->getAnim()->setDisplayTime(90);
-				spikeEntity->getAnim()->setLoop(true);
-				spikeEntity->getAnim()->Play();
+				//spikeEntity->getAnim()->setLoop(true);
+				//spikeEntity->getAnim()->Play();
 
 				int absI = getAbsBlockX(i);
 				int absJ = getAbsBlockY(j);
@@ -146,6 +147,27 @@ void Level::loadEntities() {
 				std::pair<int, int> result(absI, absJ);
 				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, spikeEntity);
 				entities->insert(*mapElement);
+				*/
+
+				x += SPIKE_OFFSET_X;
+				y += SPIKE_OFFSET_Y;	//TODO: Why i - 1 
+
+				Spikes* spikes = new Spikes(x, y, scene_x + i, scene_y + j);
+
+				int absI = getAbsBlockY(i);
+				int absJ = getAbsBlockX(j);
+
+				std::pair<int, int> result(absI, absJ);
+				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, spikes);
+				entities->insert(*mapElement);
+
+
+
+
+
+
+
+
 			}
 			if(getCodeByBlock(i,j) == '^') {
 				int x = (j) * BLOCK_WIDTH_PX;
@@ -161,8 +183,8 @@ void Level::loadEntities() {
 				torchEntity->getAnim()->setLoop(true);
 				torchEntity->getAnim()->Play();
 
-				int absI = getAbsBlockX(i);
-				int absJ = getAbsBlockY(j);
+				int absI = getAbsBlockY(i);
+				int absJ = getAbsBlockX(j);
 
 				std::pair<int, int> result(absI, absJ);
 				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, torchEntity);
@@ -179,8 +201,8 @@ void Level::loadEntities() {
 				potionEntity->getAnim()->setLoop(true);
 				potionEntity->getAnim()->Play();
 
-				int absI = getAbsBlockX(i);
-				int absJ = getAbsBlockY(j);
+				int absI = getAbsBlockY(i);
+				int absJ = getAbsBlockX(j);
 
 				std::pair<int, int> result(absI, absJ);
 				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, potionEntity);
@@ -194,8 +216,8 @@ void Level::loadEntities() {
 				guilotineEntity->getAnim()->setLoop(true);
 				guilotineEntity->getAnim()->Play();
 
-				int absI = getAbsBlockX(i);
-				int absJ = getAbsBlockY(j);
+				int absI = getAbsBlockY(i);
+				int absJ = getAbsBlockX(j);
 				
 				std::pair<int, int> result(absI, absJ);
 				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, guilotineEntity);
@@ -205,8 +227,8 @@ void Level::loadEntities() {
 			if(getCodeByBlock(i,j) == 'G') {
 				Gate* gate = new Gate(x, y, scene_x + i, scene_y + j);
 
-				int absI = getAbsBlockX(i);
-				int absJ = getAbsBlockY(j);
+				int absI = getAbsBlockY(i);
+				int absJ = getAbsBlockX(j);
 
 				std::pair<int, int> result(absI, absJ);
 				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, gate);
