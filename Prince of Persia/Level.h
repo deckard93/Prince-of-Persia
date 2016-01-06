@@ -31,11 +31,11 @@ public:
 
 	void changeScene(direction dir);
 
-	int getBlockXByCoord(int yCoord);
-	int getBlockYByCoord(int xCoord);
+	int getSceneBlockXByCoord(int yCoord);
+	int getSceneBlockYByCoord(int xCoord);
 
-	int getAbsBlockX(int x);
-	int getAbsBlockY(int y);
+	int getLevelBlockX(int x);
+	int getLevelBlockY(int y);
 
 	void setCodeByCoord(int x, int y, char c);
 
@@ -47,8 +47,18 @@ public:
 	std::map<pair<int, int>, Entity*>* getEntities();
 	std::map<pair<int, int>, pair<int, int> >* getMec();
 	
-	char getCodeByBlock(int i, int j);
-	char getCodeByCoord(int x, int y);
+	char getLevelCodeByBlock(int x, int y);
+
+	char getSceneCodeByBlock(int y, int x);
+	char getSceneCodeByCoord(int x, int y);
+
+	int getLevelHeight();
+	int getLevelWidth();
+
+
+
+	void findSpikes(int block_x, int block_y);
+
 
 	~Level();
 private:
