@@ -23,8 +23,8 @@ void Level::loadLevel(int l) {
 	char c;
 
 	//read contents into level array	
-	for(int i = 0; i < level_height; i++) {
-		for(int j = 0; j < level_width; j++) {
+	for(int y = 0; y < level_height; y++) {
+		for(int x = 0; x < level_width; x++) {
 			char c = fgetc(file);
 			if(c == '\r') {
 				c = fgetc(file);
@@ -32,7 +32,7 @@ void Level::loadLevel(int l) {
 			if(c == '\n') {
 				c = fgetc(file);
 			}
-			level[i][j] = c;
+			level[y][x] = c;
 		}
 	}
 
@@ -62,31 +62,35 @@ void Level::loadLevel(int l) {
 }
 
 void Level::setCodeByCoord(int x, int y, char c) {
-	level[scene_y + getBlockYByCoord(y)][scene_x + getBlockXByCoord(x)] = c;
+	level[scene_y + getSceneBlockYByCoord(y)][scene_x + getSceneBlockXByCoord(x)] = c;
 	loadEntities();
 }
 
-char Level::getCodeByBlock(int i, int j) {
-	return level[scene_y + i][scene_x + j];
-}
-char Level::getCodeByCoord(int x, int y) {
-	int blockX = getBlockXByCoord(x);
-	int blockY = getBlockYByCoord(y);
-
-	return getCodeByBlock(blockY, blockX);
+char Level::getLevelCodeByBlock(int x, int y) {
+	return level[y][x];
 }
 
-int Level::getBlockXByCoord(int xCoord) {
+char Level::getSceneCodeByBlock(int y, int x) {
+	return level[scene_y + y][scene_x + x];
+}
+char Level::getSceneCodeByCoord(int x, int y) {
+	int blockX = getSceneBlockXByCoord(x);
+	int blockY = getSceneBlockYByCoord(y);
+
+	return getSceneCodeByBlock(blockY, blockX);
+}
+
+int Level::getSceneBlockXByCoord(int xCoord) {
 	return (xCoord + BLOCK_WIDTH_PX) / BLOCK_WIDTH_PX; //????
 }
-int Level::getBlockYByCoord(int yCoord) {
+int Level::getSceneBlockYByCoord(int yCoord) {
 	return (yCoord + BLOCK_HEIGHT_PX) / BLOCK_HEIGHT_PX; //????
 }
 
-int Level::getAbsBlockX(int x) {
+int Level::getLevelBlockX(int x) {
 	return scene_x + x;
 }
-int Level::getAbsBlockY(int y) {
+int Level::getLevelBlockY(int y) {
 	return scene_y + y;
 }
 
@@ -94,15 +98,15 @@ void Level::loadEntities() {
 
 	entities->clear();
 
-	for(int i = 0; i <= SCENE_HEIGHT_BLK; i++)  {
-		for(int j = 0; j <= SCENE_WIDTH_BLK; j++) {
+	for(int block_y = 0; block_y <= SCENE_HEIGHT_BLK; block_y++)  {
+		for(int block_x = 0; block_x <= SCENE_WIDTH_BLK; block_x++) {
 
-			int x = (j - 1) * BLOCK_WIDTH_PX;
-			int y = BLOCK_HEIGHT_PX * (i - 1);
+			int x = (block_x - 1) * BLOCK_WIDTH_PX;
+			int y = BLOCK_HEIGHT_PX * (block_y - 1);
 
 
 		
-			if (getCodeByBlock(i, j) == '|') {
+			if (getSceneCodeByBlock(block_y, block_x) == '|') {
 
 				x += SWORD_OFFSET_X;
 				y += SWORD_OFFSET_Y;
@@ -120,19 +124,19 @@ void Level::loadEntities() {
 				swordEntity->getAnim()->Play();
 
 
-				int absI = getAbsBlockY(i);
-				int absJ = getAbsBlockX(j);
+				int absI = getLevelBlockY(block_y);
+				int absJ = getLevelBlockX(block_x);
 
 				std::pair<int, int> result(absI, absJ);
 				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, swordEntity);
 				entities->insert(*mapElement);
 			}
 
-			if(getCodeByBlock(i,j) == '/') {
+			if(getSceneCodeByBlock(block_y,block_x) == '/') {
 	
 				/*
 				x += SPIKE_OFFSET_X;
-				y += SPIKE_OFFSET_Y;	//TODO: Why i - 1 
+				y += SPIKE_OFFSET_Y;	//TODO: Why y - 1 
 
 				Entity* spikeEntity = new Entity (new Animation(Game::getSprite("spikes"), 6), x, y, spikeT);
 
@@ -141,8 +145,8 @@ void Level::loadEntities() {
 				//spikeEntity->getAnim()->setLoop(true);
 				//spikeEntity->getAnim()->Play();
 
-				int absI = getAbsBlockX(i);
-				int absJ = getAbsBlockY(j);
+				int absI = getLevelBlockX(y);
+				int absJ = getLevelBlockY(x);
 
 				std::pair<int, int> result(absI, absJ);
 				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, spikeEntity);
@@ -150,12 +154,12 @@ void Level::loadEntities() {
 				*/
 
 				x += SPIKE_OFFSET_X;
-				y += SPIKE_OFFSET_Y;	//TODO: Why i - 1 
+				y += SPIKE_OFFSET_Y;	//TODO: Why y - 1 
 
-				Spikes* spikes = new Spikes(x, y, scene_x + i, scene_y + j);
+				Spikes* spikes = new Spikes(x, y, scene_x + block_y, scene_y + block_x);
 
-				int absI = getAbsBlockY(i);
-				int absJ = getAbsBlockX(j);
+				int absI = getLevelBlockY(block_y);
+				int absJ = getLevelBlockX(block_x);
 
 				std::pair<int, int> result(absI, absJ);
 				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, spikes);
@@ -169,9 +173,9 @@ void Level::loadEntities() {
 
 
 			}
-			if(getCodeByBlock(i,j) == '^') {
-				int x = (j) * BLOCK_WIDTH_PX;
-				int y = BLOCK_HEIGHT_PX * (i);
+			if(getSceneCodeByBlock(block_y,block_x) == '^') {
+				int x = (block_x) * BLOCK_WIDTH_PX;
+				int y = BLOCK_HEIGHT_PX * (block_y);
 
 				x += TORCH_OFFSET_X;
 				y -= TORCH_OFFSET_Y;
@@ -183,14 +187,14 @@ void Level::loadEntities() {
 				torchEntity->getAnim()->setLoop(true);
 				torchEntity->getAnim()->Play();
 
-				int absI = getAbsBlockY(i);
-				int absJ = getAbsBlockX(j);
+				int absI = getLevelBlockY(block_y);
+				int absJ = getLevelBlockX(block_x);
 
 				std::pair<int, int> result(absI, absJ);
 				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, torchEntity);
 				entities->insert(*mapElement);
 			} 
-			if(getCodeByBlock(i,j) == 'P') {
+			if(getSceneCodeByBlock(block_y,block_x) == 'P') {
 				x += POTION_OFFSET_X;
 				y += POTION_OFFSET_Y;
 
@@ -201,14 +205,14 @@ void Level::loadEntities() {
 				potionEntity->getAnim()->setLoop(true);
 				potionEntity->getAnim()->Play();
 
-				int absI = getAbsBlockY(i);
-				int absJ = getAbsBlockX(j);
+				int absI = getLevelBlockY(block_y);
+				int absJ = getLevelBlockX(block_x);
 
 				std::pair<int, int> result(absI, absJ);
 				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, potionEntity);
 				entities->insert(*mapElement);
 			}
-			if(getCodeByBlock(i,j) == '!') {
+			if(getSceneCodeByBlock(block_y,block_x) == '!') {
 				Entity* guilotineEntity = new Entity(new Animation(L"Assets//guilotine.png", 5), x, y, guilotineT);
 
 				guilotineEntity->getAnim()->setCurrentFrame(rand() % 5);
@@ -216,19 +220,19 @@ void Level::loadEntities() {
 				guilotineEntity->getAnim()->setLoop(true);
 				guilotineEntity->getAnim()->Play();
 
-				int absI = getAbsBlockY(i);
-				int absJ = getAbsBlockX(j);
+				int absI = getLevelBlockY(block_y);
+				int absJ = getLevelBlockX(block_x);
 				
 				std::pair<int, int> result(absI, absJ);
 				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, guilotineEntity);
 				entities->insert(*mapElement);
 			}
 
-			if(getCodeByBlock(i,j) == 'G') {
-				Gate* gate = new Gate(x, y, scene_x + i, scene_y + j);
+			if(getSceneCodeByBlock(block_y,block_x) == 'G') {
+				Gate* gate = new Gate(x, y, scene_x + block_y, scene_y + block_x);
 
-				int absI = getAbsBlockY(i);
-				int absJ = getAbsBlockX(j);
+				int absI = getLevelBlockY(block_y);
+				int absJ = getLevelBlockX(block_x);
 
 				std::pair<int, int> result(absI, absJ);
 				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, gate);
@@ -263,9 +267,30 @@ void Level::changeScene(direction dir) {
 	loadEntities();
 }
 
+
+int Level::getLevelHeight() {
+	return level_height;
+}
+int Level::getLevelWidth() {
+	return level_width;
+}
+
 std::map<std::pair<int,int>, Entity*>* Level::getEntities() {
 	return entities;
 }
 std::map<std::pair<int, int>, std::pair<int, int> >* Level::getMec() {
 	return mechanism;
+}
+
+
+void Level::findSpikes(int block_x, int block_y) {
+	for (int y = block_y; y < level_height; y++) {
+		if (level[y][block_x] == '/') {
+			std::pair<int, int> p(y, block_x);
+			Entity* e = (*entities)[p];
+			Spikes* spikes = dynamic_cast<Spikes*>(e);
+			spikes->On();
+		}
+	}
+
 }
