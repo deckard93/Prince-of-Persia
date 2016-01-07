@@ -458,7 +458,17 @@ void Game::DrawBackground() {
 				}
 				break;
 			case '=':
-				graphics.DrawSprite(xOff, yOff - getSprite("trap")->height, getSprite("trap"));
+				if (level->getSceneCodeByCoord(prince->getMidX(), prince->getMidY()) == '=') {
+					if (level->getSceneBlockXByCoord(prince->getMidX()) == x && level->getSceneBlockYByCoord(prince->getMidY() == y)) {
+						graphics.DrawSprite(xOff, yOff + 2 - getSprite("trap")->height, getSprite("trap"));
+					}
+					else {
+						graphics.DrawSprite(xOff, yOff - getSprite("trap")->height, getSprite("trap"));
+					}
+				}
+				else {
+					graphics.DrawSprite(xOff, yOff - getSprite("trap")->height, getSprite("trap"));
+				}
 				break;
 			case 'S':
 				graphics.DrawSprite(xOff, yOff - getSprite("deadSk")->height, getSprite("deadSk"));
