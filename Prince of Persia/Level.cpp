@@ -104,13 +104,13 @@ void Level::loadEntities() {
 			int x = (block_x - 1) * BLOCK_WIDTH_PX;
 			int y = BLOCK_HEIGHT_PX * (block_y - 1);
 
+			int absY;
+			int absX;
 
-		
 			if (getSceneCodeByBlock(block_y, block_x) == '|') {
 
 				x += SWORD_OFFSET_X;
 				y += SWORD_OFFSET_Y;
-
 
 				int frames = 2;
 				float * timing = (float *) malloc(frames * sizeof(float));
@@ -123,11 +123,10 @@ void Level::loadEntities() {
 				swordEntity->getAnim()->setLoop(true);
 				swordEntity->getAnim()->Play();
 
+				absY = getLevelBlockY(block_y);
+				absX = getLevelBlockX(block_x);
 
-				int absI = getLevelBlockY(block_y);
-				int absJ = getLevelBlockX(block_x);
-
-				std::pair<int, int> result(absI, absJ);
+				std::pair<int, int> result(absY, absX);
 				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, swordEntity);
 				entities->insert(*mapElement);
 			}
@@ -145,10 +144,10 @@ void Level::loadEntities() {
 				//spikeEntity->getAnim()->setLoop(true);
 				//spikeEntity->getAnim()->Play();
 
-				int absI = getLevelBlockX(y);
-				int absJ = getLevelBlockY(x);
+				int absY = getLevelBlockX(y);
+				int absX = getLevelBlockY(x);
 
-				std::pair<int, int> result(absI, absJ);
+				std::pair<int, int> result(absY, absX);
 				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, spikeEntity);
 				entities->insert(*mapElement);
 				*/
@@ -158,19 +157,12 @@ void Level::loadEntities() {
 
 				Spikes* spikes = new Spikes(x, y, scene_x + block_y, scene_y + block_x);
 
-				int absI = getLevelBlockY(block_y);
-				int absJ = getLevelBlockX(block_x);
+				absY = getLevelBlockY(block_y);
+				absX = getLevelBlockX(block_x);
 
-				std::pair<int, int> result(absI, absJ);
+				std::pair<int, int> result(absY, absX);
 				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, spikes);
 				entities->insert(*mapElement);
-
-
-
-
-
-
-
 
 			}
 			if(getSceneCodeByBlock(block_y,block_x) == '^') {
@@ -187,10 +179,10 @@ void Level::loadEntities() {
 				torchEntity->getAnim()->setLoop(true);
 				torchEntity->getAnim()->Play();
 
-				int absI = getLevelBlockY(block_y);
-				int absJ = getLevelBlockX(block_x);
+				absY = getLevelBlockY(block_y);
+				absX = getLevelBlockX(block_x);
 
-				std::pair<int, int> result(absI, absJ);
+				std::pair<int, int> result(absY, absX);
 				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, torchEntity);
 				entities->insert(*mapElement);
 			} 
@@ -205,10 +197,10 @@ void Level::loadEntities() {
 				potionEntity->getAnim()->setLoop(true);
 				potionEntity->getAnim()->Play();
 
-				int absI = getLevelBlockY(block_y);
-				int absJ = getLevelBlockX(block_x);
+				absY = getLevelBlockY(block_y);
+				absX = getLevelBlockX(block_x);
 
-				std::pair<int, int> result(absI, absJ);
+				std::pair<int, int> result(absY, absX);
 				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, potionEntity);
 				entities->insert(*mapElement);
 			}
@@ -220,10 +212,10 @@ void Level::loadEntities() {
 				guilotineEntity->getAnim()->setLoop(true);
 				guilotineEntity->getAnim()->Play();
 
-				int absI = getLevelBlockY(block_y);
-				int absJ = getLevelBlockX(block_x);
+				absY = getLevelBlockY(block_y);
+				absX = getLevelBlockX(block_x);
 				
-				std::pair<int, int> result(absI, absJ);
+				std::pair<int, int> result(absY, absX);
 				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, guilotineEntity);
 				entities->insert(*mapElement);
 			}
@@ -231,10 +223,10 @@ void Level::loadEntities() {
 			if(getSceneCodeByBlock(block_y,block_x) == 'G') {
 				Gate* gate = new Gate(x, y, scene_x + block_y, scene_y + block_x);
 
-				int absI = getLevelBlockY(block_y);
-				int absJ = getLevelBlockX(block_x);
+				absY = getLevelBlockY(block_y);
+				absX = getLevelBlockX(block_x);
 
-				std::pair<int, int> result(absI, absJ);
+				std::pair<int, int> result(absY, absX);
 				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, gate);
 				entities->insert(*mapElement);		
 			}
