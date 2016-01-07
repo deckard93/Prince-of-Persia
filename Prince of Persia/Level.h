@@ -55,9 +55,10 @@ public:
 	int getLevelHeight();
 	int getLevelWidth();
 
+	bool isFreeSpace(char c);
 
 
-	void findSpikes(int block_x, int block_y);
+	bool findSpikes(int block_x, int block_y);
 
 
 	~Level();

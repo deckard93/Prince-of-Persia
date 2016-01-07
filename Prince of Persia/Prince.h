@@ -5,7 +5,11 @@
 #include "Entity.h"
 #include "Game.h"
 
+
+enum princeState { sRunning, sFalling, sIdle, sDead};
+
 class Prince : public Entity {
+
 
 //variables
 private:
@@ -31,6 +35,10 @@ private:
 	Animation* fightStrike;
 	Animation* fightStart;
 	Animation* fightFinish;
+
+	Animation* spikeDeath;
+
+	princeState state;
 
 	bool isAnimating;
 	bool facingRight;
@@ -58,8 +66,10 @@ public:
 	//getters
 	int getHealth();
 	int getMaxHealth();
+	princeState getPrinceState();
 
 	//setters
+	void setState(princeState state);
 
 	//function
 	void HandlePrince(Input* input);
@@ -70,7 +80,9 @@ public:
 	void Animate(Graphics* graphics);
 	int setFall();
 	int PickUpSword();
-	void Land(); //TODO: remove thos
+	void Land(); //TODO: remove this
+
+	void spikeKill();
 
 	//destructors
 	~Prince();
