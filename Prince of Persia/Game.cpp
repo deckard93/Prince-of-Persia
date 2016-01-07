@@ -222,6 +222,8 @@ void Game::CheckCollision() {
 		std::pair<int, int> p(absX, absY - 1);
 		std::pair<int, int> k = (*mechanism)[p];
 
+		k = make_pair(50, 4);
+
 		if (entitites->find(k) == entitites->end()) {
 			return;
 		}
@@ -254,25 +256,21 @@ void Game::CheckCollision() {
 
 
 	if (level->findSpikes(absX, absY)) {
-		if (prince->getPrinceState() == sRunning || 
-			prince->getPrinceState() == sFalling) {
+		
+	}
 
+	if (code == '/') {
+		if (prince->getPrinceState() == sRunning ||
+			prince->getPrinceState() == sFalling) {
+		
 			nBlockX = level->getSceneBlockXByCoord(prince->getMidX());
 			nBlockY = level->getSceneBlockYByCoord(prince->getMidY());
-			prince->setX((nBlockX - 1 ) * Level::BLOCK_WIDTH_PX - 15);
+			prince->setX((nBlockX - 1) * Level::BLOCK_WIDTH_PX - 15);
 			prince->setY((nBlockY - 1)* Level::BLOCK_HEIGHT_PX);
 			prince->spikeKill();
 		}
 	}
 
-	/*
-	if (code == '/') {
-		std::pair<int, int> p(absY, absX);
-		Entity* e = (*entitites)[p];
-		Spikes* spikes = dynamic_cast<Spikes*>(e);
-		spikes->On();
-	}
-	*/
 
 	////============== Guilotine ==============
 
@@ -426,13 +424,13 @@ void Game::DrawBackground() {
 	int yOff = 0;
 	int xOff = 0;
 
-	for(int j = Level::SCENE_HEIGHT_BLK; j >= 0; j--){
-		for(int i = 0; i <= Level::SCENE_WIDTH_BLK; i++){
+	for(int y = Level::SCENE_HEIGHT_BLK; y >= 0; y--){
+		for(int x = 0; x <= Level::SCENE_WIDTH_BLK; x++){
 
-			yOff = Level::BLOCK_HEIGHT_PX * j;
-			xOff = - Level::BLOCK_WIDTH_PX + Level::BLOCK_WIDTH_PX * i;
+			yOff = Level::BLOCK_HEIGHT_PX * y;
+			xOff = - Level::BLOCK_WIDTH_PX + Level::BLOCK_WIDTH_PX * x;
 
-			switch(level->getSceneCodeByBlock(j, i)) {
+			switch(level->getSceneCodeByBlock(y, x)) {
 			case '|':
 				graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
 				break;
@@ -448,10 +446,13 @@ void Game::DrawBackground() {
 				break;
 			case '-':
 				if(level->getSceneCodeByCoord(prince->getMidX(), prince->getMidY()) == '-') {
-
 					/*TODO: this needs to be fixed */
-					//if(level->getSceneBlockXByCoord(prince->getMidX()) == j && level->getSceneBlockYByCoord(prince->getMidY() == y) ) {
-					graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
+					if (level->getSceneBlockXByCoord(prince->getMidX()) == x && level->getSceneBlockYByCoord(prince->getMidY() == y)) {
+						graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
+					}
+					else {
+						graphics.DrawSprite(xOff, yOff - getSprite("activate")->height, getSprite("activate"));
+					}
 				} else {
 					graphics.DrawSprite(xOff, yOff - getSprite("activate")->height, getSprite("activate"));
 				}
@@ -550,8 +551,8 @@ if(DEBUG) {
 		s += "M: " + g;
 		std::string h(1,scene[nBlockY][nBlockX]);
 		s += h;
-		std::string j(1,scene[nBlockY][nBlockX + 1]);
-		s += j;
+		std::string y(1,scene[nBlockY][nBlockX + 1]);
+		s += y;
 	}
 	s += "\n";
 

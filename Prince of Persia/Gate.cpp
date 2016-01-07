@@ -43,8 +43,7 @@ void Gate::Close() {}
 
 void Gate::Animate(Graphics* graphics) {
 	//at the end of animation
-	
-	
+
 	if(this->getAnim() == gate) {
 		if(this->getAnim()->getCurrentFrame() == 0) {
 			if(!this->getAnim()->isFrozen()) {
