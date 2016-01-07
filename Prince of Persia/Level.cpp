@@ -283,14 +283,30 @@ std::map<std::pair<int, int>, std::pair<int, int> >* Level::getMec() {
 }
 
 
-void Level::findSpikes(int block_x, int block_y) {
+bool Level::isFreeSpace(char c) {
+	if (c == ' ' ||
+		c == '*' ||
+		c == '#' ) {
+		return true;
+	}
+	return false;
+}
+
+bool Level::findSpikes(int block_x, int block_y) {
 	for (int y = block_y; y < level_height; y++) {
+		if (level[y][block_x] == 'I' || 
+			level[y][block_x] == '[' ||
+			level[y][block_x] == ']') {
+			break;
+		}
 		if (level[y][block_x] == '/') {
 			std::pair<int, int> p(y, block_x);
 			Entity* e = (*entities)[p];
 			Spikes* spikes = dynamic_cast<Spikes*>(e);
 			spikes->On();
+			return true;
 		}
 	}
+	return false;
 
 }

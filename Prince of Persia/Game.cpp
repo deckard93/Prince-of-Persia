@@ -75,7 +75,9 @@ Game::Game(HWND hwnd, Input* in) :
 	RegisterSprite("fightStart" , "Assets//prince//");
 	RegisterSprite("fightStrike", "Assets//prince//");
 	RegisterSprite("fightFinish", "Assets//prince//");
-	
+
+	//death/kill sprites
+	RegisterSprite("spikeKill"  , "Assets//prince//");
 
 
 	//objects
@@ -249,7 +251,19 @@ void Game::CheckCollision() {
 	}
 	*/
 
-	level->findSpikes(absX, absY);
+
+
+	if (level->findSpikes(absX, absY)) {
+		if (prince->getPrinceState() == sRunning || 
+			prince->getPrinceState() == sFalling) {
+
+			nBlockX = level->getSceneBlockXByCoord(prince->getMidX());
+			nBlockY = level->getSceneBlockYByCoord(prince->getMidY());
+			prince->setX((nBlockX - 1 ) * Level::BLOCK_WIDTH_PX - 15);
+			prince->setY((nBlockY - 1)* Level::BLOCK_HEIGHT_PX);
+			prince->spikeKill();
+		}
+	}
 
 	/*
 	if (code == '/') {
@@ -518,6 +532,7 @@ void Game::Reset() {
 
 	prince->setX(2 * Level::BLOCK_WIDTH_PX);
 	prince->setY(prince->getAnim()->getSheet()->getFrameHeight() - Level::FOOT_FLOAT);
+	prince->setState(sIdle);
 }
 
 Game::~Game() {}

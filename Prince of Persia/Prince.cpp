@@ -3,6 +3,7 @@
 
 //constructors
 Prince::Prince() {
+	state = sIdle;
 
 	hasSword = false;
 	maxHealth = 6;
@@ -37,6 +38,8 @@ Prince::Prince() {
 	fightStrike = new Animation(Game::getSprite("fightStrike"), 6);
 	fightStart  = new Animation(Game::getSprite("fightStart") , 4);
 	fightFinish = new Animation(Game::getSprite("fightFinish"), 8);
+
+	spikeDeath = new Animation(Game::getSprite("spikeKill"),   1);
 
 
 
@@ -99,9 +102,10 @@ int Prince::getMaxHealth() {
 
 //function
 void Prince::Animate(Graphics* graphics) {
+	//if (state == sDead) { return; }
+
 	int moveX = 0;
 	int moveY = 0;
-
 
 	if(this->getAnim()->isFinished()) {
 		//side effects at the end of an animation
@@ -354,6 +358,7 @@ void Prince::Animate(Graphics* graphics) {
 }
 
 void Prince::HandlePrince(Input* input) {
+	if (state == sDead) { return; }
 
 	int moveX = 0;
 	int moveY = 0;
@@ -642,6 +647,7 @@ void Prince::switchFacing() {
 		jumpGrab->setFlipped(false);
 		pickSword->setFlipped(false);
 		staticJump->setFlipped(false);
+		spikeDeath->setFlipped(false);
 		runningJump->setFlipped(false);
 
 		facingRight = false;
@@ -670,6 +676,7 @@ void Prince::switchFacing() {
 		jumpGrab->setFlipped(true);
 		pickSword->setFlipped(true);
 		staticJump->setFlipped(true);
+		spikeDeath->setFlipped(true);
 		runningJump->setFlipped(true);
 		
 		facingRight = true;
@@ -684,6 +691,26 @@ void Prince::switchFacing() {
 	}
 }
 
+princeState Prince::getPrinceState() {
+	if (getAnim() == running) {
+		return sRunning;
+	}
+	else if (getAnim() == fall) {
+		return sFalling;
+	}
+
+	return sIdle;
+}
+
+void Prince::setState(princeState state) {
+	this->state = state;
+}
+
+void Prince::spikeKill() {
+	state = sDead;
+	this->setCurrentAnim(spikeDeath);
+	this->getAnim()->Freeze();
+}
 
 /*
 idle		= new Animation(L"Assets//prince//idle.png"       ,	1	);
