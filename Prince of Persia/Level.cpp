@@ -44,8 +44,8 @@ void Level::loadLevel(int l) {
 
 	mechanism = new std::map< std::pair<int, int>, std::pair<int, int> >();
 
-	while (fscanf(file, "%d", &platX) > 0 && fscanf(file, "%d", &platY) > 0 &&
-		   fscanf(file, "%d", &gateX) > 0 && fscanf(file, "%d", &gateY) > 0) {
+	while (fscanf(file, "%d", &platY) > 0 && fscanf(file, "%d", &platX) > 0 &&
+		   fscanf(file, "%d", &gateY) > 0 && fscanf(file, "%d", &gateX) > 0) {
 
 		std::pair<int, int> plat(platY, platX);
 		std::pair<int, int> gate(gateY, gateX);

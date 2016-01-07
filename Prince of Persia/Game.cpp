@@ -219,16 +219,16 @@ void Game::CheckCollision() {
 		
 		std::map<std::pair<int, int>, std::pair<int, int> >* mechanism = level->getMec();
 
-		std::pair<int, int> p(absX, absY - 1);
-		std::pair<int, int> k = (*mechanism)[p];
+		std::pair<int, int> platKey(absY, absX);
+		std::pair<int, int> gateKey = (*mechanism)[platKey];
 
-		k = make_pair(50, 4);
+		//gateKey = make_pair(50, 4);
 
-		if (entitites->find(k) == entitites->end()) {
+		if (entitites->find(gateKey) == entitites->end()) {
 			return;
 		}
 
-		Entity* e = (*entitites)[k];
+		Entity* e = (*entitites)[gateKey];
 
 		Gate* g = dynamic_cast<Gate*>(e);
 
@@ -245,8 +245,8 @@ void Game::CheckCollision() {
 		char c = level->getSceneCodeByBlock(nBlockY + y, nBlockX);
 		if (c == '/') {
 
-			std::pair<int, int> p(absY + y, absX);
-			Entity* e = (*entitites)[p];
+			std::pair<int, int> platKey(absY + y, absX);
+			Entity* e = (*entitites)[platKey];
 			Spikes* spikes = dynamic_cast<Spikes*>(e);
 			spikes->On();
 		}
