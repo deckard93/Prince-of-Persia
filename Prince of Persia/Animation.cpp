@@ -93,11 +93,11 @@ int Animation::getCurrentFrame() {
 //Setters
 void Animation::setEffectDone() { effectPending = false; }
 void Animation::setForward() {
-	currentFrame = 0;
+	//currentFrame = 0;
 	playForward = true;
 }
 void Animation::setReverse() {
-	currentFrame = sheet->getFrameCount() - 1;
+	//currentFrame = sheet->getFrameCount() - 1;
 	playForward = false;
 }
 void Animation::setLoop(bool in) {

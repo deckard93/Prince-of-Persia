@@ -3,6 +3,8 @@
 
 
 Gate::Gate(int x, int y, int levelX, int levelY) {
+	slowTime = 900;
+	slowTime = 30;
 
 	type = gateT;
 
@@ -17,50 +19,67 @@ Gate::Gate(int x, int y, int levelX, int levelY) {
 	gate->Stop();
 
 	gate->setReverse();
-	gate->setDisplayTime(60);
-	gate->setCurrentFrame(6);
+	gate->setDisplayTime(slowTime);
+	gate->setCurrentFrame(gate->getLastFrameNr());
 
 	//gate->Play();
 	
+	state = sClosed;
 	timer = new Timer();
 }
 
 void Gate::Open() {
-	if(this->getAnim() == gate) {
-		if(getAnim()->getCurrentFrame() != 0) {
-			timer->StopWatch();
-			timer->StartWatch();
-			int fr = this->getAnim()->getCurrentFrame();
-			this->getAnim()->setReverse();
-			this->getAnim()->setCurrentFrame(fr);
-			this->getAnim()->setDisplayTime(30);
-			this->getAnim()->Play();
-		}
+
+	if (state == sClosed || state == sClosing) {
+		state = sOpening;
+
+		slowTime = 1000;
+
+		timer->StopWatch();
+		timer->StartWatch();
+
+		this->getAnim()->setReverse();
+		this->getAnim()->setDisplayTime(fastTime);
+		this->getAnim()->Play();
+
+	}
+	else if (state == sOpened) {
+		timer->StopWatch();
+		timer->StartWatch();
 	}
 }
 
-void Gate::Close() {}
+void Gate::Close() {
+	if (state == sOpened || state == sClosing) {
+		state = sClosing;
+
+		this->getAnim()->setForward();
+		this->getAnim()->setDisplayTime(fastTime);
+		this->getAnim()->Play();
+	}
+}
 
 void Gate::Animate(Graphics* graphics) {
-	//at the end of animation
-
-	if(this->getAnim() == gate) {
-		if(this->getAnim()->getCurrentFrame() == 0) {
-			if(!this->getAnim()->isFrozen()) {
-				this->getAnim()->Freeze();
-			} else {
-				if(timer->GetTimeMilli() > 1000) {
-					timer->StopWatch();
-					this->getAnim()->setForward();
-					this->getAnim()->setDisplayTime(1000);
-					this->getAnim()->Play();
-				}
-			}
-		}
-		if(this->getAnim()->isFinished()) {
-			this->getAnim()->setCurrentFrame(6);
-		}
-	}	
 	
+	if (getAnim()->getCurrentFrame() == 0 && state == sOpening) {
+		getAnim()->Stop();
+		state = sOpened;
+	}
+
+	if (getAnim()->getCurrentFrame() == getAnim()->getLastFrameNr() && state == sClosing) {
+		getAnim()->Stop();
+		state = sClosed;
+	}
+
+	if (state == sOpened) {
+		if (timer->GetTimeMilli() > slowTime) {
+			state = sClosing;
+
+			this->getAnim()->setForward();
+			this->getAnim()->setDisplayTime(slowTime);
+			this->getAnim()->Play();
+		}
+	}
+
 	Entity::Animate(graphics);
 }
