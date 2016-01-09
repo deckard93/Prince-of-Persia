@@ -184,14 +184,14 @@ void Game::CheckCollision() {
 	}
 
 	//===================== Change Scenes =====================
-	if(yFoot - 20 > Level::BLOCK_HEIGHT_PX * 3) {
+	if(prince->getMidY() > Level::BLOCK_HEIGHT_PX * 3) {
 		level->changeScene(D);
 		prince->setY(-60);
 	}
 
-	if(yFoot < 0) {
-		//level->changeScene(U);
-		//prince->setY(Level::BLOCK_HEIGHT_PX * 3);
+	if(prince->getMidY() < 0) {
+		level->changeScene(U);
+		prince->setY(Level::BLOCK_HEIGHT_PX * 3 - 70);
 	}
 
 	if(xFoot + 60 > Level::BLOCK_WIDTH_PX * 10 + 5) {
