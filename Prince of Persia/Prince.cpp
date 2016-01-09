@@ -436,10 +436,6 @@ void Prince::HandlePrince(Input* input) {
 			}
 		}
 
-
-
-
-
 		if(this->getAnim() == runningTurn) {
 			this->setCurrentAnim(running);
 			this->getAnim()->setCurrentFrame(5);
