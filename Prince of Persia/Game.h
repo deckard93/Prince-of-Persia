@@ -10,6 +10,7 @@
 #include "Level.h"
 #include "Gate.h"
 #include "Spikes.h"
+#include "Guilotine.h"
 
 #include <windows.h>
 #include <string.h>

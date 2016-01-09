@@ -61,6 +61,18 @@ void Level::loadLevel(int l) {
 	fclose (file);
 }
 
+bool Level::inScene(int abs_block_x, int abs_block_y) {
+
+	if (abs_block_x >= scene_x &&
+		abs_block_x < scene_x + SCENE_WIDTH_BLK &&
+		abs_block_y > scene_y &&
+		abs_block_y <= scene_y + SCENE_HEIGHT_BLK) {
+		return true;
+	}
+	return false;
+}
+
+
 void Level::setCodeByCoord(int x, int y, char c) {
 	level[scene_y + getSceneBlockYByCoord(y)][scene_x + getSceneBlockXByCoord(x)] = c;
 	loadEntities();
@@ -98,173 +110,113 @@ void Level::loadEntities() {
 
 	entities->clear();
 
-	for(int block_y = 0; block_y <= SCENE_HEIGHT_BLK; block_y++)  {
-		for(int block_x = 0; block_x <= SCENE_WIDTH_BLK; block_x++) {
+	for(int abs_block_y = 0; abs_block_y < level_height; abs_block_y++)  {
+		for(int abs_block_x = 0; abs_block_x < level_width; abs_block_x++) {
 
-			int x = (block_x - 1) * BLOCK_WIDTH_PX;
-			int y = BLOCK_HEIGHT_PX * (block_y - 1);
+			int x = BLOCK_WIDTH_PX * ((abs_block_x) % SCENE_WIDTH_BLK - 1);
+			int y = BLOCK_HEIGHT_PX * ((abs_block_y - 1) % SCENE_HEIGHT_BLK);
 
-			int absY;
-			int absX;
+			Entity* entity = NULL;
 
-			if (getSceneCodeByBlock(block_y, block_x) == '|') {
+			switch (getLevelCodeByBlock(abs_block_x, abs_block_y)) {
 
-				x += SWORD_OFFSET_X;
-				y += SWORD_OFFSET_Y;
+				case'|': {
+					x += SWORD_OFFSET_X;
+					y += SWORD_OFFSET_Y;
 
-				int frames = 2;
-				float * timing = (float *) malloc(frames * sizeof(float));
-				timing[0] = 5000;
-				timing[1] = 100;
-				Entity* swordEntity = new Entity(new Animation(Game::getSprite("sword"), frames, timing), x, y, swordT);
+					int frames = 2;
+					float * timing = (float *)malloc(frames * sizeof(float));
+					timing[0] = 5000;
+					timing[1] = 100;
+					Entity* sword = new Entity(new Animation(Game::getSprite("sword"), frames, timing), x, y, swordT);
 
-				swordEntity->getAnim()->setCurrentFrame(rand() % 2);
-				swordEntity->getAnim()->setDisplayTime(90);
-				swordEntity->getAnim()->setLoop(true);
-				swordEntity->getAnim()->Play();
+					sword->getAnim()->setCurrentFrame(rand() % 2);
+					sword->getAnim()->setDisplayTime(90);
+					sword->getAnim()->setLoop(true);
+					sword->getAnim()->Play();
 
-				absY = getLevelBlockY(block_y);
-				absX = getLevelBlockX(block_x);
+					entity = sword;
+				} break;
 
-				std::pair<int, int> result(absY, absX);
-				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, swordEntity);
-				entities->insert(*mapElement);
-			}
+				case '^': {
+					x += TORCH_OFFSET_X;
+					y += TORCH_OFFSET_Y;
 
-			if(getSceneCodeByBlock(block_y,block_x) == '/') {
-	
-				/*
-				x += SPIKE_OFFSET_X;
-				y += SPIKE_OFFSET_Y;	//TODO: Why y - 1 
+					Entity* torch = new Entity(new Animation(Game::getSprite("torch"), 5), x, y, torchT);
 
-				Entity* spikeEntity = new Entity (new Animation(Game::getSprite("spikes"), 6), x, y, spikeT);
+					torch->getAnim()->setCurrentFrame(rand() % 5);
+					torch->getAnim()->setDisplayTime(80.0);
+					torch->getAnim()->setLoop(true);
+					torch->getAnim()->Play();
 
-				spikeEntity->getAnim()->setCurrentFrame(rand() % 5);
-				spikeEntity->getAnim()->setDisplayTime(90);
-				//spikeEntity->getAnim()->setLoop(true);
-				//spikeEntity->getAnim()->Play();
+					entity = torch;
+				} break;
 
-				int absY = getLevelBlockX(y);
-				int absX = getLevelBlockY(x);
+				case 'P': {
+					x += POTION_OFFSET_X;
+					y += POTION_OFFSET_Y;
 
-				std::pair<int, int> result(absY, absX);
-				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, spikeEntity);
-				entities->insert(*mapElement);
-				*/
+					Entity* potion = new Entity(new Animation(Game::getSprite("potionHealth"), 6), x, y, potionT);
 
-				x += SPIKE_OFFSET_X;
-				y += SPIKE_OFFSET_Y;	//TODO: Why y - 1 
+					potion->getAnim()->setCurrentFrame(rand() % 6);
+					potion->getAnim()->setDisplayTime(100);
+					potion->getAnim()->setLoop(true);
+					potion->getAnim()->Play();
 
-				Spikes* spikes = new Spikes(x, y, scene_x + block_y, scene_y + block_x);
+					entity = potion;
+				} break;
 
-				absY = getLevelBlockY(block_y);
-				absX = getLevelBlockX(block_x);
+				case'K': {
+					x += POTION_OFFSET_X;
+					y += POTION_OFFSET_Y;
 
-				std::pair<int, int> result(absY, absX);
-				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, spikes);
-				entities->insert(*mapElement);
+					Entity* potion = new Entity(new Animation(Game::getSprite("potionPoison"), 6), x, y, poisonPotT);
 
-			}
-			if(getSceneCodeByBlock(block_y,block_x) == '^') {
-				int x = (block_x) * BLOCK_WIDTH_PX;
-				int y = BLOCK_HEIGHT_PX * (block_y);
+					potion->getAnim()->setCurrentFrame(rand() % 6);
+					potion->getAnim()->setDisplayTime(100);
+					potion->getAnim()->setLoop(true);
+					potion->getAnim()->Play();
 
-				x += TORCH_OFFSET_X;
-				y -= TORCH_OFFSET_Y;
+					entity = potion;
+				} break;
 
-				Entity* torchEntity = new Entity (new Animation(L"Assets//torch.png", 5), x, y, torchT);
+				case'E': {
+					x += BIG_POTION_OFFSET_X;
+					y += BIG_POTION_OFFSET_Y;
 
-				torchEntity->getAnim()->setCurrentFrame(rand() % 5);
-				torchEntity->getAnim()->setDisplayTime(80.0);
-				torchEntity->getAnim()->setLoop(true);
-				torchEntity->getAnim()->Play();
+					Entity* potion = new Entity(new Animation(Game::getSprite("potionExtend"), 1), x, y, extendPotT);
 
-				absY = getLevelBlockY(block_y);
-				absX = getLevelBlockX(block_x);
+					potion->getAnim()->setDisplayTime(100);
+					potion->getAnim()->setLoop(true);
+					potion->getAnim()->Play();
 
-				std::pair<int, int> result(absY, absX);
-				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, torchEntity);
-				entities->insert(*mapElement);
-			} 
-			if(getSceneCodeByBlock(block_y,block_x) == 'P') {
-				x += POTION_OFFSET_X;
-				y += POTION_OFFSET_Y;
+					entity = potion;
+				} break;
 
-				Entity* potionEntity = new Entity (new Animation(L"Assets//potionHealth.png", 6), x, y, potionT);
+				case '/': {
+					x += SPIKE_OFFSET_X;
+					y += SPIKE_OFFSET_Y;	//TODO: Why y - 1 
 
-				potionEntity->getAnim()->setCurrentFrame(rand() % 6);
-				potionEntity->getAnim()->setDisplayTime(100);
-				potionEntity->getAnim()->setLoop(true);
-				potionEntity->getAnim()->Play();
-
-				absY = getLevelBlockY(block_y);
-				absX = getLevelBlockX(block_x);
-
-				std::pair<int, int> result(absY, absX);
-				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, potionEntity);
-				entities->insert(*mapElement);
-			}
-			if (getSceneCodeByBlock(block_y, block_x) == 'K') {
-				x += POTION_OFFSET_X;
-				y += POTION_OFFSET_Y;
-
-				Entity* potionEntity = new Entity(new Animation(L"Assets//potionPoison.png", 6), x, y, poisonPotT);
-
-				potionEntity->getAnim()->setCurrentFrame(rand() % 6);
-				potionEntity->getAnim()->setDisplayTime(100);
-				potionEntity->getAnim()->setLoop(true);
-				potionEntity->getAnim()->Play();
-
-				absY = getLevelBlockY(block_y);
-				absX = getLevelBlockX(block_x);
-
-				std::pair<int, int> result(absY, absX);
-				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, potionEntity);
-				entities->insert(*mapElement);
-			}
-			if (getSceneCodeByBlock(block_y, block_x) == 'E') {
-				x += POTION_OFFSET_X;
-				y += POTION_OFFSET_Y + 5;
-
-				Entity* potionEntity = new Entity(new Animation(L"Assets//potionExtend.png", 1), x, y, extendPotT);
-
-				potionEntity->getAnim()->setDisplayTime(100);
-				potionEntity->getAnim()->setLoop(true);
-				potionEntity->getAnim()->Play();
-
-				absY = getLevelBlockY(block_y);
-				absX = getLevelBlockX(block_x);
-
-				std::pair<int, int> result(absY, absX);
-				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, potionEntity);
-				entities->insert(*mapElement);
-			}
-
-			if(getSceneCodeByBlock(block_y,block_x) == '!') {
-				Entity* guilotineEntity = new Entity(new Animation(L"Assets//guilotine.png", 5), x, y, guilotineT);
-
-				guilotineEntity->getAnim()->setCurrentFrame(rand() % 5);
-				guilotineEntity->getAnim()->setDisplayTime(90);
-				guilotineEntity->getAnim()->setLoop(true);
-				guilotineEntity->getAnim()->Play();
-
-				absY = getLevelBlockY(block_y);
-				absX = getLevelBlockX(block_x);
+					Spikes* spikes = new Spikes(x, y, abs_block_x, abs_block_y);
+					entity = spikes;
+				} break;
 				
-				std::pair<int, int> result(absY, absX);
-				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, guilotineEntity);
-				entities->insert(*mapElement);
+				case '!': {
+					Guilotine* guilotine = new Guilotine(x, y);
+					entity = guilotine;
+				} break;
+
+				case 'G': {
+					Gate* gate = new Gate(x, y, abs_block_x, abs_block_y);
+					entity = gate;
+				} break;
+
 			}
 
-			if(getSceneCodeByBlock(block_y,block_x) == 'G') {
-				Gate* gate = new Gate(x, y, scene_x + block_y, scene_y + block_x);
-
-				absY = getLevelBlockY(block_y);
-				absX = getLevelBlockX(block_x);
-
-				std::pair<int, int> result(absY, absX);
-				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, gate);
-				entities->insert(*mapElement);		
+			if (entity != NULL) {
+				std::pair<int, int> result(abs_block_y, abs_block_x);
+				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, entity);
+				entities->insert(*mapElement);
 			}
 		}
 	}
@@ -292,7 +244,7 @@ void Level::changeScene(direction dir) {
 		break;
 	}
 
-	loadEntities();
+	//loadEntities();
 }
 
 

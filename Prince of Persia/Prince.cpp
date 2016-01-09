@@ -42,13 +42,11 @@ Prince::Prince() {
 	spikeDeath = new Animation(Game::getSprite("spikeKill"),   1);
 
 
-
 	fightStep->setDisplayTime(100);
 	fightParry->setDisplayTime(120);
 	fightStrike->setDisplayTime(100);
 	fightStart->setDisplayTime(100);
 	fightFinish->setDisplayTime(100);
-
 
 
 	fall->setDisplayTime(70);
