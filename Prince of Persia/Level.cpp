@@ -190,7 +190,7 @@ void Level::loadEntities() {
 				x += POTION_OFFSET_X;
 				y += POTION_OFFSET_Y;
 
-				Entity* potionEntity = new Entity (new Animation(L"Assets//healthPotion.png", 6), x, y, potionT);
+				Entity* potionEntity = new Entity (new Animation(L"Assets//potionHealth.png", 6), x, y, potionT);
 
 				potionEntity->getAnim()->setCurrentFrame(rand() % 6);
 				potionEntity->getAnim()->setDisplayTime(100);
@@ -204,6 +204,42 @@ void Level::loadEntities() {
 				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, potionEntity);
 				entities->insert(*mapElement);
 			}
+			if (getSceneCodeByBlock(block_y, block_x) == 'K') {
+				x += POTION_OFFSET_X;
+				y += POTION_OFFSET_Y;
+
+				Entity* potionEntity = new Entity(new Animation(L"Assets//potionPoison.png", 6), x, y, poisonPotT);
+
+				potionEntity->getAnim()->setCurrentFrame(rand() % 6);
+				potionEntity->getAnim()->setDisplayTime(100);
+				potionEntity->getAnim()->setLoop(true);
+				potionEntity->getAnim()->Play();
+
+				absY = getLevelBlockY(block_y);
+				absX = getLevelBlockX(block_x);
+
+				std::pair<int, int> result(absY, absX);
+				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, potionEntity);
+				entities->insert(*mapElement);
+			}
+			if (getSceneCodeByBlock(block_y, block_x) == 'E') {
+				x += POTION_OFFSET_X;
+				y += POTION_OFFSET_Y + 5;
+
+				Entity* potionEntity = new Entity(new Animation(L"Assets//potionExtend.png", 1), x, y, extendPotT);
+
+				potionEntity->getAnim()->setDisplayTime(100);
+				potionEntity->getAnim()->setLoop(true);
+				potionEntity->getAnim()->Play();
+
+				absY = getLevelBlockY(block_y);
+				absX = getLevelBlockX(block_x);
+
+				std::pair<int, int> result(absY, absX);
+				std::pair<pair<int, int>, Entity*>* mapElement = new pair<pair<int, int>, Entity*>(result, potionEntity);
+				entities->insert(*mapElement);
+			}
+
 			if(getSceneCodeByBlock(block_y,block_x) == '!') {
 				Entity* guilotineEntity = new Entity(new Animation(L"Assets//guilotine.png", 5), x, y, guilotineT);
 
@@ -295,7 +331,7 @@ bool Level::findSpikes(int block_x, int block_y) {
 			std::pair<int, int> p(y, block_x);
 			Entity* e = (*entities)[p];
 			Spikes* spikes = dynamic_cast<Spikes*>(e);
-			spikes->On();
+			if (spikes != NULL) { spikes->On(); }
 			return true;
 		}
 	}

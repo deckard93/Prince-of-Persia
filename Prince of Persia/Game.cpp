@@ -42,10 +42,12 @@ Game::Game(HWND hwnd, Input* in) :
 	RegisterSprite("spikesForeground");
 	RegisterSprite("spikes");
 	RegisterSprite("torch");
-	RegisterSprite("healthPotion");
 	RegisterSprite("guilotine");
 	RegisterSprite("gate");
 	RegisterSprite("sword");
+	RegisterSprite("potionHealth");
+	RegisterSprite("potionPosion");
+	RegisterSprite("potionExtend");
 	
 	//sprite sheets
 	RegisterSprite("idle"       , "Assets//prince//");
@@ -352,6 +354,22 @@ void Game::HandleInput() {
 			}
 		}
 
+		if (level->getSceneCodeByCoord(prince->getMidX(), prince->getMidY()) == 'K') {
+
+			if (prince->Drink()) {
+				level->setCodeByCoord(prince->getMidX(), prince->getMidY(), '_');
+				prince->Hurt();
+			}
+		}
+
+		if (level->getSceneCodeByCoord(prince->getMidX(), prince->getMidY()) == 'E') {
+
+			if (prince->Drink()) {
+				level->setCodeByCoord(prince->getMidX(), prince->getMidY(), '_');
+				prince->increaseMaxHealth();
+			}
+		}
+
 		if (level->getSceneCodeByCoord(prince->getMidX(), prince->getMidY()) == '|') {
 
 			if (prince->PickUpSword()) {
@@ -381,6 +399,7 @@ void Game::DrawGraphics() {
 	if (DEBUG) { graphics.DrawCircle(prince->getX(), prince->getY(), 5, 255, 255, 255); }
 	
 	for (std::map<std::pair<int, int>, Entity*>::iterator i = entitites->begin(); i != entitites->end(); i++) {
+		if (i->second == NULL) { continue;  } // TODO: should not happen check load entities
 		if (i->second->getType() == spikeT) { continue; }
 
 		i->second->Animate(&graphics);
@@ -484,6 +503,12 @@ void Game::DrawBackground() {
 				graphics.DrawSprite(xOff, yOff - getSprite("bricks")->height, getSprite("bricks"));
 				break;
 			case 'P':
+				graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
+				break;
+			case 'K':
+				graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
+				break;
+			case 'E':
 				graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
 				break;
 			case '$':
