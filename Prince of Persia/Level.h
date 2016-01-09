@@ -57,6 +57,8 @@ public:
 
 	bool isFreeSpace(char c);
 
+	bool inScene(int abs_block_x, int abs_block_y);
+
 
 	bool findSpikes(int block_x, int block_y);
 
@@ -112,17 +114,19 @@ public:
 
 	static const int FOOT_FLOAT			= 11;
 
-	static const int TORCH_OFFSET_Y = 125;
-	static const int TORCH_OFFSET_X = 20;
+	static const int TORCH_OFFSET_Y = 1;
+	static const int TORCH_OFFSET_X = 84;
 
 	static const int POTION_OFFSET_X = 40;
 	static const int POTION_OFFSET_Y = 60;
+
+	static const int BIG_POTION_OFFSET_X = 40;
+	static const int BIG_POTION_OFFSET_Y = 65;
 
 	static const int SPIKE_OFFSET_X = 0;
 	static const int SPIKE_OFFSET_Y = 26;
 
 	static const int SWORD_OFFSET_X = 0;
 	static const int SWORD_OFFSET_Y = 95;
-
 
 };

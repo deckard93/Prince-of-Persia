@@ -46,7 +46,7 @@ Game::Game(HWND hwnd, Input* in) :
 	RegisterSprite("gate");
 	RegisterSprite("sword");
 	RegisterSprite("potionHealth");
-	RegisterSprite("potionPosion");
+	RegisterSprite("potionPoison");
 	RegisterSprite("potionExtend");
 	
 	//sprite sheets
@@ -391,8 +391,11 @@ void Game::DrawGraphics() {
 	for (std::map<std::pair<int, int>, Entity*>::iterator i = entitites->begin(); i != entitites->end(); i++) {
 		Entity* entity = i->second;
 		Spikes* spikes = dynamic_cast<Spikes*>(entity);
-		if (spikes != NULL) {
+		if (spikes != NULL && level->inScene(i->first.second, i->first.first)) {
 			spikes->AnimateBackground(&graphics);
+		}
+		else {
+			i->second->Animate(NULL);
 		}
 	}
 	if (DEBUG) { graphics.DrawCircle(prince->getMidX(), prince->getMidY(), 5, 255, 255, 255); }
@@ -402,7 +405,12 @@ void Game::DrawGraphics() {
 		if (i->second == NULL) { continue;  } // TODO: should not happen check load entities
 		if (i->second->getType() == spikeT) { continue; }
 
-		i->second->Animate(&graphics);
+		if (level->inScene(i->first.second, i->first.first)) {
+			i->second->Animate(&graphics);
+		}
+		else {
+			i->second->Animate(NULL);
+		}
 	}
 
 	prince->Animate(&graphics);
@@ -411,8 +419,11 @@ void Game::DrawGraphics() {
 	for (std::map<std::pair<int, int>, Entity*>::iterator i = entitites->begin(); i != entitites->end(); i++) {
 		Entity* entity = i->second;
 		Spikes* spikes = dynamic_cast<Spikes*>(entity);
-		if(spikes != NULL) { 
+		if(spikes != NULL && level->inScene(i->first.second, i->first.first)) {
 			spikes->AnimateForeground(&graphics);
+		}
+		else {
+			i->second->Animate(NULL);
 		}
 	}
 

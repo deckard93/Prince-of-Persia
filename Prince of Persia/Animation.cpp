@@ -124,7 +124,7 @@ void Animation::Stop() {
 	finished = true;
 }
 void Animation::Update(Graphics* graphics, int x, int y) {
-	Display(graphics, x, y);		//draw
+	if (graphics != NULL) { Display(graphics, x, y); }		//draw
 	
 	if(!finished) {
 		NextFrame();				//update animation
