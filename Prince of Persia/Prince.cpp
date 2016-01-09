@@ -364,7 +364,7 @@ void Prince::HandlePrince(Input* input) {
 	int moveY = 0;
 
 	if (fightStance) {
-		OutputDebugString(L"FIGHT!\n");
+		//OutputDebugString(L"FIGHT!\n");
 
 		if (this->getAnim()->isFinished()) {
 			//input at the end of an animation
@@ -418,7 +418,7 @@ void Prince::HandlePrince(Input* input) {
 		return;
 	}
 
-	OutputDebugString(L"PASSIVE!\n");
+	//OutputDebugString(L"PASSIVE!\n");
 
 	if(this->getAnim()->isFinished()) {
 
