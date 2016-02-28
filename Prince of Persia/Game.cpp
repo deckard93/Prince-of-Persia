@@ -1,6 +1,8 @@
 #include "Game.h"
 #include "Graphics.h"
 #include "Level.h"
+#include "Guard.h"
+#include "GuardAI.h"
 
 #define BORDERS 0
 
@@ -49,7 +51,7 @@ Game::Game(HWND hwnd, Input* in) :
 	RegisterSprite("potionPoison");
 	RegisterSprite("potionExtend");
 	
-	//sprite sheets
+	//prince sprite sheets
 	RegisterSprite("idle"       , "Assets//prince//");
 	RegisterSprite("turn"       , "Assets//prince//");
 	RegisterSprite("running"    , "Assets//prince//");
@@ -69,6 +71,10 @@ Game::Game(HWND hwnd, Input* in) :
 	RegisterSprite("newDrop"    , "Assets//prince//");
 	RegisterSprite("drink"      , "Assets//prince//");
 	RegisterSprite("pickSword"  , "Assets//prince//");
+
+	//prince sprite sheets
+	RegisterSprite("guardIdle", "Assets//guard//");
+
 
 	//fight sheets
 	RegisterSprite("fightIdle"  , "Assets//prince//");
@@ -96,10 +102,10 @@ Game::Game(HWND hwnd, Input* in) :
 void Game::GameLoop() {	
 	graphics.BeginFrame();
 	
-	//ControlAI
 	DrawGraphics();
 
 	HandleInput();
+	ControlAI();
 	CheckCollision();
 
 	graphics.EndFrame();
@@ -116,6 +122,20 @@ Sprite* Game::getSprite(string name) {
 }
 
 //control
+void Game::ControlAI() {
+	std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
+	for (std::map<std::pair<int, int>, Entity*>::iterator i = entitites->begin(); i != entitites->end(); i++) {
+		if (i->second == NULL) { continue; } // TODO: should not happen check load entities
+		if (i->second->getType() == guardT) {
+			if (level->inScene(i->first.second, i->first.first)) {
+				Entity* guard = i->second;
+				GuardAI* guardAI = dynamic_cast<GuardAI*>(guard);
+				assert(guardAI != 0);
+				guardAI->Control(*prince, *level);
+			}
+		}
+	}
+}
 void Game::CheckCollision() {
 
 	//calculate foot position
@@ -307,6 +327,15 @@ void Game::HandleInput() {
 
 	if (input->getKeyStatus('O')) {
 		prince->defferMoveX(-1);
+	}
+
+
+	if (input->getKeyStatus('G')) {
+		prince->Heal();
+	}
+
+	if (input->getKeyStatus('F')) {
+		prince->Hurt();
 	}
 
 

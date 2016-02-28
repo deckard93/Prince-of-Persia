@@ -196,6 +196,14 @@ bool Animation::isFrozen() {
 	} 
 	return false;
 }
+void Animation::Reset() {
+	//TODO is this function correct?
+	if (playForward) {
+		currentFrame = 0;
+	} else {
+		currentFrame = getLastFrameNr() - 1;
+	}
+}
 
 //drawing
 void Animation::Display(Graphics* graphics, int x, int y) {
@@ -212,6 +220,9 @@ bool Animation::isFinished() {
 }
 bool Animation::isReversed() {
 	return !playForward;
+}
+bool Animation::isFlipped() {
+	return flipped;
 }
 
 //Destructors

@@ -1,5 +1,8 @@
 #include "Level.h"
 #include "Game.h"
+#include "Guard.h"
+#include "GuardAI.h"
+
 
 void Level::loadLevel(int l) {
 
@@ -9,6 +12,8 @@ void Level::loadLevel(int l) {
 	filePath += "level";
 	filePath += levelNo;
 	filePath += ".txt";
+
+	filePath = "Levels/arena.txt";
 
 	//open file
 	FILE *file = fopen(filePath.c_str(), "rb");
@@ -72,7 +77,6 @@ bool Level::inScene(int abs_block_x, int abs_block_y) {
 	return false;
 }
 
-
 void Level::setCodeByCoord(int x, int y, char c) {
 	level[scene_y + getSceneBlockYByCoord(y)][scene_x + getSceneBlockXByCoord(x)] = c;
 	loadEntities();
@@ -80,6 +84,9 @@ void Level::setCodeByCoord(int x, int y, char c) {
 
 char Level::getLevelCodeByBlock(int x, int y) {
 	return level[y][x];
+}
+void Level::setLevelCodeByBlock(int x, int y, char c) {
+	level[y][x] = c;
 }
 
 char Level::getSceneCodeByBlock(int y, int x) {
@@ -166,6 +173,12 @@ void Level::loadEntities() {
 					entity = potion;
 				} break;
 
+				case'1': {
+					setLevelCodeByBlock(abs_block_x, abs_block_y, '_');
+					GuardAI* aiGuard = new GuardAI(x, y - 5);
+					entity = aiGuard;
+				} break;
+
 				case'K': {
 					x += POTION_OFFSET_X;
 					y += POTION_OFFSET_Y;
@@ -180,7 +193,7 @@ void Level::loadEntities() {
 					entity = potion;
 				} break;
 
-				case'E': {
+				case 'E': {
 					x += BIG_POTION_OFFSET_X;
 					y += BIG_POTION_OFFSET_Y;
 
@@ -195,7 +208,7 @@ void Level::loadEntities() {
 
 				case '/': {
 					x += SPIKE_OFFSET_X;
-					y += SPIKE_OFFSET_Y;	//TODO: Why y - 1 
+					y += SPIKE_OFFSET_Y;
 
 					Spikes* spikes = new Spikes(x, y, abs_block_x, abs_block_y);
 					entity = spikes;
@@ -271,7 +284,6 @@ bool Level::isFreeSpace(char c) {
 	}
 	return false;
 }
-
 bool Level::findSpikes(int block_x, int block_y) {
 	for (int y = block_y; y < level_height; y++) {
 		if (level[y][block_x] == 'I' || 

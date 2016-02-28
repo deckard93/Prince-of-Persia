@@ -1,5 +1,5 @@
 #include "Prince.h"
-
+#include "NormalInput.h"
 
 //constructors
 Prince::Prince() {
@@ -88,14 +88,6 @@ Prince::Prince() {
 
 	setCurrentAnim(idle);
 
-}
-
-//getters
-int Prince::getHealth() {
-	return currentHealth;
-}
-int Prince::getMaxHealth() {
-	return maxHealth;
 }
 
 //function
@@ -324,14 +316,22 @@ void Prince::Animate(Graphics* graphics) {
 
 		//fighting side effects
 		if (this->getAnim() == fightStep) {
-			
-			if (this->getAnim()->isReversed()) {
-				//this->MoveX(4);
-				moveX -= 2;
+
+			if (this->getAnim()->isReversed()) {	
+				if (this->getAnim()->isFlipped()) {
+					moveX += 2;
+				}
+				else {
+					moveX -= 2;
+				}
 			}
 			else {
-				//this->MoveX(-4);
-				moveX += 2;
+				if (this->getAnim()->isFlipped()) {
+					moveX -= 2;
+				}
+				else {
+					moveX += 2;
+				}
 			}
 		}
 
@@ -355,200 +355,253 @@ void Prince::Animate(Graphics* graphics) {
 	Entity::Animate(graphics);
 }
 
-void Prince::HandlePrince(Input* input) {
-	if (state == sDead) { return; }
 
-	int moveX = 0;
-	int moveY = 0;
 
-	if (fightStance) {
-		//OutputDebugString(L"FIGHT!\n");
 
-		if (this->getAnim()->isFinished()) {
-			//input at the end of an animation
-			
-		} else {
-			//input during animation
-		}
 
-		//defaultToIdle();
+void Prince::ActionHandler(Action action)
+{
+	if (this->getAnim() != idle) { return; }
 
-		if (this->getAnim() == fightIdle) {
+	switch (action) {
+		case aLeftJump: {
+			if (!facingRight) {	setCurrentAnim(staticJump); }
+		} break;
+		case aRightJump: {
+			if (facingRight) { setCurrentAnim(staticJump);  }
+		} break;
+		case aLeftStep: {
+			if (!facingRight) { setCurrentAnim(step); }
+		} break;
+		case aRightStep: {
+			if (facingRight) { setCurrentAnim(step); }
+		} break;
+		case aClimbUp:	{
 
-			if (input->isRightPressed() && facingRight) { 
-				fightStep->setReverse();
-				this->setCurrentAnim(fightStep); 
+		} break;
+		case aClimbDown: {
+			this->setCurrentAnim(climbUp);
+			climbUp->setForward();
+			climbUp->Reset();
+		} break;
+
+		case aJumpGrab: {
+			this->setCurrentAnim(jumpGrab);
+		} break;
+		case aHang:		{
+		} break;
+
+		case aGoRight: {
+			if (facingRight) {
+				setCurrentAnim(running);
+			} else {
+				setCurrentAnim(turn);
+				switchFacing();
 			}
-			if (input->isRightPressed() && !facingRight) { 
-				
-				fightStep->setForward();
-				this->setCurrentAnim(fightStep);  
-			}
+		} break;
 
-			if (input->isLeftPressed() && facingRight) { 
-				fightStep->setForward();
-				this->setCurrentAnim(fightStep); 
+		case aGoLeft: {
+			if (!facingRight) {	
+				setCurrentAnim(running);
+			} else {
+				setCurrentAnim(turn);
+				switchFacing();
 			}
-			if (input->isLeftPressed() && !facingRight) { 
-				
-				fightStep->setReverse();
-				this->setCurrentAnim(fightStep); 
-			}
-			
-			
-			if (input->isCtrlPressed()) { this->setCurrentAnim(fightStrike); }
-			if (input->hasUpBeenPressed())   { this->setCurrentAnim(fightParry); }
+		} break;
 
-			
-			
-			if (input->hasBeenPressed('X')) { this->setCurrentAnim(fightStep);   }
-		
-			
-			if (input->hasBeenPressed('B')) { this->setCurrentAnim(fightStart);  }
-			if (input->hasBeenPressed('N')) { this->setCurrentAnim(fightFinish); }
+		case aCrouch: {
+			setCurrentAnim(crouch);
+		} break;
 
-			
-			if (input->hasBeenPressed('K')) {
-				fightStance = false;
-			}
-		}
+		case aNone: { } break;
 
-		return;
+
 	}
 
-	//OutputDebugString(L"PASSIVE!\n");
+}
 
-	if(this->getAnim()->isFinished()) {
+
+void Prince::FightController(Input* input) {
+	if (this->getAnim()->isFinished()) {
+		//input at the end of an animation
+	}
+	else {
+		//input during animation
+	}
+	
+	if (this->getAnim() != fightIdle) {	return;	}
+
+	//accept input
+	if (input->isRightPressed() && facingRight) {
+		fightStep->setReverse();
+		this->setCurrentAnim(fightStep);
+	}
+	if (input->isRightPressed() && !facingRight) {
+		fightStep->setForward();
+		this->setCurrentAnim(fightStep);
+	}
+
+	if (input->isLeftPressed() && facingRight) {
+		fightStep->setForward();
+		this->setCurrentAnim(fightStep);
+	}
+	if (input->isLeftPressed() && !facingRight) {
+		fightStep->setReverse();
+		this->setCurrentAnim(fightStep);
+	}
+
+	if (input->isCtrlPressed())     { this->setCurrentAnim(fightStrike); }
+	if (input->hasUpBeenPressed())  { this->setCurrentAnim(fightParry);  }
+	if (input->hasBeenPressed('X')) { this->setCurrentAnim(fightStep);   }
+	if (input->hasBeenPressed('B')) { this->setCurrentAnim(fightStart);  }
+	if (input->hasBeenPressed('N')) { this->setCurrentAnim(fightFinish); }
+	if (input->hasBeenPressed('K')) {
+		fightStance = false;
+		this->MoveX(fightDisplacement);
+	}
+}
+void Prince::NormalController(Input* input) {
+
+	NormalInput nInput(input);
+
+	if (this->getAnim()->isFinished()) {
 
 		//input at the end of an animation
-		if( hang == this->getAnim()) {
-			if(input->isShiftPressed()) { this->getAnim()->Play(); }
+		if (hang == this->getAnim()) {
+			if (input->isShiftPressed()) { this->getAnim()->Play(); }
 		}
 		if (climbUp == this->getAnim() && !getAnim()->isReversed()) {
 			this->setCurrentAnim(hang);
 		}
-	
-		if( jumpGrab == this->getAnim() ) {
-			if(input->isShiftPressed()){ this->setCurrentAnim(hang); }
-			if(input->isUpPressed()) { 
-				this->setCurrentAnim(climbUp); 
+
+		if (jumpGrab == this->getAnim()) {
+			if (input->isShiftPressed()) { this->setCurrentAnim(hang); }
+			if (input->isUpPressed()) {
+				this->setCurrentAnim(climbUp);
 				getAnim()->setReverse();
 			}
 		}
 
-		if(this->getAnim() == runningTurn) {
+		if (this->getAnim() == runningTurn) {
 			this->setCurrentAnim(running);
 			this->getAnim()->setCurrentFrame(5);
 		}
 
-		if(this->getAnim() == runningJump) {
+		if (this->getAnim() == runningJump) {
 			this->setCurrentAnim(running);
 			this->getAnim()->setCurrentFrame(12);
 		}
-	
-	} else {
+
+	}
+	else {
 		//input during animation
-		if(this->getAnim() == crouch && this->getAnim()->getCurrentFrame() == 3) { 
-			if(input->isDownPressed()){
+		if (this->getAnim() == crouch && this->getAnim()->getCurrentFrame() == 3) {
+			if (input->isDownPressed()) {
 				this->getAnim()->setCurrentFrame(2);
 			}
 		}
 
-		if(this->getAnim() == running) {
-			if(getAnim()->getCurrentFrame() == 13) {
-				if(
-					(input->isRightPressed() && facingRight) || 
-					(input->isLeftPressed() && !facingRight)
-					) 
+		if (this->getAnim() == running) {
+			if (getAnim()->getCurrentFrame() == 13) {
+				if ((input->isRightPressed() && facingRight) ||
+					(input->isLeftPressed() && !facingRight))
 				{
 					getAnim()->setCurrentFrame(5);
 				}
 
-				if(
-					(input->isRightPressed() && !facingRight) ||
-					(input->isLeftPressed() && facingRight)
-					) 
+				if ((input->isRightPressed() && !facingRight) ||
+					(input->isLeftPressed() && facingRight))
 				{
 					this->setCurrentAnim(runningTurn);
 					switchFacing();
 				}
 			}
 
-			if(input->isUpPressed() && 
+			if (input->isUpPressed() &&
 				getAnim()->getCurrentFrame() > 10 &&
 				getAnim()->getCurrentFrame() < 14) {
 				this->setCurrentAnim(runningJump);
 			}
 		}
 
-		if(this->getAnim() == hang) {
-			if((!input->isShiftPressed() || hang->isFinished())) {
+		if (this->getAnim() == hang) {
+			if ((!input->isShiftPressed() || hang->isFinished())) {
 				this->getAnim()->Stop();
-			} else if(input->isUpPressed()) {
+			}
+			else if (input->isUpPressed()) {
 				this->setCurrentAnim(climbUp);
 				getAnim()->setReverse();
+				climbUp->Reset();
 			}
 		}
 	}
+
+	
+	if (this->getAnim() != idle) { return; }
 
 	//accept input
-	if(this->getAnim() == idle) {
+	if (nInput.doLeftStep()  && !facingRight){ this->setCurrentAnim(step);	     return; }
+	if (nInput.doRightStep() && facingRight) { this->setCurrentAnim(step);       return; }
+	if (nInput.doLeftJump()  && !facingRight){ this->setCurrentAnim(staticJump); return; }
+	if (nInput.doRightJump() && facingRight) { this->setCurrentAnim(staticJump); return; }
 
-		if(input->isShiftPressed() && input->isLeftPressed() && !facingRight) { this->setCurrentAnim(step);	return;}
-		if(input->isShiftPressed() && input->isRightPressed() && facingRight) { this->setCurrentAnim(step); return;}
-		if(input->isUpPressed() && input->isLeftPressed() && !facingRight) { this->setCurrentAnim(staticJump); return; }
-		if(input->isUpPressed() && input->isRightPressed() && facingRight) { this->setCurrentAnim(staticJump); return; }
+	if (input->isDownPressed() && input->isShiftPressed()) {
+		this->setCurrentAnim(climbUp);
+		climbUp->setForward();
+		climbUp->Reset();
+		return;
+	}
+	if (nInput.doClimb()) { this->setCurrentAnim(jumpGrab); return;  }
+	if (nInput.goDown())  { this->setCurrentAnim(crouch);   return;  }
+	
 
-		if(input->isUpPressed()) { this->setCurrentAnim(jumpGrab); }
-		if(input->isDownPressed()) { this->setCurrentAnim(crouch); }
-		if(input->isDownPressed() && input->isShiftPressed()) {
-			this->setCurrentAnim(climbUp);
-			climbUp->setForward();
+	if (input->isRightPressed()) {
+		if (facingRight) {
+			this->setCurrentAnim(running);
+			return;
+		} else {
+			this->setCurrentAnim(turn);
+			switchFacing();
+			return;
 		}
-
-		if(input->isRightPressed()) {
-			if(facingRight) {
-				this->setCurrentAnim(running);
-			} else {
-				this->setCurrentAnim(turn);
-				switchFacing();	
-			}
-		}
-
-		if(input->isLeftPressed()) {
-			if(facingRight) {
-				this->setCurrentAnim(turn);
-				switchFacing();
-			} else {
-				this->setCurrentAnim(running);
-			}
-		}
-
-		if (input->hasBeenPressed('K')) { 
-			fightStance = true; 
-			setCurrentAnim(fightIdle);  
+	}
+	if (input->isLeftPressed()) {
+		if (facingRight) {
+			this->setCurrentAnim(turn);
+			switchFacing();
+			return;
+		} else {
+			this->setCurrentAnim(running);
+			return;
 		}
 	}
 
+	if (input->hasBeenPressed('K')) {
+		fightStance = true;
+		this->MoveX(-fightDisplacement);
+		setCurrentAnim(fightIdle);
+	}
+}
 
+void Prince::HandlePrince(Input* input) {
+	if (state == sDead) { return; }
 
+	int moveX = 0;
+	int moveY = 0;
+
+	if (fightStance) {		
+		FightController(input);
+	} else {
+		NormalController(input);
+	}
 }
 
 int Prince::Drink() {
 	if(this->getAnim() == idle) {
 		this->setCurrentAnim(drink);
-	
 		return 1;
 	}
 	return 0;
-}
-void Prince::Hurt() {
-	currentHealth--;
-}
-void Prince::Heal() {
-	if(currentHealth < maxHealth) {
-		currentHealth++;
-	}
 }
 void Prince::increaseMaxHealth() {
 	maxHealth++;

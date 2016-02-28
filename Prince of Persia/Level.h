@@ -38,6 +38,7 @@ public:
 	int getLevelBlockY(int y);
 
 	void setCodeByCoord(int x, int y, char c);
+	void setLevelCodeByBlock(int x, int y, char c);
 
 	void drawLevel();
 	void changeScene();

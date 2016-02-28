@@ -9,35 +9,27 @@ public:
 
 	void setLeftStatus(bool status);
 	bool isLeftPressed();
-	bool getLeftPrev();
 
 	void setUpStatus(bool status);
 	bool isUpPressed();
-	bool getUpPrev();
 
 	void setRightStatus(bool status);
 	bool isRightPressed();
-	bool getRightPrev();
 
 	void setDownStatus(bool status);
 	bool isDownPressed();
-	bool getDownPrev();
 
 	void setShiftStatus(bool status);
 	bool isShiftPressed();
-	bool getShiftPrev();
 
 	void setCtrlStatus(bool status);
 	bool isCtrlPressed();
-	bool getCtrlPrev();
 
 	void setSpaceStatus(bool status);
 	bool isSpacePressed();
-	bool getSpacePrev();
 	
 	bool hasUpBeenPressed();
 	bool hasDownBeenPressed();
-
 
 	bool getKeyStatus(char k);
 	void setKeyStatus(int k, bool status);
