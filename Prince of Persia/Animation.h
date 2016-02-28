@@ -61,6 +61,7 @@ public:
 	void setCurrentFrame(int frame);
 	void Freeze();
 	bool isFrozen();
+	void Reset();
 
 	//drawing
 	void Display(Graphics* graphics, int x, int y);
@@ -68,6 +69,7 @@ public:
 	
 	bool isFinished();
 	bool isReversed();
+	bool isFlipped();
 
 	//Destructors
 	~Animation();

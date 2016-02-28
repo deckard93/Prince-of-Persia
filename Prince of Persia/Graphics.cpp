@@ -87,7 +87,6 @@ void FreeSprite( Sprite* sprite )
 	free( sprite->surface );
 }
 
-
 //Constructor
 Graphics::Graphics(HWND windowHandle) {
 	//There is something silly float
@@ -106,8 +105,6 @@ Graphics::Graphics(HWND windowHandle) {
 	d3dpresent.BackBufferFormat = D3DFMT_UNKNOWN;
 	d3dpresent.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
 	d3dpresent.Flags = D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;
-
-
 
 	//Create device 
 	result = pD3DObject->CreateDevice(
