@@ -25,7 +25,6 @@ private:
 	Animation* spikeDeath;
 	*/
 
-
 	Animation* idle;
 	Animation* turn;
 	Animation* running;
@@ -41,17 +40,6 @@ private:
 	Animation* drop;
 	Animation* drink;
 	Animation* pickSword;
-
-	Animation* fightIdle;
-	Animation* fightStep;
-	Animation* fightParry;
-	Animation* fightStrike;
-	Animation* fightStart;
-	Animation* fightFinish;
-
-	Animation* guilotineDeath;
-	Animation* spikeDeath;
-	Animation* swordDeath;
 
 	princeState state;
 
