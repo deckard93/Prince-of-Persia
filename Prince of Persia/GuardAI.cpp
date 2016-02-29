@@ -27,21 +27,20 @@ void GuardAI::Control(Prince& prince, Level& level) {
 	int guardLevelX = level.getSceneBlockYByCoord(this->getX());
 
 
+	FacePrince(prince, level);
 	if ( princeLevelY == guardLevelY ) {
 
 //		OutputDebugStringA("We're on the same level \n");
-		
-
-		FacePrince(prince);
 		if (abs(princeLevelX - guardLevelX) <= 1) {
 			ActionHandler(aStrike);
 		}
 		else {
 			if (princeLevelX > guardLevelX) {
-				ActionHandler(aGoLeft);
+				ActionHandler(aGoRight);
 			}
 			else {
-				ActionHandler(aGoRight);
+				ActionHandler(aGoLeft);
+				
 			}
 		}
 
@@ -50,6 +49,14 @@ void GuardAI::Control(Prince& prince, Level& level) {
 	return;
 }
 
-void GuardAI::FacePrince(Prince& prince) {
-	
+void GuardAI::FacePrince(Prince& prince, Level& level) {
+	int princeLevelX = level.getSceneBlockYByCoord(prince.getX());
+	int guardLevelX = level.getSceneBlockYByCoord(this->getX());
+
+	if (princeLevelX < guardLevelX && facingRight) {
+		this->SwitchFacing();
+	}
+	if (princeLevelX > guardLevelX && !facingRight) {
+		this->SwitchFacing();
+	}
 }

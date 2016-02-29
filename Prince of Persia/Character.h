@@ -15,10 +15,39 @@ public:
 	int getHealth();
 	int getMaxHealth();
 
+	void SwitchFacing();
+	Animation* idle;
+	Animation* turn;
+	Animation* running;
+	Animation* climbUp;
+	Animation* crouch;
+	Animation* jumpGrab;
+	Animation* staticJump;
+	Animation* step;
+	Animation* hang;
+	Animation* runningJump;
+	Animation* runningTurn;
+	Animation* fall;
+	Animation* drop;
+	Animation* drink;
+	Animation* pickSword;
+
 protected:
 	void defaultToIdle();
 
-private:
+protected:
+
+	Animation* fightIdle;
+	Animation* fightStep;
+	Animation* fightParry;
+	Animation* fightStrike;
+
+	Animation* fightStart;
+	Animation* fightFinish;
+
+	Animation* swordDeath;
+	Animation* guilotineDeath;
+	Animation* spikeDeath;
 
 //variables
 protected:

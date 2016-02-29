@@ -14,6 +14,7 @@ private:
 public:
 	GuardAI(int x, int y);
 	void Control(Prince & prince, Level & level);
+	
 private:
-	void FacePrince(Prince& prince);
+	void FacePrince(Prince & prince, Level & level);
 };

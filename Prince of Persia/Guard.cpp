@@ -21,6 +21,8 @@ Guard::Guard(int x, int y) {
 	fightParry->setReverse();
 	fightStrike->setReverse();
 
+	facingRight = false;
+
 	Entity::setCurrentAnim(fightIdle);
 }
 
