@@ -13,6 +13,14 @@ Guard::Guard(int x, int y) {
 	fightParry  = new Animation(Game::getSprite("fightParry"),  3);
 	fightStrike = new Animation(Game::getSprite("fightStrike"), 6);
 
+	fightStep->setDisplayTime(100);
+	fightParry->setDisplayTime(120);
+	fightStrike->setDisplayTime(100);
+
+	fightStep->setReverse();
+	fightParry->setReverse();
+	fightStrike->setReverse();
+
 	Entity::setCurrentAnim(fightIdle);
 }
 
@@ -103,6 +111,9 @@ void Guard::Animate(Graphics* graphics) {
 				else {
 					if (this->getAnim()->isFlipped()) {
 						moveX -= 2;
+					}
+					else {
+						moveX += 2;
 					}
 				}
 			}

@@ -44,6 +44,8 @@ private:
 	//control
 	void HandleInput();
 	void ControlAI();
+	void CheckCharacterCollision(Character & character);
+	void CheckPrinceCollision();
 	void CheckCollision();
 	void DrawGraphics();
 

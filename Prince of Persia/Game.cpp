@@ -132,102 +132,82 @@ void Game::ControlAI() {
 				GuardAI* guardAI = dynamic_cast<GuardAI*>(guard);
 				assert(guardAI != 0);
 				guardAI->Control(*prince, *level);
+				Character* character = dynamic_cast<Character*>(guard);
+				assert(character != 0);
+				CheckCharacterCollision(*character);
 			}
 		}
 	}
 }
-void Game::CheckCollision() {
 
+
+void Game::CheckCharacterCollision(Character& character) {
 	//calculate foot position
-	int xFoot = prince->getX() + prince->getAnim()->getSheet()->getFrameWidth() / 2 - 36;
-	int yFoot = prince->getY() + prince->getAnim()->getSheet()->getFrameHeight() - 9;
+	int xFoot = character.getX() + character.getAnim()->getSheet()->getFrameWidth() / 2 - 36;
+	int yFoot = character.getY() + character.getAnim()->getSheet()->getFrameHeight() - 9;
 
-	int xFootReal = prince->getX() + prince->getAnim()->getSheet()->getFrameWidth() / 2;
-	int yFootReal = prince->getY() + prince->getAnim()->getSheet()->getFrameHeight() - 9;
+	int xFootReal = character.getX() + character.getAnim()->getSheet()->getFrameWidth() / 2;
+	int yFootReal = character.getY() + character.getAnim()->getSheet()->getFrameHeight() - 9;
 
 
-	if (DEBUG) { graphics.DrawCircle(xFootReal, yFootReal, 5, 255, 255, 255); }
-
-	int mX = prince->getDefferX();
-	int mY = prince->getDefferY();
+	int mX = character.getDefferX();
+	int mY = character.getDefferY();
 
 	int nBlockX = level->getSceneBlockXByCoord(xFoot);
 	int nBlockY = level->getSceneBlockYByCoord(yFoot);
 	//nBlockX = level->getSceneBlockXByCoord(xFootReal - 23);
 
-	
+
 	//===================== Fall ==========================
-	if(level->getSceneCodeByBlock(nBlockY, nBlockX) == '_' || 
-	   level->getSceneCodeByBlock(nBlockY, nBlockX) == '#' ||
-	   level->getSceneCodeByBlock(nBlockY, nBlockX) == '/' ||
-	   level->getSceneCodeByBlock(nBlockY, nBlockX) == '^' ||
-	   level->getSceneCodeByBlock(nBlockY, nBlockX) == '$' ||
-	   level->getSceneCodeByBlock(nBlockY, nBlockX) == '|' ||
-	   level->getSceneCodeByBlock(nBlockY, nBlockX) == '_' ) {
+	if (level->getSceneCodeByBlock(nBlockY, nBlockX) == '_' ||
+		level->getSceneCodeByBlock(nBlockY, nBlockX) == '#' ||
+		level->getSceneCodeByBlock(nBlockY, nBlockX) == '/' ||
+		level->getSceneCodeByBlock(nBlockY, nBlockX) == '^' ||
+		level->getSceneCodeByBlock(nBlockY, nBlockX) == '$' ||
+		level->getSceneCodeByBlock(nBlockY, nBlockX) == '|' ||
+		level->getSceneCodeByBlock(nBlockY, nBlockX) == '_') {
 
 		int bar = (Level::BLOCK_HEIGHT_PX * nBlockY);
-		if(DEBUG) graphics.DrawLine(0, bar, Graphics::SCREENX, bar, 255, 255, 255);
-	
-		if(yFoot < bar - 20) {
-			mY += prince->setFall();
-		} else {
-			//prince->getAnim()->Play(); ???????????????
-			prince->Land();
+		if (yFoot < bar - 20) {
+			//mY += prince->setFall(); //TODO make part of Character
+		}
+		else {
+			//prince->Land(); //TODO make part of character
 		}
 	}
 
 	if (level->getSceneCodeByBlock(nBlockY, nBlockX) == ' ' ||
 		level->getSceneCodeByBlock(nBlockY, nBlockX) == '*') {
-		mY += prince->setFall();
+		//mY += prince->setFall(); TODO make this part of the character Class
 	}
 
 	//=============== Collision With Walls =====================
-	if(mX < 0 && level->getSceneCodeByBlock(nBlockY, nBlockX) == ']') {
+	if (mX < 0 && level->getSceneCodeByBlock(nBlockY, nBlockX) == ']') {
 		int bar = (Level::BLOCK_WIDTH_PX * (nBlockX));
 
 		if (DEBUG) graphics.DrawLine(0, bar, Graphics::SCREENX, bar, 255, 255, 255);
 
-		if(xFoot + mX < bar) {
+		if (xFoot + mX < bar) {
 			mX = 0;
 		}
 	}
 
-	if(mX > 0 && level->getSceneCodeByBlock(nBlockY,nBlockX + 1) == '[' ||
-				 level->getSceneCodeByBlock(nBlockY,nBlockX) == '[' ) {
+	if (mX > 0 && level->getSceneCodeByBlock(nBlockY, nBlockX + 1) == '[' ||
+		level->getSceneCodeByBlock(nBlockY, nBlockX) == '[') {
 
-		int bar = (Level::BLOCK_WIDTH_PX * (nBlockX) - 27);
+		int bar = (Level::BLOCK_WIDTH_PX * (nBlockX)-27);
 		if (DEBUG) graphics.DrawLine(bar, yFoot, bar, Level::BLOCK_HEIGHT_PX, 255, 255, 255);
 
-		if(xFoot + mX > bar ) {
+		if (xFoot + mX > bar) {
 			mX = 0;
 		}
 	}
 
-	//===================== Change Scenes =====================
-	if(prince->getMidY() > Level::BLOCK_HEIGHT_PX * 3) {
-		level->changeScene(D);
-		prince->setY(-60);
-	}
-
-	if(prince->getMidY() < 0) {
-		level->changeScene(U);
-		prince->setY(Level::BLOCK_HEIGHT_PX * 3 - 70);
-	}
-
-	if(xFoot + 60 > Level::BLOCK_WIDTH_PX * 10 + 5) {
-		level->changeScene(R);
-		prince->setX( -30);
-	}
-
-	if(xFoot < -5) {
-		level->changeScene(L);
-		prince->setX(Level::BLOCK_WIDTH_PX * 9 - 30);
-	}
-
+	
 
 	//===================== Move Prince =====================
-	prince->MoveX(mX);
-	prince->MoveY(mY);
+	character.MoveX(mX);
+	character.MoveY(mY);
 
 	char code = level->getSceneCodeByCoord(prince->getMidX(), prince->getMidY());
 	int absX = level->getLevelBlockX(level->getSceneBlockXByCoord(prince->getMidX()));
@@ -235,10 +215,10 @@ void Game::CheckCollision() {
 	std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
 
 	////================== Open/Close Gates ==================
-	if (code == '-' || 
+	if (code == '-' ||
 		code == '=') {
 
-		
+
 		std::map<std::pair<int, int>, std::pair<int, int> >* mechanism = level->getMec();
 
 		std::pair<int, int> platKey(absY, absX);
@@ -256,7 +236,138 @@ void Game::CheckCollision() {
 
 		if (code == '-') {
 			g->Open();
-		} else {
+		}
+		else {
+			g->Close();
+		}
+	}
+
+
+
+
+}
+void Game::CheckPrinceCollision() {
+	//calculate foot position
+	int xFoot = prince->getX() + prince->getAnim()->getSheet()->getFrameWidth() / 2 - 36;
+	int yFoot = prince->getY() + prince->getAnim()->getSheet()->getFrameHeight() - 9;
+
+	int xFootReal = prince->getX() + prince->getAnim()->getSheet()->getFrameWidth() / 2;
+	int yFootReal = prince->getY() + prince->getAnim()->getSheet()->getFrameHeight() - 9;
+
+
+	if (DEBUG) { graphics.DrawCircle(xFootReal, yFootReal, 5, 255, 255, 255); }
+
+	int mX = prince->getDefferX();
+	int mY = prince->getDefferY();
+
+	int nBlockX = level->getSceneBlockXByCoord(xFoot);
+	int nBlockY = level->getSceneBlockYByCoord(yFoot);
+	//nBlockX = level->getSceneBlockXByCoord(xFootReal - 23);
+
+
+	//===================== Fall ==========================
+	if (level->getSceneCodeByBlock(nBlockY, nBlockX) == '_' ||
+		level->getSceneCodeByBlock(nBlockY, nBlockX) == '#' ||
+		level->getSceneCodeByBlock(nBlockY, nBlockX) == '/' ||
+		level->getSceneCodeByBlock(nBlockY, nBlockX) == '^' ||
+		level->getSceneCodeByBlock(nBlockY, nBlockX) == '$' ||
+		level->getSceneCodeByBlock(nBlockY, nBlockX) == '|' ||
+		level->getSceneCodeByBlock(nBlockY, nBlockX) == '_') {
+
+		int bar = (Level::BLOCK_HEIGHT_PX * nBlockY);
+		if (DEBUG) graphics.DrawLine(0, bar, Graphics::SCREENX, bar, 255, 255, 255);
+
+		if (yFoot < bar - 20) {
+			mY += prince->setFall();
+		}
+		else {
+			//prince->getAnim()->Play(); ???????????????
+			prince->Land();
+		}
+	}
+
+	if (level->getSceneCodeByBlock(nBlockY, nBlockX) == ' ' ||
+		level->getSceneCodeByBlock(nBlockY, nBlockX) == '*') {
+		mY += prince->setFall();
+	}
+
+	//=============== Collision With Walls =====================
+	if (mX < 0 && level->getSceneCodeByBlock(nBlockY, nBlockX) == ']') {
+		int bar = (Level::BLOCK_WIDTH_PX * (nBlockX));
+
+		if (DEBUG) graphics.DrawLine(0, bar, Graphics::SCREENX, bar, 255, 255, 255);
+
+		if (xFoot + mX < bar) {
+			mX = 0;
+		}
+	}
+
+	if (mX > 0 && level->getSceneCodeByBlock(nBlockY, nBlockX + 1) == '[' ||
+		level->getSceneCodeByBlock(nBlockY, nBlockX) == '[') {
+
+		int bar = (Level::BLOCK_WIDTH_PX * (nBlockX)-27);
+		if (DEBUG) graphics.DrawLine(bar, yFoot, bar, Level::BLOCK_HEIGHT_PX, 255, 255, 255);
+
+		if (xFoot + mX > bar) {
+			mX = 0;
+		}
+	}
+
+	//===================== Change Scenes =====================
+	if (prince->getMidY() > Level::BLOCK_HEIGHT_PX * 3) {
+		level->changeScene(D);
+		prince->setY(-60);
+	}
+
+	if (prince->getMidY() < 0) {
+		level->changeScene(U);
+		prince->setY(Level::BLOCK_HEIGHT_PX * 3 - 70);
+	}
+
+	if (xFoot + 60 > Level::BLOCK_WIDTH_PX * 10 + 5) {
+		level->changeScene(R);
+		prince->setX(-30);
+	}
+
+	if (xFoot < -5) {
+		level->changeScene(L);
+		prince->setX(Level::BLOCK_WIDTH_PX * 9 - 30);
+	}
+
+
+	//===================== Move Prince =====================
+	prince->MoveX(mX);
+	prince->MoveY(mY);
+
+	char code = level->getSceneCodeByCoord(prince->getMidX(), prince->getMidY());
+	int absX = level->getLevelBlockX(level->getSceneBlockXByCoord(prince->getMidX()));
+	int absY = level->getLevelBlockY(level->getSceneBlockYByCoord(prince->getMidY()));
+	std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
+
+	////================== Open/Close Gates ==================
+	if (code == '-' ||
+		code == '=') {
+
+
+		std::map<std::pair<int, int>, std::pair<int, int> >* mechanism = level->getMec();
+
+		std::pair<int, int> platKey(absY, absX);
+		std::pair<int, int> gateKey = (*mechanism)[platKey];
+
+		//gateKey = make_pair(50, 4);
+
+		if (entitites->find(gateKey) == entitites->end()) {
+			return;
+		}
+
+		Entity* e = (*entitites)[gateKey];
+
+		Gate* g = dynamic_cast<Gate*>(e);
+
+		if (code == '-') {
+			g->Open();
+		}
+		else {
 			g->Close();
 		}
 	}
@@ -264,27 +375,27 @@ void Game::CheckCollision() {
 	////============== Spikes ==============
 	/*
 	for (int y = 0; nBlockY + y < 5; y++) {
-		char c = level->getSceneCodeByBlock(nBlockY + y, nBlockX);
-		if (c == '/') {
+	char c = level->getSceneCodeByBlock(nBlockY + y, nBlockX);
+	if (c == '/') {
 
-			std::pair<int, int> platKey(absY + y, absX);
-			Entity* e = (*entitites)[platKey];
-			Spikes* spikes = dynamic_cast<Spikes*>(e);
-			spikes->On();
-		}
+	std::pair<int, int> platKey(absY + y, absX);
+	Entity* e = (*entitites)[platKey];
+	Spikes* spikes = dynamic_cast<Spikes*>(e);
+	spikes->On();
+	}
 	}
 	*/
 
 
 
 	if (level->findSpikes(absX, absY)) {
-		
+
 	}
 
 	if (code == '/') {
 		if (prince->getPrinceState() == sRunning ||
 			prince->getPrinceState() == sFalling) {
-		
+
 			nBlockX = level->getSceneBlockXByCoord(prince->getMidX());
 			nBlockY = level->getSceneBlockYByCoord(prince->getMidY());
 			prince->setX((nBlockX - 1) * Level::BLOCK_WIDTH_PX - 15);
@@ -297,6 +408,9 @@ void Game::CheckCollision() {
 	////============== Guilotine ==============
 
 
+}
+void Game::CheckCollision() {
+	CheckPrinceCollision();
 }
 void Game::HandleInput() {
 	
