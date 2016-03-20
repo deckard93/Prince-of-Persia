@@ -17,6 +17,8 @@ public:
 
 	void SwitchFacing();
 	bool isImmune();
+	bool checkParryBy(Character* enemy);
+	bool isParying();
 	bool isHitting(Character * enemy);
 
 	Animation* idle;

@@ -414,6 +414,7 @@ void Game::CheckCombatCollision()
 	std::list<Character*>* guards = level->getGuards();
 	for (std::list<Character*>::iterator i = guards->begin(); i != guards->end(); i++) {
 		Character* guard = *i;
+		guard->checkParryBy(prince);
 		if (guard->isHitting(prince)) {
 			prince->Hurt();
 		}
@@ -421,8 +422,10 @@ void Game::CheckCombatCollision()
 
 	for (std::list<Character*>::iterator i = guards->begin(); i != guards->end(); i++) {
 		Character* guard = *i;
-		if (prince->isHitting(guard)) {
-			guard->Hurt();
+		if (!prince->checkParryBy(guard)) {
+			if (prince->isHitting(guard)) {
+				guard->Hurt();
+			}
 		}
 	}
 }

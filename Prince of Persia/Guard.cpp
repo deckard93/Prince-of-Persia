@@ -20,7 +20,7 @@ Guard::Guard(int x, int y) {
 
 	fightStep->setReverse();
 	fightParry->setReverse();
-	fightStrike->setReverse();
+	//fightStrike->setReverse();
 
 	facingRight = false;
 

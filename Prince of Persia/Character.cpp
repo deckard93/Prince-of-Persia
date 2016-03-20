@@ -63,6 +63,30 @@ bool Character::isImmune() {
 
 }
 
+bool Character::checkParryBy(Character* enemy) {
+
+	if (this->getY() != enemy->getY())           { return false; }
+	if (this->getAnim() != fightStrike)          { return false; }
+	if (this->getAnim()->getCurrentFrame() >= 2) { return false; }
+
+	if (enemy->isParying()) { 
+		this->setCurrentAnim(fightParry);
+		this->getAnim()->setCurrentFrame(enemy->getAnim()->getCurrentFrame());
+		return true;
+	}
+	return false;
+}
+
+bool Character::isParying()
+{
+	if (this->getAnim() == fightParry) {
+		if (this->getAnim()->getCurrentFrame() < 2) {
+			return true;
+		}
+	}
+	return false;
+}
+
 bool Character::isHitting(Character* enemy)
 {
 	
