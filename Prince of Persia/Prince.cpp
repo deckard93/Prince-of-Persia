@@ -44,7 +44,7 @@ Prince::Prince() {
 
 
 	fightStep->setDisplayTime(100);
-	fightParry->setDisplayTime(120);
+	fightParry->setDisplayTime(80); //120
 	fightStrike->setDisplayTime(100);
 	fightStart->setDisplayTime(100);
 	fightFinish->setDisplayTime(100);
@@ -80,7 +80,7 @@ Prince::Prince() {
 
 	fightStep->setReverse();
 	fightParry->setReverse();
-	fightStrike->setReverse();
+	//fightStrike->setReverse();
 	fightStart->setReverse();
 	fightFinish->setReverse();
 
