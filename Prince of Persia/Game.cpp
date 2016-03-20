@@ -83,6 +83,7 @@ Game::Game(HWND hwnd, Input* in) :
 	RegisterSprite("fightStart" , "Assets//prince//");
 	RegisterSprite("fightStrike", "Assets//prince//");
 	RegisterSprite("fightFinish", "Assets//prince//");
+	RegisterSprite("fightInjure", "Assets//prince//");
 
 	//death/kill sprites
 	RegisterSprite("spikeKill"  , "Assets//prince//");
@@ -148,7 +149,6 @@ void Game::CheckCharacterCollision(Character& character) {
 
 	int xFootReal = character.getX() + character.getAnim()->getSheet()->getFrameWidth() / 2;
 	int yFootReal = character.getY() + character.getAnim()->getSheet()->getFrameHeight() - 9;
-
 
 	int mX = character.getDefferX();
 	int mY = character.getDefferY();
@@ -409,8 +409,26 @@ void Game::CheckPrinceCollision() {
 
 
 }
+void Game::CheckCombatCollision()
+{
+	std::list<Character*>* guards = level->getGuards();
+	for (std::list<Character*>::iterator i = guards->begin(); i != guards->end(); i++) {
+		Character* guard = *i;
+		if (guard->isHitting(prince)) {
+			prince->Hurt();
+		}
+	}
+
+	for (std::list<Character*>::iterator i = guards->begin(); i != guards->end(); i++) {
+		Character* guard = *i;
+		if (prince->isHitting(guard)) {
+			guard->Hurt();
+		}
+	}
+}
 void Game::CheckCollision() {
 	CheckPrinceCollision();
+	CheckCombatCollision();
 }
 void Game::HandleInput() {
 	

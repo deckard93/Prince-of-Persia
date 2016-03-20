@@ -16,6 +16,9 @@ public:
 	int getMaxHealth();
 
 	void SwitchFacing();
+	bool isImmune();
+	bool isHitting(Character * enemy);
+
 	Animation* idle;
 	Animation* turn;
 	Animation* running;
@@ -42,6 +45,7 @@ protected:
 	Animation* fightParry;
 	Animation* fightStrike;
 
+	Animation* fightInjure;
 	Animation* fightStart;
 	Animation* fightFinish;
 

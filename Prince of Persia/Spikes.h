@@ -27,5 +27,4 @@ public:
 	void AnimateForeground(Graphics* graphics);
 	void AnimateBackground(Graphics* graphics);
 
-
 };

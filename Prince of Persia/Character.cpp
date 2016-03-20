@@ -3,7 +3,11 @@
 Character::Character() {}
 
 void Character::Hurt() {
-	currentHealth--;
+	
+	if (currentHealth > 0) {
+		currentHealth--;
+		this->setCurrentAnim(fightInjure);
+	}
 }
 void Character::Heal() {
 	if (currentHealth < maxHealth) {
@@ -48,4 +52,34 @@ void Character::SwitchFacing() {
 		//idle->setFlipped(true);
 
 	}
+}
+
+bool Character::isImmune() {
+	if (this->getAnim() == fightInjure) {
+		return true;
+	} else {
+		return false;
+	}
+
+}
+
+bool Character::isHitting(Character* enemy)
+{
+	
+	if (this->getY() != enemy->getY()) {
+		return false;
+	}
+
+	if (this->getAnim() != fightStrike) {
+		return false;
+	}
+
+	if (enemy->isImmune()) {
+		return false;
+	}
+
+	if (this->getAnim()->getCurrentFrame() != 2) {
+		return false;
+	}
+	return true;
 }

@@ -4,6 +4,12 @@
 #include "GuardAI.h"
 
 
+Level::Level() {
+	characters = new std::list<Character*>();
+	entities = new std::map<std::pair<int, int>, Entity*>();
+	mechanism = new std::map< std::pair<int, int>, std::pair<int, int> >();
+}
+
 void Level::loadLevel(int l) {
 
 	std::string levelNo = static_cast<std::ostringstream*>( &(std::ostringstream() << l) )->str();
@@ -47,7 +53,7 @@ void Level::loadLevel(int l) {
 	int gateX;
 	int gateY;
 
-	mechanism = new std::map< std::pair<int, int>, std::pair<int, int> >();
+	mechanism->clear();
 
 	while (fscanf(file, "%d", &platY) > 0 && fscanf(file, "%d", &platX) > 0 &&
 		   fscanf(file, "%d", &gateY) > 0 && fscanf(file, "%d", &gateX) > 0) {
@@ -59,8 +65,8 @@ void Level::loadLevel(int l) {
 		
 	}
 
-	entities = new std::map<std::pair<int, int>, Entity*>();
-
+	entities->clear();
+	
 	loadEntities();
 
 	fclose (file);
@@ -177,6 +183,7 @@ void Level::loadEntities() {
 					setLevelCodeByBlock(abs_block_x, abs_block_y, '_');
 					GuardAI* aiGuard = new GuardAI(x, y - 5);
 					entity = aiGuard;
+					characters->push_back(aiGuard);
 				} break;
 
 				case'K': {
@@ -275,6 +282,11 @@ std::map<std::pair<int, int>, std::pair<int, int> >* Level::getMec() {
 	return mechanism;
 }
 
+std::list<Character*>* Level::getGuards() {
+	return characters;
+}
+
+
 
 bool Level::isFreeSpace(char c) {
 	if (c == ' ' ||
@@ -301,4 +313,22 @@ bool Level::findSpikes(int block_x, int block_y) {
 	}
 	return false;
 
+}
+
+Level::~Level()
+{
+	if (entities != NULL) {
+		delete entities;
+		entities = NULL;
+	}
+
+	if (mechanism != NULL) {
+		delete mechanism;
+		mechanism = NULL;
+	}
+
+	if (characters != NULL) {
+		delete characters;
+		characters = NULL;
+	}
 }
