@@ -7,6 +7,7 @@
 #include <list>
 #include <map>
 
+#include "Character.h"
 #include "Graphics.h"
 #include "Gate.h"
 #include "Spikes.h"
@@ -27,7 +28,7 @@ class Level {
 
 //functions
 public:
-	Level() {}
+	Level();
 
 	void changeScene(direction dir);
 
@@ -47,6 +48,8 @@ public:
 
 	std::map<pair<int, int>, Entity*>* getEntities();
 	std::map<pair<int, int>, pair<int, int> >* getMec();
+
+	std::list<Character*>* getGuards();
 	
 	char getLevelCodeByBlock(int x, int y);
 
@@ -59,7 +62,6 @@ public:
 	bool isFreeSpace(char c);
 
 	bool inScene(int abs_block_x, int abs_block_y);
-
 
 	bool findSpikes(int block_x, int block_y);
 
@@ -88,6 +90,7 @@ private:
 
 	std::map<pair<int, int>, Entity*>* entities;
 	std::map<pair<int, int>, pair<int, int> >* mechanism;
+	std::list<Character*>* characters;
 
 	//Level Sprites
 	Sprite block;

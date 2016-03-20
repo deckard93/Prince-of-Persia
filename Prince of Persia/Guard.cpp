@@ -12,6 +12,7 @@ Guard::Guard(int x, int y) {
 	fightStep   = new Animation(Game::getSprite("fightStep"),   4);
 	fightParry  = new Animation(Game::getSprite("fightParry"),  3);
 	fightStrike = new Animation(Game::getSprite("fightStrike"), 6);
+	fightInjure = new Animation(Game::getSprite("fightInjure"), 3);
 
 	fightStep->setDisplayTime(100);
 	fightParry->setDisplayTime(120);

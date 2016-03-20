@@ -46,6 +46,7 @@ private:
 	void ControlAI();
 	void CheckCharacterCollision(Character & character);
 	void CheckPrinceCollision();
+	void CheckCombatCollision();
 	void CheckCollision();
 	void DrawGraphics();
 

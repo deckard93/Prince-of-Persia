@@ -31,7 +31,7 @@ void GuardAI::Control(Prince& prince, Level& level) {
 	if ( princeLevelY == guardLevelY ) {
 
 //		OutputDebugStringA("We're on the same level \n");
-		if (abs(princeLevelX - guardLevelX) <= 1) {
+		if (abs(princeLevelX - guardLevelX) == 0) {
 			ActionHandler(aStrike);
 		}
 		else {
@@ -39,11 +39,9 @@ void GuardAI::Control(Prince& prince, Level& level) {
 				ActionHandler(aGoRight);
 			}
 			else {
-				ActionHandler(aGoLeft);
-				
+				ActionHandler(aGoLeft);		
 			}
 		}
-
 	}
 
 	return;

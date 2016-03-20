@@ -38,6 +38,7 @@ Prince::Prince() {
 	fightStrike = new Animation(Game::getSprite("fightStrike"), 6);
 	fightStart  = new Animation(Game::getSprite("fightStart") , 4);
 	fightFinish = new Animation(Game::getSprite("fightFinish"), 8);
+	fightInjure = new Animation(Game::getSprite("fightInjure"), 3);
 
 	spikeDeath = new Animation(Game::getSprite("spikeKill"),   1);
 
@@ -47,6 +48,7 @@ Prince::Prince() {
 	fightStrike->setDisplayTime(100);
 	fightStart->setDisplayTime(100);
 	fightFinish->setDisplayTime(100);
+	fightInjure->setDisplayTime(100);
 
 
 	fall->setDisplayTime(70);
@@ -72,6 +74,7 @@ Prince::Prince() {
 	jumpGrab->setReverse();
 	drink->setReverse();
 	drop->setReverse();
+	//fightInjure->setReverse();
 	
 
 
@@ -315,6 +318,13 @@ void Prince::Animate(Graphics* graphics) {
 		}
 
 		//fighting side effects
+		if (this->getAnim() == fightInjure) {
+			if (this->getAnim()->isFlipped()) {
+				moveX -= 2;
+			} else {
+				moveX += 2;
+			}
+		}
 		if (this->getAnim() == fightStep) {
 
 			if (this->getAnim()->isReversed()) {	
@@ -453,6 +463,7 @@ void Prince::FightController(Input* input) {
 	if (input->isCtrlPressed())     { this->setCurrentAnim(fightStrike); }
 	if (input->hasUpBeenPressed())  { this->setCurrentAnim(fightParry);  }
 	if (input->hasBeenPressed('X')) { this->setCurrentAnim(fightStep);   }
+	if (input->hasBeenPressed('T')) { this->setCurrentAnim(fightInjure); }
 	if (input->hasBeenPressed('B')) { this->setCurrentAnim(fightStart);  }
 	if (input->hasBeenPressed('N')) { this->setCurrentAnim(fightFinish); }
 	if (input->hasBeenPressed('K')) {
@@ -705,6 +716,7 @@ void Prince::switchFacing() {
 		fightStart->setFlipped(false);
 		fightStrike->setFlipped(false);
 		fightFinish->setFlipped(false);
+		fightInjure->setFlipped(false);
 		
 	
 	} else {
@@ -734,6 +746,7 @@ void Prince::switchFacing() {
 		fightStart->setFlipped(true);
 		fightStrike->setFlipped(true);
 		fightFinish->setFlipped(true);
+		fightInjure->setFlipped(true);
 
 	}
 }
