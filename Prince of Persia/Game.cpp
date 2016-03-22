@@ -4,6 +4,7 @@
 #include "Guard.h"
 #include "GuardAI.h"
 
+
 #define BORDERS 0
 
 
@@ -418,9 +419,15 @@ void Game::CheckPrinceCollision() {
 
 
 }
-void Game::CheckCombatCollision()
-{
+void Game::CheckCombatCollision() {
 	std::list<Character*>* guards = level->getGuards();
+
+	for (std::list<Character*>::iterator i = guards->begin(); i != guards->end(); i++) {
+		Character* guard = *i;
+		EngageFight(prince, guard);
+	}
+
+
 	for (std::list<Character*>::iterator i = guards->begin(); i != guards->end(); i++) {
 		Character* guard = *i;
 		guard->checkParryBy(prince);
@@ -603,6 +610,26 @@ void Game::DrawGraphics() {
 	DrawHealth();
 
 	//graphics.EndFrame();
+
+}
+
+void Game::EngageFight(Character* prince, Character* guard) {
+
+	if (prince->getY() != guard->getY()) { return; }
+	if (std::abs(prince->getX() - guard->getX()) > 10000) { return; }
+	if (!prince->isIdle()) { return; }
+
+	
+	if (prince->isFighting()) {
+		prince->FaceCharacter(*guard, *level);
+		return;
+	}
+
+	if (prince->getX() < guard->getX() && !prince->isFacingRight()) { return; }
+	if (prince->getX() >= guard->getX() && prince->isFacingRight()) { return; }
+
+
+	prince->EngageEnemy(*guard);
 
 }
 

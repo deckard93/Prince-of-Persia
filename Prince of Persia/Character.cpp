@@ -1,6 +1,9 @@
 #include "Character.h"
+#include "Level.h"
 
-Character::Character() {}
+Character::Character() {
+	inFight = false;
+}
 
 void Character::Hurt() {
 	
@@ -106,4 +109,40 @@ bool Character::isHitting(Character* enemy)
 		return false;
 	}
 	return true;
+}
+
+bool Character::isFighting() {
+	return inFight;
+}
+
+bool Character::isIdle() {
+	if (this->getAnim() == this->idle || this->getAnim() == this->fightIdle) {
+		return true;
+	}
+	return false;
+}
+
+bool Character::isFacingRight() {
+	return facingRight;
+}
+
+void Character::FaceCharacter(Character& character, Level& level) {
+	int characterLevelX = level.getSceneBlockYByCoord(character.getX());
+	int guardLevelX = level.getSceneBlockYByCoord(this->getX());
+
+	if (characterLevelX < guardLevelX && facingRight) {
+		this->SwitchFacing();
+	}
+	if (characterLevelX > guardLevelX && !facingRight) {
+		this->SwitchFacing();
+	}
+}
+
+void Character::EngageEnemy(Character & enemy) {
+	if (!isFighting()) {
+		if (this->getAnim() == idle) {
+			this->setCurrentAnim(fightStart);
+			inFight = true;
+		}
+	}
 }

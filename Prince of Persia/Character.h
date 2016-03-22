@@ -3,6 +3,8 @@
 #include "Animation.h"
 #include "Entity.h"
 
+class Level;
+
 enum Action { aLeftJump, aRightJump, aJumpGrab, aCrouch, aGoRight, aGoLeft, aClimbUp, aClimbDown, aLeftStep, aRightStep, aHang, aNone, aStrike, aParry, aEngage, aDisengage };
 
 class Character : public Entity {
@@ -17,11 +19,16 @@ public:
 
 	void SwitchFacing();
 	bool isImmune();
-	bool checkParryBy(Character* enemy);
 	bool isParying();
+	bool checkParryBy(Character* enemy);
 	bool isHitting(Character * enemy);
+	bool isFighting();
+	bool isIdle();
+	bool isFacingRight();
+	void FaceCharacter(Character& character, Level& level);
 
-	Animation* idle;
+	void EngageEnemy(Character & enemy);
+
 	Animation* turn;
 	Animation* running;
 	Animation* climbUp;
@@ -41,6 +48,7 @@ protected:
 	void defaultToIdle();
 
 protected:
+	Animation* idle;
 
 	Animation* fightIdle;
 	Animation* fightStep;
@@ -59,9 +67,10 @@ protected:
 protected:
 	bool isAnimating;
 	bool facingRight;
+	bool inFight;
 	int maxHealth;
 	int currentHealth;
-
+	
 public:
 
 };
