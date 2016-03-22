@@ -6,7 +6,7 @@ class Guard;
 
 class GuardAI : public Guard {
 
-//variables
+	//variables
 private:
 	bool engaged; //triggered //aggroed
 
@@ -14,7 +14,4 @@ private:
 public:
 	GuardAI(int x, int y);
 	void Control(Prince & prince, Level & level);
-	
-private:
-	void FacePrince(Prince & prince, Level & level);
 };

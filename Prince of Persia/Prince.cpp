@@ -86,7 +86,7 @@ Prince::Prince() {
 
 
 	facingRight = false;
-	fightStance = false;
+	inFight = false;
 
 
 	setCurrentAnim(idle);
@@ -366,9 +366,6 @@ void Prince::Animate(Graphics* graphics) {
 }
 
 
-
-
-
 void Prince::ActionHandler(Action action)
 {
 	if (this->getAnim() != idle) { return; }
@@ -467,7 +464,7 @@ void Prince::FightController(Input* input) {
 	if (input->hasBeenPressed('B')) { this->setCurrentAnim(fightStart);  }
 	if (input->hasBeenPressed('N')) { this->setCurrentAnim(fightFinish); }
 	if (input->hasBeenPressed('K')) {
-		fightStance = false;
+		inFight = false;
 		this->MoveX(fightDisplacement);
 	}
 }
@@ -588,9 +585,9 @@ void Prince::NormalController(Input* input) {
 	}
 
 	if (input->hasBeenPressed('K')) {
-		fightStance = true;
+		inFight = true;
 		this->MoveX(-fightDisplacement);
-		setCurrentAnim(fightIdle);
+		setCurrentAnim(fightStart);
 	}
 }
 
@@ -600,7 +597,7 @@ void Prince::HandlePrince(Input* input) {
 	int moveX = 0;
 	int moveY = 0;
 
-	if (fightStance) {		
+	if (inFight) {		
 		FightController(input);
 	} else {
 		NormalController(input);
@@ -669,6 +666,7 @@ int Prince::PickUpSword() {
 void Prince::Land() {
 	if (getAnim() == fall && getAnim()->getCurrentFrame() == 4 && getAnim()->isFrozen()) { getAnim()->Play(); }
 }
+
 //destructors
 Prince::~Prince() {}
 
@@ -677,7 +675,7 @@ void Prince::defaultToIdle() {
 	/* Must be called after checking for
 	animation side effects upon finishing
 	*/
-	if (fightStance) {
+	if (inFight) {
 		if (this->getAnim()->isFinished()) {
 			setCurrentAnim(fightIdle);
 		}

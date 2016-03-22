@@ -15,7 +15,7 @@
 #include <windows.h>
 #include <string.h>
 #include <hash_map>
-
+#include <cmath>
 
 using std::hash_map;
 using std::make_pair;
@@ -49,6 +49,7 @@ private:
 	void CheckCombatCollision();
 	void CheckCollision();
 	void DrawGraphics();
+	void EngageFight(Character* prince, Character* guard);
 
 	//Update Frame
 	void ComposeFrame();

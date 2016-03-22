@@ -25,6 +25,7 @@ private:
 	Animation* spikeDeath;
 	*/
 
+	/*
 	Animation* idle;
 	Animation* turn;
 	Animation* running;
@@ -40,11 +41,11 @@ private:
 	Animation* drop;
 	Animation* drink;
 	Animation* pickSword;
+	*/
 
 	princeState state;
 
 	bool hasSword;
-	bool fightStance;
 
 	int idleSpeedX;
 	int runningSpeedX;
