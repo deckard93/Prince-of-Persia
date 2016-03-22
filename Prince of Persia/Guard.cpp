@@ -8,17 +8,17 @@ Guard::Guard(int x, int y) {
 	type = guardT;
 
 	//Sprite* sprite = Game::getSprite("guardIdle");
-	fightIdle   = new Animation(Game::getSprite("fightIdle"),   1);
-	fightStep   = new Animation(Game::getSprite("fightStep"),   4);
+	fightIdle   = new Animation(Game::getSprite("guardFightIdle"),   1);
+	fightStep   = new Animation(Game::getSprite("guardFightStep"),   4);
 	fightParry  = new Animation(Game::getSprite("fightParry"),  3);
-	fightStrike = new Animation(Game::getSprite("fightStrike"), 6);
+	fightStrike = new Animation(Game::getSprite("guardFightStrike"), 8);
 	fightInjure = new Animation(Game::getSprite("fightInjure"), 3);
 
 	fightStep->setDisplayTime(100);
 	fightParry->setDisplayTime(120);
 	fightStrike->setDisplayTime(100);
 
-	fightStep->setReverse();
+	//fightStep->setReverse();
 	fightParry->setReverse();
 	//fightStrike->setReverse();
 
