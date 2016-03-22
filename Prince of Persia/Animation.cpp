@@ -1,3 +1,8 @@
+#include <assert.h>
+
+#include "Graphics.h"
+#include "SpriteSheet.h"
+
 #include "Animation.h"
 
 

@@ -12,15 +12,19 @@ Guard::Guard(int x, int y) {
 	fightStep   = new Animation(Game::getSprite("guardFightStep"),   4);
 	fightParry  = new Animation(Game::getSprite("fightParry"),  3);
 	fightStrike = new Animation(Game::getSprite("guardFightStrike"), 8);
-	fightInjure = new Animation(Game::getSprite("fightInjure"), 3);
+	fightInjure = new Animation(Game::getSprite("guardFightInjure"), 3);
 
 	fightStep->setDisplayTime(100);
 	fightParry->setDisplayTime(120);
 	fightStrike->setDisplayTime(100);
+	fightInjure->setDisplayTime(100);
 
 	//fightStep->setReverse();
 	fightParry->setReverse();
 	//fightStrike->setReverse();
+
+	currentHealth = 3;
+	maxHealth = 3;
 
 	facingRight = false;
 
@@ -97,30 +101,37 @@ void Guard::Animate(Graphics* graphics) {
 		}
 		*/
 
+		
 		//fighting side effects
+		if (this->getAnim() == fightInjure) {
+			if (this->getAnim()->isFlipped()) {
+				moveX -= 2;
+			}
+			else {
+				moveX += 2;
+			}
+		}
+
 		if (this->getAnim() == fightStep) {
 
-			//fighting side effects
-			if (this->getAnim() == fightStep) {
-
-				if (this->getAnim()->isReversed()) {
-					if (this->getAnim()->isFlipped()) {
-						moveX += 2;
-					}
-					else {
-						moveX -= 2;
-					}
+			if (this->getAnim()->isReversed()) {
+				if (this->getAnim()->isFlipped()) {
+					moveX += 2;
 				}
 				else {
-					if (this->getAnim()->isFlipped()) {
-						moveX -= 2;
-					}
-					else {
-						moveX += 2;
-					}
+					moveX -= 2;
+				}
+			}
+			else {
+				if (this->getAnim()->isFlipped()) {
+					moveX -= 2;
+				}
+				else {
+					moveX += 2;
 				}
 			}
 		}
+		
 	}
 	else {
 		//side effects at the beggining of an animation

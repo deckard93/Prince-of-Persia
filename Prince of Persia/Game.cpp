@@ -93,7 +93,7 @@ Game::Game(HWND hwnd, Input* in) :
 	//RegisterSprite("fightStart", "Assets//guard//");
 	RegisterSprite("guardFightStrike", "Assets//guard//");
 	//RegisterSprite("fightFinish", "Assets//guard//");
-	//RegisterSprite("fightInjure", "Assets//guard//");
+	RegisterSprite("guardFightInjure", "Assets//guard//");
 
 	//death/kill sprites
 	RegisterSprite("spikeKill"  , "Assets//prince//");
@@ -113,11 +113,11 @@ Game::Game(HWND hwnd, Input* in) :
 void Game::GameLoop() {	
 	graphics.BeginFrame();
 	
-	DrawGraphics();
-
 	HandleInput();
 	ControlAI();
 	CheckCollision();
+
+	DrawGraphics();
 
 	graphics.EndFrame();
 }
@@ -438,10 +438,9 @@ void Game::CheckCombatCollision() {
 
 	for (std::list<Character*>::iterator i = guards->begin(); i != guards->end(); i++) {
 		Character* guard = *i;
-		if (!prince->checkParryBy(guard)) {
-			if (prince->isHitting(guard)) {
-				guard->Hurt();
-			}
+		//if (!prince->checkParryBy(guard)) {}
+		if (prince->isHitting(guard)) {
+			guard->Hurt();
 		}
 	}
 }
@@ -483,6 +482,13 @@ void Game::HandleInput() {
 
 	if (input->getKeyStatus('G')) {
 		prince->Heal();
+
+
+
+		std::list<Character*>* guards = level->getGuards();
+		std::list<Character*>::iterator i = guards->begin();
+		Character* guard = *i;
+		guard->Heal();
 	}
 
 	if (input->getKeyStatus('F')) {
@@ -616,10 +622,9 @@ void Game::DrawGraphics() {
 void Game::EngageFight(Character* prince, Character* guard) {
 
 	if (prince->getY() != guard->getY()) { return; }
-	if (std::abs(prince->getX() - guard->getX()) > 10000) { return; }
+	if (std::abs(prince->getX() - guard->getX()) > 10000) { return; }  //TODO: need to change this
 	if (!prince->isIdle()) { return; }
 
-	
 	if (prince->isFighting()) {
 		prince->FaceCharacter(*guard, *level);
 		return;
@@ -627,7 +632,6 @@ void Game::EngageFight(Character* prince, Character* guard) {
 
 	if (prince->getX() < guard->getX() && !prince->isFacingRight()) { return; }
 	if (prince->getX() >= guard->getX() && prince->isFacingRight()) { return; }
-
 
 	prince->EngageEnemy(*guard);
 
@@ -649,6 +653,28 @@ void Game::DrawHealth() {
 		//graphics.DrawSprite(y * healthFull.width,  Level::BLOCK_HEIGHT_PX * 3, &healthEmpty );
 		graphics.DrawSprite(i * getSprite("healthEmpty")->width, Level::BLOCK_HEIGHT_PX * 3, getSprite("healthEmpty"));
 	}
+
+
+
+
+	std::list<Character*>* guards = level->getGuards();
+	std::list<Character*>::iterator i = guards->begin();
+	Character* guard = *i;
+	
+	for (int i = 0; i < guard->getHealth(); i++) {
+		//graphics.DrawSprite(y * healthFull.width, Level::BLOCK_HEIGHT_PX * 3, &healthFull );
+		graphics.DrawSprite(Level::BLOCK_WIDTH_PX * 10 - (i + 1) * ( getSprite("healthFull")->width), Level::BLOCK_HEIGHT_PX * 3, getSprite("healthFull"));
+
+	}
+
+
+
+
+
+
+
+
+
 }
 void Game::DrawBackground() {
 	int yOff = 0;

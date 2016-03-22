@@ -32,6 +32,7 @@ void Character::SwitchFacing() {
 		fightStep->setFlipped(false);
 		fightParry->setFlipped(false);
 		fightStrike->setFlipped(false);
+		fightInjure->setFlipped(false);
 		//fightStart->setFlipped(false);
 		//fightFinish->setFlipped(false);
 
@@ -47,6 +48,7 @@ void Character::SwitchFacing() {
 		fightStep->setFlipped(true);
 		fightParry->setFlipped(true);
 		fightStrike->setFlipped(true);
+		fightInjure->setFlipped(true);
 		//fightStart->setFlipped(true);
 		//fightFinish->setFlipped(true);
 
