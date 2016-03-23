@@ -102,6 +102,7 @@ Game::Game(HWND hwnd, Input* in) :
 	//objects
 	level = new Level();
 	prince = new Prince();
+	engagedGuard = NULL;
 
 	Reset();
 
@@ -420,6 +421,7 @@ void Game::CheckPrinceCollision() {
 
 }
 void Game::CheckCombatCollision() {
+	engagedGuard = NULL;
 	std::list<Character*>* guards = level->getGuards();
 
 	for (std::list<Character*>::iterator i = guards->begin(); i != guards->end(); i++) {
@@ -623,6 +625,7 @@ void Game::EngageFight(Character* prince, Character* guard) {
 
 	if (prince->getY() != guard->getY()) { return; }
 	if (std::abs(prince->getX() - guard->getX()) > 10000) { return; }  //TODO: need to change this
+	SetEngagedGuard(guard);
 	if (!prince->isIdle()) { return; }
 
 	if (prince->isFighting()) {
@@ -635,6 +638,19 @@ void Game::EngageFight(Character* prince, Character* guard) {
 
 	prince->EngageEnemy(*guard);
 
+}
+
+void Game::SetEngagedGuard(Character* guard) {
+	if (engagedGuard == NULL) {
+		engagedGuard = guard;
+	} else {
+		int currentGuardDistance = std::sqrt((std::pow(guard->getX() - prince->getX(), 2.0) + std::pow(guard->getY() - prince->getY(), 2.0)));
+		int engagedGuardDistance = std::sqrt((std::pow(engagedGuard->getX() - prince->getX(), 2.0) + std::pow(engagedGuard->getY() - prince->getY(), 2.0)));
+		
+		if (currentGuardDistance < engagedGuardDistance) {
+			engagedGuard = guard;
+		}
+	}
 }
 
 //util
@@ -657,11 +673,11 @@ void Game::DrawHealth() {
 
 
 
-	std::list<Character*>* guards = level->getGuards();
-	std::list<Character*>::iterator i = guards->begin();
-	Character* guard = *i;
-	
-	for (int i = 0; i < guard->getHealth(); i++) {
+	//std::list<Character*>* guards = level->getGuards();
+	//std::list<Character*>::iterator i = guards->begin();
+	//engagedGuard = *i;
+	if (engagedGuard == NULL) { return;  };
+	for (int i = 0; i < engagedGuard->getHealth(); i++) {
 		//graphics.DrawSprite(y * healthFull.width, Level::BLOCK_HEIGHT_PX * 3, &healthFull );
 		graphics.DrawSprite(Level::BLOCK_WIDTH_PX * 10 - (i + 1) * ( getSprite("healthFull")->width), Level::BLOCK_HEIGHT_PX * 3, getSprite("healthFull"));
 
