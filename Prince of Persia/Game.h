@@ -50,6 +50,7 @@ private:
 	void CheckCollision();
 	void DrawGraphics();
 	void EngageFight(Character* prince, Character* guard);
+	void SetEngagedGuard(Character* guard);
 
 	//Update Frame
 	void ComposeFrame();
@@ -72,6 +73,8 @@ private:
 
 	D3DCOLOR fontSurf[512 * 84];
 	Font fixedSys;
+
+	Character* engagedGuard;
 
 public:
 
