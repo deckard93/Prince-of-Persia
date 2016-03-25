@@ -71,6 +71,7 @@ public:
 
 	//function
 	void HandlePrince(Input* input);
+	bool isStriking();
 	int Drink();
 	void increaseMaxHealth();
 	void Animate(Graphics* graphics);

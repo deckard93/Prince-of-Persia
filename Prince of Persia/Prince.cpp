@@ -605,6 +605,13 @@ void Prince::HandlePrince(Input* input) {
 	}
 }
 
+bool Prince::isStriking() {
+	if (getAnim() == fightStrike) {
+		return true;
+	}
+	return false;
+}
+
 int Prince::Drink() {
 	if(this->getAnim() == idle) {
 		this->setCurrentAnim(drink);
