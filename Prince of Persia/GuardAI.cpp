@@ -33,7 +33,10 @@ void GuardAI::Control(Prince& prince, Level& level) {
 
 //		OutputDebugStringA("We're on the same level \n");
 		if (abs(princeLevelX - guardLevelX) == 0) {
-			ActionHandler(aStrike);
+			//ActionHandler(aStrike);
+			if (prince.isStriking() && prince.getAnim()->getCurrentFrame() == 0) {
+				ActionHandler(aParry);
+			}
 		}
 		else {
 			if (princeLevelX > guardLevelX) {

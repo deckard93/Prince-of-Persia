@@ -62,7 +62,7 @@ void Character::SwitchFacing() {
 }
 
 bool Character::isImmune() {
-	if (this->getAnim() == fightInjure) {
+	if (this->getAnim() == fightInjure || this->getAnim() == fightParry) {
 		return true;
 	} else {
 		return false;

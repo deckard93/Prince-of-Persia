@@ -86,15 +86,14 @@ Game::Game(HWND hwnd, Input* in) :
 	RegisterSprite("fightFinish", "Assets//prince//");
 	RegisterSprite("fightInjure", "Assets//prince//");
 
-
 	RegisterSprite("guardFightIdle"   , "Assets//guard//");
 	RegisterSprite("guardFightStep"   , "Assets//guard//");
 	RegisterSprite("guardFightParry"  , "Assets//guard//");
 	RegisterSprite("guardFightParried", "Assets//guard//");
-	//RegisterSprite("fightStart", "Assets//guard//");
 	RegisterSprite("guardFightStrike", "Assets//guard//");
-	//RegisterSprite("fightFinish", "Assets//guard//");
 	RegisterSprite("guardFightInjure", "Assets//guard//");
+	//RegisterSprite("fightFinish", "Assets//guard//");
+	//RegisterSprite("fightStart", "Assets//guard//");
 
 	//death/kill sprites
 	RegisterSprite("spikeKill"  , "Assets//prince//");
@@ -441,7 +440,7 @@ void Game::CheckCombatCollision() {
 
 	for (std::list<Character*>::iterator i = guards->begin(); i != guards->end(); i++) {
 		Character* guard = *i;
-		//if (!prince->checkParryBy(guard)) {}
+		//if (!prince->checkParryBy(guard));
 		if (prince->isHitting(guard)) {
 			guard->Hurt();
 		}

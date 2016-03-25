@@ -10,7 +10,7 @@ Guard::Guard(int x, int y) {
 	//Sprite* sprite = Game::getSprite("guardIdle");
 	fightIdle    = new Animation(Game::getSprite("guardFightIdle")   , 1);
 	fightStep    = new Animation(Game::getSprite("guardFightStep")   , 4);
-	fightParry   = new Animation(Game::getSprite("fightParry")       , 3);
+	fightParry   = new Animation(Game::getSprite("guardFightParry")  , 6);
 	fightParried = new Animation(Game::getSprite("guardFightParried"), 1);
 	fightStrike  = new Animation(Game::getSprite("guardFightStrike") , 8);
 	fightInjure  = new Animation(Game::getSprite("guardFightInjure") , 3);
