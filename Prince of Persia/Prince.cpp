@@ -39,6 +39,8 @@ Prince::Prince() {
 	fightStart  = new Animation(Game::getSprite("fightStart") , 4);
 	fightFinish = new Animation(Game::getSprite("fightFinish"), 8);
 	fightInjure = new Animation(Game::getSprite("fightInjure"), 3);
+	fightDying  = new Animation(Game::getSprite("fightDying") , 5);
+	swordDeath  = new Animation(Game::getSprite("swordDeath") , 1);
 	fightParried = NULL;
 
 	spikeDeath = new Animation(Game::getSprite("spikeKill"),   1);
@@ -50,6 +52,7 @@ Prince::Prince() {
 	fightStart->setDisplayTime(100);
 	fightFinish->setDisplayTime(100);
 	fightInjure->setDisplayTime(100);
+	fightDying->setDisplayTime(100);
 
 
 	fall->setDisplayTime(70);
@@ -110,6 +113,12 @@ void Prince::Animate(Graphics* graphics) {
 				//==TODO
 				//this->MoveY(Level::BLOCK_HEIGHT_PX);
 			}
+		}
+		if (this->getAnim() == fightDying) {
+			this->setCurrentAnim(swordDeath);
+			getAnim()->Freeze();
+			dead = true;
+			return;
 		}
 
 		if(this->getAnim() == runningJump) {
@@ -712,6 +721,7 @@ void Prince::switchFacing() {
 		pickSword->setFlipped(false);
 		staticJump->setFlipped(false);
 		spikeDeath->setFlipped(false);
+		swordDeath->setFlipped(false);
 		runningJump->setFlipped(false);
 
 		facingRight = false;
@@ -723,6 +733,7 @@ void Prince::switchFacing() {
 		fightStrike->setFlipped(false);
 		fightFinish->setFlipped(false);
 		fightInjure->setFlipped(false);
+		fightDying->setFlipped(false);
 		
 	
 	} else {
@@ -742,6 +753,7 @@ void Prince::switchFacing() {
 		pickSword->setFlipped(true);
 		staticJump->setFlipped(true);
 		spikeDeath->setFlipped(true);
+		swordDeath->setFlipped(true);
 		runningJump->setFlipped(true);
 		
 		facingRight = true;
@@ -753,6 +765,7 @@ void Prince::switchFacing() {
 		fightStrike->setFlipped(true);
 		fightFinish->setFlipped(true);
 		fightInjure->setFlipped(true);
+		fightDying->setFlipped(true);
 
 	}
 }

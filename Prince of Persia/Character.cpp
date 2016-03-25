@@ -3,14 +3,20 @@
 
 Character::Character() {
 	inFight = false;
+	dead = false;
 }
 
 void Character::Hurt() {
 	
-	if (currentHealth > 0) {
+	if (currentHealth > 1) {
 		currentHealth--;
 		this->setCurrentAnim(fightInjure);
+		return;
 	}
+	currentHealth--;
+	this->setCurrentAnim(fightDying);
+	//dead = true;
+
 }
 void Character::Heal() {
 	if (currentHealth < maxHealth) {
@@ -33,6 +39,7 @@ void Character::SwitchFacing() {
 		fightParry->setFlipped(false);
 		fightStrike->setFlipped(false);
 		fightInjure->setFlipped(false);
+		fightDying->setFlipped(false);
 		if (fightParried != NULL) { fightParried->setFlipped(false); }
 		//fightStart->setFlipped(false);
 		//fightFinish->setFlipped(false);
@@ -50,6 +57,7 @@ void Character::SwitchFacing() {
 		fightParry->setFlipped(true);
 		fightStrike->setFlipped(true);
 		fightInjure->setFlipped(true);
+		fightDying->setFlipped(true);
 		if (fightParried != NULL) { fightParried->setFlipped(true); }
 		//fightStart->setFlipped(true);
 		//fightFinish->setFlipped(true);
@@ -124,6 +132,10 @@ bool Character::isIdle() {
 		return true;
 	}
 	return false;
+}
+
+bool Character::isDead() {
+	return dead;
 }
 
 bool Character::isFacingRight() {

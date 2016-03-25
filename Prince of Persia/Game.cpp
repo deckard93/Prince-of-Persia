@@ -85,18 +85,23 @@ Game::Game(HWND hwnd, Input* in) :
 	RegisterSprite("fightStrike", "Assets//prince//");
 	RegisterSprite("fightFinish", "Assets//prince//");
 	RegisterSprite("fightInjure", "Assets//prince//");
+	RegisterSprite("fightDying" , "Assets//prince//");
+	RegisterSprite("swordDeath", "Assets//prince//");
 
 	RegisterSprite("guardFightIdle"   , "Assets//guard//");
 	RegisterSprite("guardFightStep"   , "Assets//guard//");
 	RegisterSprite("guardFightParry"  , "Assets//guard//");
 	RegisterSprite("guardFightParried", "Assets//guard//");
-	RegisterSprite("guardFightStrike", "Assets//guard//");
-	RegisterSprite("guardFightInjure", "Assets//guard//");
+	RegisterSprite("guardFightStrike" , "Assets//guard//");
+	RegisterSprite("guardFightInjure" , "Assets//guard//");
+	RegisterSprite("guardFightDying"  , "Assets//guard//");
+	RegisterSprite("guardSwordDeath"  , "Assets//guard//");
 	//RegisterSprite("fightFinish", "Assets//guard//");
 	//RegisterSprite("fightStart", "Assets//guard//");
 
 	//death/kill sprites
 	RegisterSprite("spikeKill"  , "Assets//prince//");
+	RegisterSprite("fightKill"  , "Assets//prince//");
 
 
 	//objects
@@ -114,9 +119,11 @@ Game::Game(HWND hwnd, Input* in) :
 void Game::GameLoop() {	
 	graphics.BeginFrame();
 	
-	HandleInput();
-	ControlAI();
-	CheckCollision();
+	if (!prince->isDead()) {
+		HandleInput();
+		ControlAI();
+		CheckCollision();
+	}
 
 	DrawGraphics();
 
