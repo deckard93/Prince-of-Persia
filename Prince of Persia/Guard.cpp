@@ -8,20 +8,22 @@ Guard::Guard(int x, int y) {
 	type = guardT;
 
 	//Sprite* sprite = Game::getSprite("guardIdle");
-	fightIdle   = new Animation(Game::getSprite("guardFightIdle"),   1);
-	fightStep   = new Animation(Game::getSprite("guardFightStep"),   4);
-	fightParry  = new Animation(Game::getSprite("fightParry"),  3);
-	fightStrike = new Animation(Game::getSprite("guardFightStrike"), 8);
-	fightInjure = new Animation(Game::getSprite("guardFightInjure"), 3);
+	fightIdle    = new Animation(Game::getSprite("guardFightIdle")   , 1);
+	fightStep    = new Animation(Game::getSprite("guardFightStep")   , 4);
+	fightParry   = new Animation(Game::getSprite("fightParry")       , 3);
+	fightParried = new Animation(Game::getSprite("guardFightParried"), 1);
+	fightStrike  = new Animation(Game::getSprite("guardFightStrike") , 8);
+	fightInjure  = new Animation(Game::getSprite("guardFightInjure") , 3);
 
 	fightStep->setDisplayTime(100);
 	fightParry->setDisplayTime(120);
 	fightStrike->setDisplayTime(100);
 	fightInjure->setDisplayTime(100);
+	fightParried->setDisplayTime(150);
 
 	//fightStep->setReverse();
-	fightParry->setReverse();
 	//fightStrike->setReverse();
+	fightParry->setReverse();
 
 	currentHealth = 3;
 	maxHealth = 3;
@@ -30,7 +32,6 @@ Guard::Guard(int x, int y) {
 
 	Entity::setCurrentAnim(fightIdle);
 }
-
 
 
 void Guard::ActionHandler(Action action) {
@@ -85,7 +86,10 @@ void Guard::Animate(Graphics* graphics) {
 
 	if (this->getAnim()->isFinished()) {
 		//side effects at the end of an animation
-
+		if (this->getAnim() == fightParried) {
+			setCurrentAnim(fightStrike);
+			getAnim()->setCurrentFrame(4);
+		}
 		//set idle state
 		defaultToIdle();
 	} 
