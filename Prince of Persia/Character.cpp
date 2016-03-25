@@ -33,6 +33,7 @@ void Character::SwitchFacing() {
 		fightParry->setFlipped(false);
 		fightStrike->setFlipped(false);
 		fightInjure->setFlipped(false);
+		if (fightParried != NULL) { fightParried->setFlipped(false); }
 		//fightStart->setFlipped(false);
 		//fightFinish->setFlipped(false);
 
@@ -49,6 +50,7 @@ void Character::SwitchFacing() {
 		fightParry->setFlipped(true);
 		fightStrike->setFlipped(true);
 		fightInjure->setFlipped(true);
+		if (fightParried != NULL) { fightParried->setFlipped(true); }
 		//fightStart->setFlipped(true);
 		//fightFinish->setFlipped(true);
 
@@ -75,8 +77,8 @@ bool Character::checkParryBy(Character* enemy) {
 	if (this->getAnim()->getCurrentFrame() >= 2) { return false; }
 
 	if (enemy->isParying()) { 
-		this->setCurrentAnim(fightParry);
-		this->getAnim()->setCurrentFrame(enemy->getAnim()->getCurrentFrame());
+		this->setCurrentAnim(fightParried);
+		//this->getAnim()->setCurrentFrame(enemy->getAnim()->getCurrentFrame());
 		return true;
 	}
 	return false;

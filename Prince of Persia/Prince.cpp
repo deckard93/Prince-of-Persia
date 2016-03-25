@@ -39,6 +39,7 @@ Prince::Prince() {
 	fightStart  = new Animation(Game::getSprite("fightStart") , 4);
 	fightFinish = new Animation(Game::getSprite("fightFinish"), 8);
 	fightInjure = new Animation(Game::getSprite("fightInjure"), 3);
+	fightParried = NULL;
 
 	spikeDeath = new Animation(Game::getSprite("spikeKill"),   1);
 

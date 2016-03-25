@@ -87,9 +87,10 @@ Game::Game(HWND hwnd, Input* in) :
 	RegisterSprite("fightInjure", "Assets//prince//");
 
 
-	RegisterSprite("guardFightIdle", "Assets//guard//");
-	RegisterSprite("guardFightStep", "Assets//guard//");
-	//RegisterSprite("fightParry", "Assets//guard//");
+	RegisterSprite("guardFightIdle"   , "Assets//guard//");
+	RegisterSprite("guardFightStep"   , "Assets//guard//");
+	RegisterSprite("guardFightParry"  , "Assets//guard//");
+	RegisterSprite("guardFightParried", "Assets//guard//");
 	//RegisterSprite("fightStart", "Assets//guard//");
 	RegisterSprite("guardFightStrike", "Assets//guard//");
 	//RegisterSprite("fightFinish", "Assets//guard//");

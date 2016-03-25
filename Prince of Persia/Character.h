@@ -43,6 +43,7 @@ public:
 	Animation* drop;
 	Animation* drink;
 	Animation* pickSword;
+	
 
 protected:
 	void defaultToIdle();
@@ -53,6 +54,7 @@ protected:
 	Animation* fightIdle;
 	Animation* fightStep;
 	Animation* fightParry;
+	Animation* fightParried;
 	Animation* fightStrike;
 
 	Animation* fightInjure;

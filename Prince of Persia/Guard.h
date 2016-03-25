@@ -11,4 +11,5 @@ public:
 	void ActionHandler(Action action);
 	void Animate(Graphics* graphics);
 	void defaultToIdle();
+	void SwitchFacing();
 };
