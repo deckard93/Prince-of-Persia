@@ -14,12 +14,15 @@ Guard::Guard(int x, int y) {
 	fightParried = new Animation(Game::getSprite("guardFightParried"), 1);
 	fightStrike  = new Animation(Game::getSprite("guardFightStrike") , 8);
 	fightInjure  = new Animation(Game::getSprite("guardFightInjure") , 3);
+	fightDying   = new Animation(Game::getSprite("guardFightDying")  , 5);
+	swordDeath   = new Animation(Game::getSprite("guardSwordDeath")  , 1);
 
 	fightStep->setDisplayTime(100);
 	fightParry->setDisplayTime(120);
 	fightStrike->setDisplayTime(100);
 	fightInjure->setDisplayTime(100);
 	fightParried->setDisplayTime(150);
+	fightDying->setDisplayTime(80);
 
 	//fightStep->setReverse();
 	//fightStrike->setReverse();
@@ -79,7 +82,7 @@ void Guard::defaultToIdle() {
 }
 
 void Guard::Animate(Graphics* graphics) {
-	//if (state == sDead) { return; }
+	if (dead) { Entity::Animate(graphics); return; }
 
 	int moveX = 0;
 	int moveY = 0;
@@ -89,6 +92,11 @@ void Guard::Animate(Graphics* graphics) {
 		if (this->getAnim() == fightParried) {
 			setCurrentAnim(fightStrike);
 			getAnim()->setCurrentFrame(4);
+		}
+		if (this->getAnim() == fightDying) {
+			setCurrentAnim(swordDeath);
+			getAnim()->Freeze();
+			dead = true;
 		}
 		//set idle state
 		defaultToIdle();

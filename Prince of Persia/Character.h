@@ -24,6 +24,7 @@ public:
 	bool isHitting(Character * enemy);
 	bool isFighting();
 	bool isIdle();
+	bool isDead();
 	bool isFacingRight();
 	void FaceCharacter(Character& character, Level& level);
 
@@ -58,6 +59,7 @@ protected:
 	Animation* fightStrike;
 
 	Animation* fightInjure;
+	Animation* fightDying;
 	Animation* fightStart;
 	Animation* fightFinish;
 
@@ -70,6 +72,7 @@ protected:
 	bool isAnimating;
 	bool facingRight;
 	bool inFight;
+	bool dead;
 	int maxHealth;
 	int currentHealth;
 	
