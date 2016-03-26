@@ -54,6 +54,7 @@ void Level::loadLevel(int l) {
 	int gateY;
 
 	mechanism->clear();
+	characters->clear();
 
 	while (fscanf(file, "%d", &platY) > 0 && fscanf(file, "%d", &platX) > 0 &&
 		   fscanf(file, "%d", &gateY) > 0 && fscanf(file, "%d", &gateX) > 0) {

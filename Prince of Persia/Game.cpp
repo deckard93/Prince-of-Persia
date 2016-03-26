@@ -119,8 +119,8 @@ Game::Game(HWND hwnd, Input* in) :
 void Game::GameLoop() {	
 	graphics.BeginFrame();
 	
+	HandleInput();
 	if (!prince->isDead()) {
-		HandleInput();
 		ControlAI();
 		CheckCollision();
 	}
@@ -826,9 +826,11 @@ void Game::DrawForeground() {
 void Game::Reset() {
 	level->loadLevel(1);
 
+	prince = new Prince();
 	prince->setX(2 * Level::BLOCK_WIDTH_PX);
 	prince->setY(prince->getAnim()->getSheet()->getFrameHeight() - Level::FOOT_FLOAT);
 	prince->setState(sIdle);
+	
 }
 
 Game::~Game() {}
