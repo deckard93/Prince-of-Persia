@@ -157,8 +157,12 @@ void Character::FaceCharacter(Character& character, Level& level) {
 void Character::EngageEnemy(Character & enemy) {
 	if (!isFighting()) {
 		if (this->getAnim() == idle) {
-			this->setCurrentAnim(fightStart);
-			inFight = true;
+			if (seenEnemies.find(&enemy) == seenEnemies.end()) {
+				std::pair<Character*, bool>  node = std::make_pair<Character*, bool>(&enemy, true);
+				seenEnemies.insert(node);
+				this->setCurrentAnim(fightStart);
+				inFight = true;
+			}
 		}
 	}
 }

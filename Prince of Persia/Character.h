@@ -3,7 +3,13 @@
 #include "Animation.h"
 #include "Entity.h"
 
+#include <list>
+#include <map>
+
+
 class Level;
+
+//std::list<Character*>;
 
 enum Action { aLeftJump, aRightJump, aJumpGrab, aCrouch, aGoRight, aGoLeft, aClimbUp, aClimbDown, aLeftStep, aRightStep, aHang, aNone, aStrike, aParry, aEngage, aDisengage };
 
@@ -66,6 +72,8 @@ protected:
 	Animation* swordDeath;
 	Animation* guilotineDeath;
 	Animation* spikeDeath;
+
+	std::map<Character*, bool> seenEnemies;
 
 //variables
 protected:
