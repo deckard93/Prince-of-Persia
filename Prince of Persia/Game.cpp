@@ -2,6 +2,7 @@
 #include "Graphics.h"
 #include "Level.h"
 #include "Guard.h"
+#include "FinishDoor.h"
 #include "GuardAI.h"
 
 
@@ -102,6 +103,12 @@ Game::Game(HWND hwnd, Input* in) :
 	//death/kill sprites
 	RegisterSprite("spikeKill"  , "Assets//prince//");
 	RegisterSprite("fightKill"  , "Assets//prince//");
+
+
+	//door sprites
+	RegisterSprite("finishDoor"    , "Assets//finishDoor//");
+	RegisterSprite("finishDoorBase", "Assets//finishDoor//");
+	RegisterSprite("enterDoor"     , "Assets//finishDoor//");
 
 
 	//objects
@@ -249,14 +256,19 @@ void Game::CheckCharacterCollision(Character& character) {
 		}
 
 		Entity* e = (*entitites)[gateKey];
-
-		Gate* g = dynamic_cast<Gate*>(e);
-
-		if (code == '-') {
-			g->Open();
-		}
-		else {
-			g->Close();
+		if (e->getType() == doorT) {
+			FinishDoor* d = dynamic_cast<FinishDoor*>(e);
+			if (code == '-') {
+				d->Open();
+			}
+		} else if (e->getType() == gateT) {
+			Gate* g = dynamic_cast<Gate*>(e);
+			if (code == '-') {
+				g->Open();
+			}
+			else {
+				g->Close();
+			}
 		}
 	}
 
@@ -379,14 +391,20 @@ void Game::CheckPrinceCollision() {
 		}
 
 		Entity* e = (*entitites)[gateKey];
-
-		Gate* g = dynamic_cast<Gate*>(e);
-
-		if (code == '-') {
-			g->Open();
+		if (e->getType() == doorT) {
+			FinishDoor* d = dynamic_cast<FinishDoor*>(e);
+			if (code == '-') {
+				d->Open();
+			}
 		}
-		else {
-			g->Close();
+		else if (e->getType() == gateT) {
+			Gate* g = dynamic_cast<Gate*>(e);
+			if (code == '-') {
+				g->Open();
+			}
+			else {
+				g->Close();
+			}
 		}
 	}
 
@@ -428,17 +446,23 @@ void Game::CheckPrinceCollision() {
 
 }
 void Game::CheckCombatCollision() {
+
+	if (engagedGuard != NULL && engagedGuard->isDead()) {
+		prince->Disengage();
+	}
 	engagedGuard = NULL;
 	std::list<Character*>* guards = level->getGuards();
 
 	for (std::list<Character*>::iterator i = guards->begin(); i != guards->end(); i++) {
 		Character* guard = *i;
+		if (guard->isDead()) { continue; }
 		EngageFight(prince, guard);
 	}
 
 
 	for (std::list<Character*>::iterator i = guards->begin(); i != guards->end(); i++) {
 		Character* guard = *i;
+		if (guard->isDead()) { continue; }
 		guard->checkParryBy(prince);
 		if (guard->isHitting(prince)) {
 			prince->Hurt();
@@ -447,6 +471,7 @@ void Game::CheckCombatCollision() {
 
 	for (std::list<Character*>::iterator i = guards->begin(); i != guards->end(); i++) {
 		Character* guard = *i;
+		if (guard->isDead()) { continue; }
 		//if (!prince->checkParryBy(guard));
 		if (prince->isHitting(guard)) {
 			guard->Hurt();
@@ -457,7 +482,7 @@ void Game::CheckCollision() {
 	CheckPrinceCollision();
 	CheckCombatCollision();
 }
-void Game::HandleInput() {
+void Game::HandleInput()  {
 	
 	if(input->hasBeenPressed('A')) {
 		level->changeScene(L);
@@ -530,6 +555,17 @@ void Game::HandleInput() {
 		}
 	}
 
+	if (input->hasBeenPressed('V')) {
+		std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
+		for (std::map<std::pair<int, int>, Entity*>::iterator i = entitites->begin(); i != entitites->end(); i++) {
+			Entity* entity = i->second;
+			if (entity->getType() == doorT) {
+				FinishDoor* door = dynamic_cast<FinishDoor*>(entity);
+				if (door != NULL) { door->Finish(); }
+			}
+		}
+	}
+
 
 
 
@@ -574,11 +610,44 @@ void Game::HandleInput() {
 
 	}
 
+	if (input->isUpPressed()) {
+
+		std::string s = "Code: ";
+		std::string g(1, level->getSceneCodeByCoord(prince->getMidX(), prince->getMidY()));
+		s += g + "\n";
+		OutputDebugStringA(s.c_str());
+
+		if (level->getSceneCodeByCoord(prince->getMidX(), prince->getMidY()) == 'H') {
+			std::map<std::pair<int, int>, std::pair<int, int> >* mechanism = level->getMec();
+			std::pair<int, int> gateKey = make_pair(level->getLevelBlockYByCoord(prince->getMidY()), level->getLevelBlockXByCoord(prince->getMidX()));
+		
+			std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
+
+			if (entitites->find(gateKey) == entitites->end()) {
+				return;
+			}
+
+			Entity* e = (*entitites)[gateKey];
+			if (e->getType() == doorT) {
+				FinishDoor* d = dynamic_cast<FinishDoor*>(e);
+			
+				if (d->Finish()) {
+					prince->setState(sFinish);
+				}
+			}			
+		}
+	}
+
+
 	prince->HandlePrince(input);
 }
 void Game::DrawGraphics() {
 
 	//graphics.BeginFrame();
+
+	//Sprite* myDoor = getSprite("finishDoor");
+	//int yCut = 100;
+	//graphics.DrawSprite(100,100, myDoor, 0, 0 + yCut, myDoor->width, myDoor->height - yCut);
 
 	std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
 
@@ -721,6 +790,9 @@ void Game::DrawBackground() {
 				graphics.DrawSprite(xOff, yOff - getSprite("blockCornerRight")->height, getSprite("blockCornerRight"));
 				break;
 			case '_':
+				graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
+				break;
+			case 'H':
 				graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
 				break;
 			case '-':

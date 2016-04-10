@@ -7,7 +7,7 @@
 #include "Game.h"
 
 
-enum princeState { sRunning, sFalling, sIdle, sDead };
+enum princeState { sRunning, sFalling, sIdle, sDead, sFinish };
 
 class Prince : public Character {
 	static const int fightDisplacement = 40;
@@ -68,6 +68,7 @@ public:
 	void setState(princeState state);
 	void FightController(Input * input);
 	void NormalController(Input * input);
+	void Disengage();
 
 	//function
 	void HandlePrince(Input* input);

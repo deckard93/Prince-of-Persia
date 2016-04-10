@@ -2,7 +2,7 @@
 
 #include "Animation.h"
 
-enum entityType : int { noneT, torchT, guilotineT, gateT, potionT, poisonPotT, extendPotT, spikeT, swordT, guardT };
+enum entityType : int { noneT, torchT, guilotineT, gateT, potionT, poisonPotT, extendPotT, spikeT, swordT, guardT, doorT };
 
 class Entity {
 

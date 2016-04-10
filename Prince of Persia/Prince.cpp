@@ -86,7 +86,9 @@ Prince::Prince() {
 	fightParry->setReverse();
 	//fightStrike->setReverse();
 	fightStart->setReverse();
+	fightStart->setCurrentFrame(fightStart->getLastFrameNr());
 	fightFinish->setReverse();
+	fightFinish->setCurrentFrame(fightFinish->getLastFrameNr());
 
 
 	facingRight = false;
@@ -99,7 +101,7 @@ Prince::Prince() {
 
 //function
 void Prince::Animate(Graphics* graphics) {
-	//if (state == sDead) { return; }
+	if (state == sFinish) { return; }
 
 	int moveX = 0;
 	int moveY = 0;
@@ -441,6 +443,10 @@ void Prince::ActionHandler(Action action)
 void Prince::FightController(Input* input) {
 	if (this->getAnim()->isFinished()) {
 		//input at the end of an animation
+		if (this->getAnim() == fightFinish) {
+			inFight = false;
+			this->MoveX(fightDisplacement);
+		}
 	}
 	else {
 		//input during animation
@@ -472,15 +478,13 @@ void Prince::FightController(Input* input) {
 	if (input->hasBeenPressed('X')) { this->setCurrentAnim(fightStep);   }
 	if (input->hasBeenPressed('T')) { this->setCurrentAnim(fightInjure); }
 	if (input->hasBeenPressed('B')) { this->setCurrentAnim(fightStart);  }
-	if (input->hasBeenPressed('N')) { this->setCurrentAnim(fightFinish); }
-	if (input->hasBeenPressed('K')) {
-		inFight = false;
-		this->MoveX(fightDisplacement);
-	}
+	if (input->hasBeenPressed('K')) { this->setCurrentAnim(fightFinish); }
 }
 void Prince::NormalController(Input* input) {
 
 	NormalInput nInput(input);
+
+	if (this->getAnim() == NULL) { return; }
 
 	if (this->getAnim()->isFinished()) {
 
@@ -601,8 +605,12 @@ void Prince::NormalController(Input* input) {
 	}
 }
 
+void Prince::Disengage() {
+	setCurrentAnim(fightFinish);
+}
+
 void Prince::HandlePrince(Input* input) {
-	if (state == sDead) { return; }
+	if (state == sDead || state == sFinish) { return; }
 
 	int moveX = 0;
 	int moveY = 0;

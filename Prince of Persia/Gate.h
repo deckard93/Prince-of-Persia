@@ -26,7 +26,7 @@ private:
 
 
 //attributes
-private:
+protected:
 	gateState state;
 	Timer* timer;
 
