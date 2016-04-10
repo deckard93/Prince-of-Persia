@@ -1,7 +1,8 @@
-#include "Level.h"
 #include "Game.h"
 #include "Guard.h"
 #include "GuardAI.h"
+#include "FinishDoor.h"
+#include "Level.h"
 
 
 Level::Level() {
@@ -19,7 +20,7 @@ void Level::loadLevel(int l) {
 	filePath += levelNo;
 	filePath += ".txt";
 
-	filePath = "Levels/arena.txt";
+	//filePath = "Levels/arena.txt";
 
 	//open file
 	FILE *file = fopen(filePath.c_str(), "rb");
@@ -95,6 +96,16 @@ char Level::getLevelCodeByBlock(int x, int y) {
 void Level::setLevelCodeByBlock(int x, int y, char c) {
 	level[y][x] = c;
 }
+
+int Level::getLevelBlockXByCoord(int x) {
+	int blockX = getSceneBlockXByCoord(x);
+	return getLevelBlockX(blockX);
+}
+int Level::getLevelBlockYByCoord(int y) {
+	int blockY = getSceneBlockYByCoord(y);
+	return getLevelBlockY(blockY);
+}
+
 
 char Level::getSceneCodeByBlock(int y, int x) {
 	return level[scene_y + y][scene_x + x];
@@ -230,6 +241,14 @@ void Level::loadEntities() {
 				case 'G': {
 					Gate* gate = new Gate(x, y, abs_block_x, abs_block_y);
 					entity = gate;
+				} break;
+
+				case 'H': {
+					x += FINISH_DOOR_OFFSET_X;
+					y -= FINISH_DOOR_OFFSET_Y;
+
+					FinishDoor* finishDoor = new FinishDoor(x, y, abs_block_x, abs_block_y);
+					entity = finishDoor;
 				} break;
 
 			}

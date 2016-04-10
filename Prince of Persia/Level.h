@@ -35,6 +35,9 @@ public:
 	int getSceneBlockXByCoord(int yCoord);
 	int getSceneBlockYByCoord(int xCoord);
 
+	int getLevelBlockXByCoord(int x);
+	int getLevelBlockYByCoord(int y);
+
 	int getLevelBlockX(int x);
 	int getLevelBlockY(int y);
 
@@ -132,5 +135,9 @@ public:
 
 	static const int SWORD_OFFSET_X = 0;
 	static const int SWORD_OFFSET_Y = 95;
+
+	static const int FINISH_DOOR_OFFSET_X = 0;
+	static const int FINISH_DOOR_OFFSET_Y = 47;
+
 
 };

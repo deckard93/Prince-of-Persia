@@ -52,6 +52,7 @@ void Entity::defferMoveY(int y) {
 
 void Entity::setCurrentAnim(Animation* anim) {
 	currentAnim = anim;
+	if (anim == NULL) { return; }
 	currentAnim->Play();
 }
 
