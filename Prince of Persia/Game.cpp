@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Platform.h"
 #include "Graphics.h"
 #include "Level.h"
 #include "Guard.h"
@@ -109,6 +110,8 @@ Game::Game(HWND hwnd, Input* in) :
 	RegisterSprite("finishDoor"    , "Assets//finishDoor//");
 	RegisterSprite("finishDoorBase", "Assets//finishDoor//");
 	RegisterSprite("enterDoor"     , "Assets//finishDoor//");
+
+	RegisterSprite("platformMove", "Assets//platform//");
 
 
 	//objects
@@ -667,7 +670,7 @@ void Game::DrawGraphics() {
 	
 	for (std::map<std::pair<int, int>, Entity*>::iterator i = entitites->begin(); i != entitites->end(); i++) {
 		if (i->second == NULL) { continue;  } // TODO: should not happen check load entities
-		if (i->second->getType() == spikeT) { continue; }
+		if (i->second->getType() == spikeT || i->second->getType() == platformT) { continue; }
 
 		if (level->inScene(i->first.second, i->first.first)) {
 			i->second->Animate(&graphics);
@@ -792,6 +795,29 @@ void Game::DrawBackground() {
 			case '_':
 				graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
 				break;
+			case '~': {
+					std::map<std::pair<int, int>, Entity*>* entities = level->getEntities();
+					int blockX = level->getLevelBlockX(x);
+					int blockY = level->getLevelBlockY(y);
+					std::pair<int, int> platformKey = std::make_pair(blockY, blockX);
+					Entity* e = entities->at(platformKey);
+					Platform* p = dynamic_cast<Platform*>(e);
+					if (p != NULL) {
+						p->Animate(&graphics);
+						if (p->getState() == dislodged) {
+							p->setY(p->getY() + 4); //TODO needs to be a variable
+							if (level->getSceneCodeByCoord(p->getX(), p->getY()) == '_') {
+								level->newSetCodeByCoord(p->getX(), p->getY(), '$');
+								level->setSceneCodeByBlock(x, y, ' ');
+							}
+						}
+						
+					}
+					if (level->getSceneBlockXByCoord(prince->getMidX()) == x && level->getSceneBlockYByCoord(prince->getMidY() == y)) {
+						p->Drop();
+					}
+				} break;
+
 			case 'H':
 				graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
 				break;
@@ -899,7 +925,7 @@ void Game::Reset() {
 	level->loadLevel(1);
 
 	prince = new Prince();
-	prince->setX(2 * Level::BLOCK_WIDTH_PX);
+	prince->setX(10 * Level::BLOCK_WIDTH_PX);
 	prince->setY(prince->getAnim()->getSheet()->getFrameHeight() - Level::FOOT_FLOAT);
 	prince->setState(sIdle);
 	
