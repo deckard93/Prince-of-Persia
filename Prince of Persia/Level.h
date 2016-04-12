@@ -57,6 +57,7 @@ public:
 	char getLevelCodeByBlock(int x, int y);
 
 	char getSceneCodeByBlock(int y, int x);
+	void setSceneCodeByBlock(int x, int y, char c);
 	char getSceneCodeByCoord(int x, int y);
 
 	int getLevelHeight();
@@ -65,6 +66,8 @@ public:
 	bool isFreeSpace(char c);
 
 	bool inScene(int abs_block_x, int abs_block_y);
+
+	void newSetCodeByCoord(int x, int y, char c);
 
 	bool findSpikes(int block_x, int block_y);
 
@@ -138,6 +141,8 @@ public:
 
 	static const int FINISH_DOOR_OFFSET_X = 0;
 	static const int FINISH_DOOR_OFFSET_Y = 47;
+
+	static const int PLATFORM_OFFSET_Y = 90;
 
 
 };

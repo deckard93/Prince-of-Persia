@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Platform.h"
 #include "Guard.h"
 #include "GuardAI.h"
 #include "FinishDoor.h"
@@ -20,7 +21,7 @@ void Level::loadLevel(int l) {
 	filePath += levelNo;
 	filePath += ".txt";
 
-	//filePath = "Levels/arena.txt";
+	filePath = "Levels/platform.txt";
 
 	//open file
 	FILE *file = fopen(filePath.c_str(), "rb");
@@ -84,8 +85,11 @@ bool Level::inScene(int abs_block_x, int abs_block_y) {
 	}
 	return false;
 }
+void Level::newSetCodeByCoord(int x, int y, char c) {
+	level[scene_y + getSceneBlockYByCoord(y)][scene_x + getSceneBlockXByCoord(x)] = c;
+}
 
-void Level::setCodeByCoord(int x, int y, char c) {
+void Level::setCodeByCoord(int x, int y, char c) { //TODO DEPRECATE
 	level[scene_y + getSceneBlockYByCoord(y)][scene_x + getSceneBlockXByCoord(x)] = c;
 	loadEntities();
 }
@@ -110,6 +114,10 @@ int Level::getLevelBlockYByCoord(int y) {
 char Level::getSceneCodeByBlock(int y, int x) {
 	return level[scene_y + y][scene_x + x];
 }
+void Level::setSceneCodeByBlock(int x, int y, char c) {
+	level[scene_y + y][scene_x + x] = c;
+}
+
 char Level::getSceneCodeByCoord(int x, int y) {
 	int blockX = getSceneBlockXByCoord(x);
 	int blockY = getSceneBlockYByCoord(y);
@@ -232,7 +240,15 @@ void Level::loadEntities() {
 					Spikes* spikes = new Spikes(x, y, abs_block_x, abs_block_y);
 					entity = spikes;
 				} break;
-				
+
+				case '~': {
+					//x += SPIKE_OFFSET_X;
+					y += 90;
+
+					Platform* platform = new Platform(x, y);
+					entity = platform;
+				} break;
+
 				case '!': {
 					Guilotine* guilotine = new Guilotine(x, y);
 					entity = guilotine;
@@ -305,8 +321,6 @@ std::map<std::pair<int, int>, std::pair<int, int> >* Level::getMec() {
 std::list<Character*>* Level::getGuards() {
 	return characters;
 }
-
-
 
 bool Level::isFreeSpace(char c) {
 	if (c == ' ' ||
