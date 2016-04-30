@@ -45,7 +45,6 @@ Prince::Prince() {
 
 	spikeDeath = new Animation(Game::getSprite("spikeKill"),   1);
 
-
 	fightStep->setDisplayTime(100);
 	fightParry->setDisplayTime(80); //120
 	fightStrike->setDisplayTime(100);
@@ -70,6 +69,7 @@ Prince::Prince() {
 	staticJump->setDisplayTime(65);
 	runningJump->setDisplayTime(49);
 	runningTurn->setDisplayTime(49);
+	fallDamage->setDisplayTime(49);
 	
 	
 	climbUp->setReverse();
@@ -640,7 +640,8 @@ void Prince::increaseMaxHealth() {
 	maxHealth++;
 	currentHealth = maxHealth;
 }
-int Prince::setFall() {
+
+int Prince::setFall(int currentBlockY) {
 	//sanity checks
 	//assert(currentAnim == running || currentAnim == runningJump || currentAnim == staticJump || currentAnim == fall);
 	if(this->getAnim() == runningJump) {
@@ -674,6 +675,7 @@ int Prince::setFall() {
 
 	if(this->getAnim() != fall) {
 		this->setCurrentAnim(fall);
+		this->lastBlockY = currentBlockY;
 		this->getAnim()->Play();
 	} else if(this->getAnim()->getCurrentFrame() == 4) {
 		this->getAnim()->Freeze();
@@ -688,8 +690,27 @@ int Prince::PickUpSword() {
 	}
 	return 0;
 }
-void Prince::Land() {
-	if (getAnim() == fall && getAnim()->getCurrentFrame() == 4 && getAnim()->isFrozen()) { getAnim()->Play(); }
+void Prince::Land(int currentBlockY) {
+	int fallHeight = currentBlockY - lastBlockY;
+
+	if (getAnim() == fall && getAnim()->getCurrentFrame() == 4 && getAnim()->isFrozen()) { 
+		switch (fallHeight) {
+		case 1:
+			getAnim()->Play();
+			break;
+		case 2:
+			this->setCurrentAnim(crouch);
+			this->currentAnim->setCurrentFrame(2);
+			this->currentAnim->setCurrentDisplayTime(3000.0);
+			this->currentHealth--;
+			break;
+		default:
+			this->setCurrentAnim(swordDeath);
+			this->currentAnim->Freeze();
+			this->setState(sDead);
+			
+		}
+	}
 }
 
 void Prince::Catch() {
@@ -735,6 +756,7 @@ void Prince::switchFacing() {
 		spikeDeath->setFlipped(false);
 		swordDeath->setFlipped(false);
 		runningJump->setFlipped(false);
+		fallDamage->setFlipped(false);
 
 		facingRight = false;
 
@@ -767,6 +789,7 @@ void Prince::switchFacing() {
 		spikeDeath->setFlipped(true);
 		swordDeath->setFlipped(true);
 		runningJump->setFlipped(true);
+		fallDamage->setFlipped(true);
 		
 		facingRight = true;
 
