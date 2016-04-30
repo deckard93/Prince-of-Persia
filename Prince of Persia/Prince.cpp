@@ -692,6 +692,10 @@ void Prince::Land() {
 	if (getAnim() == fall && getAnim()->getCurrentFrame() == 4 && getAnim()->isFrozen()) { getAnim()->Play(); }
 }
 
+void Prince::Catch() {
+	this->setCurrentAnim(hang);
+}
+
 //destructors
 Prince::~Prince() {}
 

@@ -287,7 +287,6 @@ void Game::CheckPrinceCollision() {
 	int xFootReal = prince->getX() + prince->getAnim()->getSheet()->getFrameWidth() / 2;
 	int yFootReal = prince->getY() + prince->getAnim()->getSheet()->getFrameHeight() - 9;
 
-
 	if (DEBUG) { graphics.DrawCircle(xFootReal, yFootReal, 5, 255, 255, 255); }
 
 	int mX = prince->getDefferX();
@@ -485,6 +484,36 @@ void Game::CheckCollision() {
 	CheckPrinceCollision();
 	CheckCombatCollision();
 }
+bool Game::CheckCatchConditions() {
+	if (prince->getPrinceState() != sFalling) {	return false; }
+
+	int blockX = level->getLevelBlockXByCoord(prince->getMidX());
+	int blockY = level->getLevelBlockYByCoord(prince->getMidY());
+
+	if (prince->isFacingRight()) {
+		blockX++;
+	} 
+	else {
+		blockX--;
+	}
+
+	int barY = blockY * Level::BLOCK_HEIGHT_PX - Level::BLOCK_HEIGHT_PX / 2 - 20;
+
+	graphics.DrawLine(0, barY, 800,barY, 255, 255, 255);
+
+	if (prince->getMidY() != barY) { return false; }
+
+	blockY++;
+
+	if (level->getLevelCodeByBlock(blockX, blockY) == '_') {
+		prince->setY(prince->getY() - 12);
+		return true;
+	}
+
+
+	return false;
+}
+
 void Game::HandleInput()  {
 	
 	if(input->hasBeenPressed('A')) {
@@ -503,7 +532,6 @@ void Game::HandleInput()  {
 		level->changeScene(U);
 	}
 
-
 	if (input->hasBeenPressed('R')) {
 		Reset();
 	}
@@ -519,9 +547,6 @@ void Game::HandleInput()  {
 
 	if (input->getKeyStatus('G')) {
 		prince->Heal();
-
-
-
 		std::list<Character*>* guards = level->getGuards();
 		std::list<Character*>::iterator i = guards->begin();
 		Character* guard = *i;
@@ -531,10 +556,6 @@ void Game::HandleInput()  {
 	if (input->getKeyStatus('F')) {
 		prince->Hurt();
 	}
-
-
-
-
 
 	if (input->hasBeenPressed('H')) {
 		std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
@@ -581,7 +602,6 @@ void Game::HandleInput()  {
 		OutputDebugStringA(s.c_str());
 
 		if(level->getSceneCodeByCoord(prince->getMidX(), prince->getMidY()) == 'P') {
-				
 			if(prince->Drink()) {
 				level->setCodeByCoord(prince->getMidX(), prince->getMidY(), '_');
 				prince->Heal();
@@ -589,7 +609,6 @@ void Game::HandleInput()  {
 		}
 
 		if (level->getSceneCodeByCoord(prince->getMidX(), prince->getMidY()) == 'K') {
-
 			if (prince->Drink()) {
 				level->setCodeByCoord(prince->getMidX(), prince->getMidY(), '_');
 				prince->Hurt();
@@ -597,7 +616,6 @@ void Game::HandleInput()  {
 		}
 
 		if (level->getSceneCodeByCoord(prince->getMidX(), prince->getMidY()) == 'E') {
-
 			if (prince->Drink()) {
 				level->setCodeByCoord(prince->getMidX(), prince->getMidY(), '_');
 				prince->increaseMaxHealth();
@@ -605,10 +623,13 @@ void Game::HandleInput()  {
 		}
 
 		if (level->getSceneCodeByCoord(prince->getMidX(), prince->getMidY()) == '|') {
-
 			if (prince->PickUpSword()) {
 				level->setCodeByCoord(prince->getMidX(), prince->getMidY(), '_');
 			}
+		}
+
+		if (CheckCatchConditions()) {
+			prince->Catch();
 		}
 
 	}
@@ -644,6 +665,7 @@ void Game::HandleInput()  {
 
 	prince->HandlePrince(input);
 }
+
 void Game::DrawGraphics() {
 
 	//graphics.BeginFrame();
@@ -761,13 +783,6 @@ void Game::DrawHealth() {
 		graphics.DrawSprite(Level::BLOCK_WIDTH_PX * 10 - (i + 1) * ( getSprite("healthFull")->width), Level::BLOCK_HEIGHT_PX * 3, getSprite("healthFull"));
 
 	}
-
-
-
-
-
-
-
 
 
 }
@@ -925,8 +940,9 @@ void Game::Reset() {
 	level->loadLevel(1);
 
 	prince = new Prince();
-	prince->setX(10 * Level::BLOCK_WIDTH_PX);
-	prince->setY(prince->getAnim()->getSheet()->getFrameHeight() - Level::FOOT_FLOAT);
+	//prince->setX(10 * Level::BLOCK_WIDTH_PX - 50);
+	prince->setX(6 * Level::BLOCK_WIDTH_PX - 50);
+	prince->setY(prince->getAnim()->getSheet()->getFrameHeight() - Level::FOOT_FLOAT - Level::BLOCK_HEIGHT_PX);
 	prince->setState(sIdle);
 	
 }

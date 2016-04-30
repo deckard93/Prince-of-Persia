@@ -43,11 +43,15 @@ private:
 
 	//control
 	void HandleInput();
+
 	void ControlAI();
+
 	void CheckCharacterCollision(Character & character);
 	void CheckPrinceCollision();
 	void CheckCombatCollision();
 	void CheckCollision();
+	bool CheckCatchConditions();
+
 	void DrawGraphics();
 	void EngageFight(Character* prince, Character* guard);
 	void SetEngagedGuard(Character* guard);
