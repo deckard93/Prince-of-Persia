@@ -79,6 +79,7 @@ public:
 	int setFall();
 	int PickUpSword();
 	void Land(); //TODO: remove this
+	void Catch();
 
 	void spikeKill();
 
