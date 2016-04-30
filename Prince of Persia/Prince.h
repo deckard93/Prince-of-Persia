@@ -23,6 +23,7 @@ private:
 	Animation* swordDeath;
 	Animation* guilotineDeath;
 	Animation* spikeDeath;
+	Animation* fallDeath;
 	*/
 
 	/*
@@ -38,10 +39,14 @@ private:
 	Animation* runningJump;
 	Animation* runningTurn;
 	Animation* fall;
+	
 	Animation* drop;
 	Animation* drink;
 	Animation* pickSword;
 	*/
+
+	Animation* fallDamage;
+	//Animation* fallDeath;
 
 	princeState state;
 
@@ -51,6 +56,7 @@ private:
 	int runningSpeedX;
 	int climbSpeedX;
 	int* princeSpeedX;
+	int lastBlockY;
 
 public:
 	
@@ -76,9 +82,9 @@ public:
 	int Drink();
 	void increaseMaxHealth();
 	void Animate(Graphics* graphics);
-	int setFall();
+	int setFall(int currentBlockY);
 	int PickUpSword();
-	void Land(); //TODO: remove this
+	void Land(int currentBlockY);
 	void Catch();
 
 	void spikeKill();

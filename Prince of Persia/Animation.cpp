@@ -13,6 +13,7 @@ Animation::Animation(SpriteSheet* s) {
 
 	frameDisplayTime = NULL;
 	defaultDisplayTime = 0;
+	currentDisplayTime = -1;
 
 	playForward = true;
 	finished    = true;
@@ -28,6 +29,7 @@ Animation::Animation(Sprite* sprite, int frames, float* timing) : sheet(NULL) {
 
 	frameDisplayTime = timing;
 	defaultDisplayTime = 0;
+	currentDisplayTime = -1;
 	currentFrame = 0;
 
 	playForward = true;
@@ -44,6 +46,7 @@ Animation::Animation(Sprite* sprite, int frames) : sheet(NULL) {
 
 	frameDisplayTime = NULL;
 	defaultDisplayTime = 0;
+	currentDisplayTime = 01;
 	currentFrame = 0;
 
 	playForward = true;
@@ -60,6 +63,7 @@ Animation::Animation(const WCHAR* spriteName,int frames) : sheet(NULL) {
 
 	frameDisplayTime = NULL;
 	defaultDisplayTime = 0;
+	currentDisplayTime = -1;
 	currentFrame = 0;
 
 	playForward = true;
@@ -117,6 +121,9 @@ void Animation::setDisplayTime(float dispTim) {
 void Animation::setDisplayTime(float* dispTim) {
 	frameDisplayTime = dispTim;
 }
+void Animation::setCurrentDisplayTime(float dispTim) {
+	currentDisplayTime = dispTim;
+}
 
 //Functions
 void Animation::Play() {
@@ -136,56 +143,40 @@ void Animation::Update(Graphics* graphics, int x, int y) {
 	}
 }
 void Animation::NextFrame() {
-	if(frameDisplayTime == NULL) {
 
-		if(timer.GetTimeMilli() > defaultDisplayTime) {
-			timer.StopWatch();
-			timer.StartWatch();
-
-			if(playForward) {
-				currentFrame+=inc;
-				effectPending = true;
-			} else {
-				currentFrame-=inc;
-				effectPending = true;
-			}
-
-			if(currentFrame >= sheet->getFrameCount()) {
-				currentFrame = 0;
-				if(!loop) finished = true;
-			}
-
-			if(currentFrame < 0) {
-				currentFrame = sheet->getFrameCount() - 1;
-				if(!loop) finished = true;
-			}
-		}
+	float threshold;
+	if (currentDisplayTime != -1) {
+		threshold = currentDisplayTime;
+	} else if (frameDisplayTime != NULL) {
+		threshold = frameDisplayTime[currentFrame];
 	} else {
+		threshold = defaultDisplayTime;
+	}
 
-		if (timer.GetTimeMilli() > frameDisplayTime[currentFrame]) {
-			timer.StopWatch();
-			timer.StartWatch();
 
-			if (playForward) {
-				currentFrame += inc;
-				effectPending = true;
-			}
-			else {
-				currentFrame -= inc;
-				effectPending = true;
-			}
+	if(timer.GetTimeMilli() > threshold) {
+		currentDisplayTime = -1;
 
-			if (currentFrame >= sheet->getFrameCount()) {
-				currentFrame = 0;
-				if (!loop) finished = true;
-			}
+		timer.StopWatch();
+		timer.StartWatch();
 
-			if (currentFrame < 0) {
-				currentFrame = sheet->getFrameCount() - 1;
-				if (!loop) finished = true;
-			}
+		if(playForward) {
+			currentFrame+=inc;
+			effectPending = true;
+		} else {
+			currentFrame-=inc;
+			effectPending = true;
 		}
 
+		if(currentFrame >= sheet->getFrameCount()) {
+			currentFrame = 0;
+			if(!loop) finished = true;
+		}
+
+		if(currentFrame < 0) {
+			currentFrame = sheet->getFrameCount() - 1;
+			if(!loop) finished = true;
+		}
 	}
 
 }

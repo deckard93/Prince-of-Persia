@@ -24,6 +24,8 @@ private:
 	bool loop;
 	bool effectPending;
 
+	float currentDisplayTime;
+
 	float defaultDisplayTime;
 	float* frameDisplayTime;
 
@@ -52,6 +54,7 @@ public:
 	void setFlipped(bool in);
 	void setDisplayTime(float dispTim);
 	void setDisplayTime(float* dispTim);
+	void setCurrentDisplayTime(float dispTim);
 
 	//Functions
 	void Play();

@@ -310,17 +310,17 @@ void Game::CheckPrinceCollision() {
 		if (DEBUG) graphics.DrawLine(0, bar, Graphics::SCREENX, bar, 255, 255, 255);
 
 		if (yFoot < bar - 20) {
-			mY += prince->setFall();
+			mY += prince->setFall(nBlockY);
 		}
 		else {
 			//prince->getAnim()->Play(); ???????????????
-			prince->Land();
+			prince->Land(nBlockY);
 		}
 	}
 
 	if (level->getSceneCodeByBlock(nBlockY, nBlockX) == ' ' ||
 		level->getSceneCodeByBlock(nBlockY, nBlockX) == '*') {
-		mY += prince->setFall();
+		mY += prince->setFall(nBlockY);
 	}
 
 	//=============== Collision With Walls =====================
