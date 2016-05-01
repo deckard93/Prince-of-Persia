@@ -50,8 +50,6 @@ private:
 
 	princeState state;
 
-	bool hasSword;
-
 	int idleSpeedX;
 	int runningSpeedX;
 	int climbSpeedX;

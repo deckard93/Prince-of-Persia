@@ -75,6 +75,8 @@ protected:
 
 	std::map<Character*, bool> seenEnemies;
 
+	bool hasSword;
+
 //variables
 protected:
 	bool isAnimating;
