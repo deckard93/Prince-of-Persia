@@ -46,7 +46,7 @@ Animation::Animation(Sprite* sprite, int frames) : sheet(NULL) {
 
 	frameDisplayTime = NULL;
 	defaultDisplayTime = 0;
-	currentDisplayTime = 01;
+	currentDisplayTime = -1;
 	currentFrame = 0;
 
 	playForward = true;
@@ -152,7 +152,6 @@ void Animation::NextFrame() {
 	} else {
 		threshold = defaultDisplayTime;
 	}
-
 
 	if(timer.GetTimeMilli() > threshold) {
 		currentDisplayTime = -1;
