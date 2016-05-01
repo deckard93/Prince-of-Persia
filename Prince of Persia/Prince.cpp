@@ -69,9 +69,9 @@ Prince::Prince() {
 	staticJump->setDisplayTime(65);
 	runningJump->setDisplayTime(49);
 	runningTurn->setDisplayTime(49);
-	fallDamage->setDisplayTime(49);
+	//fallDamage->setDisplayTime(49);
 	
-	
+
 	climbUp->setReverse();
 	runningJump->setReverse();
 	runningTurn->setReverse();
