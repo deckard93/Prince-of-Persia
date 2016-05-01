@@ -473,12 +473,13 @@ void Prince::FightController(Input* input) {
 		this->setCurrentAnim(fightStep);
 	}
 
-	if (input->isCtrlPressed())     { this->setCurrentAnim(fightStrike); }
-	if (input->hasUpBeenPressed())  { this->setCurrentAnim(fightParry);  }
-	if (input->hasBeenPressed('X')) { this->setCurrentAnim(fightStep);   }
-	if (input->hasBeenPressed('T')) { this->setCurrentAnim(fightInjure); }
-	if (input->hasBeenPressed('B')) { this->setCurrentAnim(fightStart);  }
-	if (input->hasBeenPressed('K')) { this->setCurrentAnim(fightFinish); }
+	if (input->isCtrlPressed())      { this->setCurrentAnim(fightStrike); }
+	if (input->hasUpBeenPressed())   { this->setCurrentAnim(fightParry);  }
+
+	//Debugging
+	if (input->hasDownBeenPressed()) { this->setCurrentAnim(fightFinish); }
+	if (input->hasBeenPressed('B'))  { this->setCurrentAnim(fightStart);  }
+	if (input->hasBeenPressed('T'))  { this->setCurrentAnim(fightInjure); }
 }
 void Prince::NormalController(Input* input) {
 
@@ -598,7 +599,7 @@ void Prince::NormalController(Input* input) {
 		}
 	}
 
-	if (input->hasBeenPressed('K')) {
+	if (input->isCtrlPressed() && hasSword) {
 		inFight = true;
 		this->MoveX(-fightDisplacement);
 		setCurrentAnim(fightStart);
@@ -686,6 +687,7 @@ int Prince::setFall(int currentBlockY) {
 int Prince::PickUpSword() {
 	if (this->getAnim() == idle) {
 		this->setCurrentAnim(pickSword);
+		hasSword = true;
 		return 1;
 	}
 	return 0;

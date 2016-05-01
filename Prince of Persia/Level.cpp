@@ -21,7 +21,7 @@ void Level::loadLevel(int l) {
 	filePath += levelNo;
 	filePath += ".txt";
 
-	filePath = "Levels/platform.txt";
+	filePath = "Levels/arena.txt";
 
 	//open file
 	FILE *file = fopen(filePath.c_str(), "rb");
@@ -142,6 +142,7 @@ int Level::getLevelBlockY(int y) {
 void Level::loadEntities() {
 
 	entities->clear();
+	characters->clear();
 
 	for(int abs_block_y = 0; abs_block_y < level_height; abs_block_y++)  {
 		for(int abs_block_x = 0; abs_block_x < level_width; abs_block_x++) {
@@ -199,14 +200,14 @@ void Level::loadEntities() {
 					entity = potion;
 				} break;
 
-				case'1': {
-					setLevelCodeByBlock(abs_block_x, abs_block_y, '_');
+				case '1': {
+					//setLevelCodeByBlock(abs_block_x, abs_block_y, '_');
 					GuardAI* aiGuard = new GuardAI(x, y - 5);
 					entity = aiGuard;
 					characters->push_back(aiGuard);
 				} break;
 
-				case'K': {
+				case 'K': {
 					x += POTION_OFFSET_X;
 					y += POTION_OFFSET_Y;
 

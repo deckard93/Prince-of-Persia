@@ -31,6 +31,7 @@ Guard::Guard(int x, int y) {
 	currentHealth = 3;
 	maxHealth = 3;
 
+	hasSword = true;
 	facingRight = false;
 
 	Entity::setCurrentAnim(fightIdle);

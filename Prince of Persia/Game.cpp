@@ -377,7 +377,6 @@ void Game::CheckPrinceCollision() {
 			}
 		}
 
-
 		xOffset -= 20;
 		nBlockX = level->getSceneBlockXByCoord(prince->getMidX() + xOffset);
 		nBlockY = level->getSceneBlockYByCoord(prince->getMidY());
@@ -873,6 +872,9 @@ void Game::DrawBackground() {
 				graphics.DrawSprite(xOff, yOff - getSprite("blockCornerRight")->height, getSprite("blockCornerRight"));
 				break;
 			case '_':
+				graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
+				break;
+			case '1':
 				graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
 				break;
 			case '~': {

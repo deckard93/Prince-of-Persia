@@ -155,6 +155,9 @@ void Character::FaceCharacter(Character& character, Level& level) {
 }
 
 void Character::EngageEnemy(Character & enemy) {
+	if (!hasSword) {
+		return;
+	}
 	if (!isFighting()) {
 		if (this->getAnim() == idle) {
 			if (seenEnemies.find(&enemy) == seenEnemies.end()) {
