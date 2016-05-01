@@ -8,6 +8,8 @@ class GuardAI : public Guard {
 
 	//variables
 private:
+	int chanceToParry;
+	int chanceToStrike;
 	bool engaged; //triggered //aggroed
 
 //functions

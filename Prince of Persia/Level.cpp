@@ -21,7 +21,7 @@ void Level::loadLevel(int l) {
 	filePath += levelNo;
 	filePath += ".txt";
 
-	filePath = "Levels/arena.txt";
+	filePath = "Levels/platform.txt";
 
 	//open file
 	FILE *file = fopen(filePath.c_str(), "rb");
