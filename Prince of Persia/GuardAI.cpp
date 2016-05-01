@@ -1,9 +1,15 @@
+#include <stdlib.h>
+#include <time.h> 
+
 #include "Prince.h"
 #include "Level.h"
 #include "Guard.h"
 #include "GuardAI.h"
 
-GuardAI::GuardAI(int x, int y) : Guard(x, y) {}
+GuardAI::GuardAI(int x, int y) : Guard(x, y) {
+	chanceToParry = 50;
+	chanceToStrike = 50;
+}
 
 void GuardAI::Control(Prince& prince, Level& level) {
 	//if prince is not on the same level do nothing
@@ -19,13 +25,15 @@ void GuardAI::Control(Prince& prince, Level& level) {
 		//attack
 	//about to be hit
 		//chance to parry (depending on how close prince is)
-	
+
 	int princeLevelY = level.getSceneBlockYByCoord(prince.getY());
 	int guardLevelY = level.getSceneBlockYByCoord(this->getY());
 
 	int princeLevelX = level.getSceneBlockYByCoord(prince.getX());
 	int guardLevelX = level.getSceneBlockYByCoord(this->getX());
 
+	srand(time(NULL));
+	
 
 	//FacePrince(prince, level);
 	FaceCharacter(prince, level);
@@ -34,10 +42,20 @@ void GuardAI::Control(Prince& prince, Level& level) {
 //		OutputDebugStringA("We're on the same level \n");
 		if (abs(princeLevelX - guardLevelX) == 0) {
 			if (prince.isStriking() && prince.getAnim()->getCurrentFrame() == 0) {
-				//ActionHandler(aParry);
+				int result = rand() % (100);
+				bool parry = false;
+				if (result < chanceToParry) {
+					parry = true;
+				}
+				if (parry) {
+					ActionHandler(aParry);
+				}
 			}
 			else {
-				ActionHandler(aStrike);
+				int result = rand() % (100);
+				if (result < chanceToStrike) {
+					ActionHandler(aStrike);
+				}
 			}
 		}
 		else {
