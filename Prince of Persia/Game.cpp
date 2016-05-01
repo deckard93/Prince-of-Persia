@@ -287,7 +287,7 @@ void Game::CheckPrinceCollision() {
 	int xFootReal = prince->getX() + prince->getAnim()->getSheet()->getFrameWidth() / 2;
 	int yFootReal = prince->getY() + prince->getAnim()->getSheet()->getFrameHeight() - 9;
 
-	if (DEBUG) { graphics.DrawCircle(xFootReal, yFootReal, 5, 255, 255, 255); }
+	if (DEBUG) { graphics.DrawCircle(xFootReal, yFootReal, 20, 255, 255, 255); }
 
 	int mX = prince->getDefferX();
 	int mY = prince->getDefferY();
@@ -298,12 +298,13 @@ void Game::CheckPrinceCollision() {
 
 
 	//===================== Fall ==========================
-	if (level->getSceneCodeByBlock(nBlockY, nBlockX) == '_' ||
+	if (level->getSceneCodeByBlock(nBlockY, nBlockX) == '-' ||
 		level->getSceneCodeByBlock(nBlockY, nBlockX) == '#' ||
 		level->getSceneCodeByBlock(nBlockY, nBlockX) == '/' ||
 		level->getSceneCodeByBlock(nBlockY, nBlockX) == '^' ||
 		level->getSceneCodeByBlock(nBlockY, nBlockX) == '$' ||
 		level->getSceneCodeByBlock(nBlockY, nBlockX) == '|' ||
+		level->getSceneCodeByBlock(nBlockY, nBlockX) == '=' ||
 		level->getSceneCodeByBlock(nBlockY, nBlockX) == '_') {
 
 		int bar = (Level::BLOCK_HEIGHT_PX * nBlockY);
@@ -345,6 +346,66 @@ void Game::CheckPrinceCollision() {
 		}
 	}
 
+
+	//=============== Collision With Gates =====================
+
+	//TODO clean this up
+	//TODO running Turn Bug
+	{
+		//int xOffset = -22;
+		int xOffset = 0;
+		int nBlockX = level->getSceneBlockXByCoord(prince->getMidX() + xOffset);
+		int nBlockY = level->getSceneBlockYByCoord(prince->getMidY());
+		if (level->getSceneCodeByBlock(nBlockY, nBlockX) == 'G' && prince->isFacingRight()) {
+
+			std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
+			int absY = level->getLevelBlockY(nBlockY);
+			int absX = level->getLevelBlockY(nBlockX);
+
+			std::pair<int, int> gateKey(absY, absX);
+			Gate* g = dynamic_cast<Gate*>((*entitites)[gateKey]);
+
+			if (!g->isOpen()) {
+				int bar = (Level::BLOCK_WIDTH_PX * (nBlockX));
+
+				if (DEBUG) graphics.DrawLine(bar, 0, bar, Graphics::SCREENY, 255, 255, 255);
+				if (DEBUG) graphics.DrawLine(prince->getMidX() + xOffset, 0, prince->getMidX() + xOffset, Graphics::SCREENY, 0, 255, 0);
+
+				if (prince->getMidX() + xOffset + mX >= bar) {
+					mX = 0;
+				}
+			}
+		}
+
+
+		xOffset -= 20;
+		nBlockX = level->getSceneBlockXByCoord(prince->getMidX() + xOffset);
+		nBlockY = level->getSceneBlockYByCoord(prince->getMidY());
+		nBlockX--;
+		if (level->getSceneCodeByBlock(nBlockY, nBlockX) == 'G' && !prince->isFacingRight()) {
+
+			std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
+			int absY = level->getLevelBlockY(nBlockY);
+			int absX = level->getLevelBlockY(nBlockX);
+
+			std::pair<int, int> gateKey(absY, absX);
+			Gate* g = dynamic_cast<Gate*>((*entitites)[gateKey]);
+
+			if (!g->isOpen()) {
+				int bar = (Level::BLOCK_WIDTH_PX * (nBlockX));
+
+				if (DEBUG) graphics.DrawLine(bar, 0, bar, Graphics::SCREENY, 255, 255, 255);
+				if (DEBUG) graphics.DrawLine(prince->getMidX() + xOffset, 0, prince->getMidX() + xOffset, Graphics::SCREENY, 0, 255, 0);
+
+				if (prince->getMidX() + xOffset + mX <= bar) {
+					mX = 0;
+				}
+			}
+		}
+	}
+
+
+
 	//===================== Change Scenes =====================
 	if (prince->getMidY() > Level::BLOCK_HEIGHT_PX * 3) {
 		level->changeScene(D);
@@ -371,14 +432,15 @@ void Game::CheckPrinceCollision() {
 	prince->MoveX(mX);
 	prince->MoveY(mY);
 
-	char code = level->getSceneCodeByCoord(prince->getMidX(), prince->getMidY());
-	int absX = level->getLevelBlockX(level->getSceneBlockXByCoord(prince->getMidX()));
+	char code = level->getSceneCodeByCoord(prince->getMidX() - 22, prince->getMidY());
+	int absX = level->getLevelBlockX(level->getSceneBlockXByCoord(prince->getMidX() - 22));
 	int absY = level->getLevelBlockY(level->getSceneBlockYByCoord(prince->getMidY()));
 	std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
 
 	////================== Open/Close Gates ==================
-	if (code == '-' ||
-		code == '=') {
+	if ( (code == '-' || code == '=' ) &&
+		 !prince->isJumping()
+		) {
 
 
 		std::map<std::pair<int, int>, std::pair<int, int> >* mechanism = level->getMec();
@@ -790,6 +852,9 @@ void Game::DrawBackground() {
 	int yOff = 0;
 	int xOff = 0;
 
+	//TODO this value is being reused in check collision move it in a common location or eliminate collision detection when drawing completely
+	int princeXOffset = 22; 
+
 	for(int y = Level::SCENE_HEIGHT_BLK; y >= 0; y--){
 		for(int x = 0; x <= Level::SCENE_WIDTH_BLK; x++){
 
@@ -837,9 +902,10 @@ void Game::DrawBackground() {
 				graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
 				break;
 			case '-':
-				if(level->getSceneCodeByCoord(prince->getMidX(), prince->getMidY()) == '-') {
-					/*TODO: this needs to be fixed */
-					if (level->getSceneBlockXByCoord(prince->getMidX()) == x && level->getSceneBlockYByCoord(prince->getMidY() == y)) {
+				if(level->getSceneCodeByCoord(prince->getMidX() - princeXOffset, prince->getMidY()) == '-') {
+					if (level->getSceneBlockXByCoord(prince->getMidX() - princeXOffset) == x &&
+						level->getSceneBlockYByCoord(prince->getMidY() == y) &&
+						!prince->isJumping() ) {
 						graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height, getSprite("tileCornerLeft"));
 					}
 					else {
@@ -850,8 +916,11 @@ void Game::DrawBackground() {
 				}
 				break;
 			case '=':
-				if (level->getSceneCodeByCoord(prince->getMidX(), prince->getMidY()) == '=') {
-					if (level->getSceneBlockXByCoord(prince->getMidX()) == x && level->getSceneBlockYByCoord(prince->getMidY() == y)) {
+				if (level->getSceneCodeByCoord(prince->getMidX() - princeXOffset, prince->getMidY()) == '=') {
+					if (level->getSceneBlockXByCoord(prince->getMidX() - princeXOffset) == x && 
+						level->getSceneBlockYByCoord(prince->getMidY() == y) &&
+						!prince->isJumping()
+						) {
 						graphics.DrawSprite(xOff, yOff + 2 - getSprite("trap")->height, getSprite("trap"));
 					}
 					else {

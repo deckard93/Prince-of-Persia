@@ -83,3 +83,15 @@ void Gate::Animate(Graphics* graphics) {
 
 	Entity::Animate(graphics);
 }
+
+bool Gate::isOpen() {
+	if (state == sOpened) {
+		return true;
+	}
+	else if (state == sClosing) {
+		if (this->currentAnim->getCurrentFrame() <= 1) {
+			return true;
+		}
+	}
+	return false;
+}
