@@ -19,6 +19,8 @@ public:
 	void Open();
 	void Close();
 
+	bool isOpen();
+
 	void Animate(Graphics* graphics);
 
 private:

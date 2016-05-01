@@ -695,6 +695,9 @@ void Prince::Land(int currentBlockY) {
 
 	if (getAnim() == fall && getAnim()->getCurrentFrame() == 4 && getAnim()->isFrozen()) { 
 		switch (fallHeight) {
+		case 0:
+			getAnim()->Play();
+			break;
 		case 1:
 			getAnim()->Play();
 			break;
@@ -824,6 +827,21 @@ void Prince::spikeKill() {
 	state = sDead;
 	this->setCurrentAnim(spikeDeath);
 	this->getAnim()->Freeze();
+}
+
+bool Prince::isJumping() {
+	if (this->getAnim() == staticJump) {
+		if (this->getAnim()->getCurrentFrame() >= 1 &&
+			this->getAnim()->getCurrentFrame() <= 12) {
+			return true;
+		}
+	}
+	if (this->getAnim() == runningJump) {
+		if (this->getAnim()->getCurrentFrame() <= 6) {
+			return true;
+		}
+	}
+	return false;
 }
 
 /*

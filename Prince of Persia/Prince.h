@@ -79,6 +79,7 @@ public:
 	//function
 	void HandlePrince(Input* input);
 	bool isStriking();
+	bool isJumping();
 	int Drink();
 	void increaseMaxHealth();
 	void Animate(Graphics* graphics);
@@ -88,13 +89,13 @@ public:
 	void Catch();
 
 	void spikeKill();
+	void defaultToIdle();
 
 	//destructors
 	~Prince();
 
 private:
 	void ActionHandler(Action action);
-	void defaultToIdle();
 	void handleInput();
 	void switchFacing();
 	void doAnimationEffects();
