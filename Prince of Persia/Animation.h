@@ -25,7 +25,6 @@ private:
 	bool effectPending;
 
 	float currentDisplayTime;
-
 	float defaultDisplayTime;
 	float* frameDisplayTime;
 

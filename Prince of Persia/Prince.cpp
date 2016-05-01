@@ -286,9 +286,9 @@ void Prince::Animate(Graphics* graphics) {
 		if(this->getAnim() == staticJump) {
 			if(getAnim()->getCurrentFrame() > 5 && getAnim()->getCurrentFrame() < 13) {
 				if(facingRight) {	
-					moveX += 8;	//this->MoveX(13);
+					moveX += 7;	//this->MoveX(13);
 				} else {
-					moveX -= 8;	//this->MoveX(-13);
+					moveX -= 7;	//this->MoveX(-13);
 				}
 			}
 		}
@@ -756,7 +756,7 @@ void Prince::switchFacing() {
 		spikeDeath->setFlipped(false);
 		swordDeath->setFlipped(false);
 		runningJump->setFlipped(false);
-		fallDamage->setFlipped(false);
+		//fallDamage->setFlipped(false);
 
 		facingRight = false;
 
@@ -789,7 +789,7 @@ void Prince::switchFacing() {
 		spikeDeath->setFlipped(true);
 		swordDeath->setFlipped(true);
 		runningJump->setFlipped(true);
-		fallDamage->setFlipped(true);
+		//fallDamage->setFlipped(true);
 		
 		facingRight = true;
 
