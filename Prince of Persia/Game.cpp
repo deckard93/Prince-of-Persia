@@ -23,6 +23,7 @@ Game::Game(HWND hwnd, Input* in) :
 	RegisterSprite("block");
 	RegisterSprite("blockCornerLeft");
 	RegisterSprite("blockCornerRight");
+	RegisterSprite("blockRound");
 	RegisterSprite("bricks");
 	RegisterSprite("separator");
 	RegisterSprite("separator_corner");
@@ -337,7 +338,9 @@ void Game::CheckPrinceCollision() {
 	}
 
 	if (mX > 0 && level->getSceneCodeByBlock(nBlockY, nBlockX + 1) == '[' ||
-		level->getSceneCodeByBlock(nBlockY, nBlockX) == '[') {
+		level->getSceneCodeByBlock(nBlockY, nBlockX) == '[' ||
+		mX > 0 && level->getSceneCodeByBlock(nBlockY, nBlockX + 1) == 'O' ||
+		level->getSceneCodeByBlock(nBlockY, nBlockX) == 'O') {
 
 		int bar = (Level::BLOCK_WIDTH_PX * (nBlockX)-27);
 		if (DEBUG) graphics.DrawLine(bar, yFoot, bar, Level::BLOCK_HEIGHT_PX, 255, 255, 255);
@@ -999,6 +1002,9 @@ void Game::DrawForeground() {
 				break;
 			case '[':
 				graphics.DrawSprite(xOff, yOff - getSprite("blockCornerLeft")->height, getSprite("blockCornerLeft"));
+				break;
+			case 'O':
+				graphics.DrawSprite(xOff, yOff - getSprite("blockRound")->height, getSprite("blockRound"));
 				break;
 			case 'G':
 				graphics.DrawSprite(xOff, yOff - getSprite("doorFrameFront")->height, getSprite("doorFrameFront"));
