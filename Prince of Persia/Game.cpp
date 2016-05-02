@@ -305,6 +305,7 @@ void Game::CheckPrinceCollision() {
 		level->getSceneCodeByBlock(nBlockY, nBlockX) == '$' ||
 		level->getSceneCodeByBlock(nBlockY, nBlockX) == '|' ||
 		level->getSceneCodeByBlock(nBlockY, nBlockX) == '=' ||
+		level->getSceneCodeByBlock(nBlockY, nBlockX) == '~' ||
 		level->getSceneCodeByBlock(nBlockY, nBlockX) == '_') {
 
 		int bar = (Level::BLOCK_HEIGHT_PX * nBlockY);
@@ -895,7 +896,8 @@ void Game::DrawBackground() {
 						}
 						
 					}
-					if (level->getSceneBlockXByCoord(prince->getMidX()) == x && level->getSceneBlockYByCoord(prince->getMidY() == y)) {
+					if (level->getSceneBlockXByCoord(prince->getMidX() - princeXOffset) == x &&
+						level->getSceneBlockYByCoord(prince->getMidY()) == y) {
 						p->Drop();
 					}
 				} break;
@@ -1012,7 +1014,7 @@ void Game::Reset() {
 
 	prince = new Prince();
 	//prince->setX(10 * Level::BLOCK_WIDTH_PX - 50);
-	prince->setX(6 * Level::BLOCK_WIDTH_PX - 50);
+	prince->setX(10 * Level::BLOCK_WIDTH_PX - 50);
 	prince->setY(prince->getAnim()->getSheet()->getFrameHeight() - Level::FOOT_FLOAT - Level::BLOCK_HEIGHT_PX);
 	prince->setState(sIdle);
 	
