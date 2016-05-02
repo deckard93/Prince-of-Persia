@@ -192,11 +192,10 @@ bool Animation::isFrozen() {
 	return false;
 }
 void Animation::Reset() {
-	//TODO is this function correct?
 	if (playForward) {
 		currentFrame = 0;
 	} else {
-		currentFrame = getLastFrameNr() - 1;
+		currentFrame = getLastFrameNr();
 	}
 }
 

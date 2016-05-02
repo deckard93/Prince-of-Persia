@@ -312,17 +312,17 @@ void Game::CheckPrinceCollision() {
 		if (DEBUG) graphics.DrawLine(0, bar, Graphics::SCREENX, bar, 255, 255, 255);
 
 		if (yFoot < bar - 20) {
-			mY += prince->setFall(nBlockY);
+			mY += prince->setFall(level->getLevelBlockYByCoord(yFoot));
 		}
 		else {
 			//prince->getAnim()->Play(); ???????????????
-			prince->Land(nBlockY);
+			prince->Land(level->getLevelBlockYByCoord(yFoot));
 		}
 	}
 
 	if (level->getSceneCodeByBlock(nBlockY, nBlockX) == ' ' ||
 		level->getSceneCodeByBlock(nBlockY, nBlockX) == '*') {
-		mY += prince->setFall(nBlockY);
+		mY += prince->setFall(level->getLevelBlockYByCoord(yFoot));
 	}
 
 	//=============== Collision With Walls =====================
@@ -366,7 +366,7 @@ void Game::CheckPrinceCollision() {
 			std::pair<int, int> gateKey(absY, absX);
 			Gate* g = dynamic_cast<Gate*>((*entitites)[gateKey]);
 
-			if (!g->isOpen()) {
+			if (g != NULL && !g->isOpen()) {
 				int bar = (Level::BLOCK_WIDTH_PX * (nBlockX));
 
 				if (DEBUG) graphics.DrawLine(bar, 0, bar, Graphics::SCREENY, 255, 255, 255);
@@ -391,7 +391,8 @@ void Game::CheckPrinceCollision() {
 			std::pair<int, int> gateKey(absY, absX);
 			Gate* g = dynamic_cast<Gate*>((*entitites)[gateKey]);
 
-			if (!g->isOpen()) {
+
+			if (g != NULL && !g->isOpen()) {
 				int bar = (Level::BLOCK_WIDTH_PX * (nBlockX));
 
 				if (DEBUG) graphics.DrawLine(bar, 0, bar, Graphics::SCREENY, 255, 255, 255);
@@ -746,7 +747,7 @@ void Game::DrawGraphics() {
 			spikes->AnimateBackground(&graphics);
 		}
 		else {
-			i->second->Animate(NULL);
+			//i->second->Animate(NULL);
 		}
 	}
 	if (DEBUG) { graphics.DrawCircle(prince->getMidX(), prince->getMidY(), 5, 255, 255, 255); }
@@ -774,7 +775,7 @@ void Game::DrawGraphics() {
 			spikes->AnimateForeground(&graphics);
 		}
 		else {
-			i->second->Animate(NULL);
+			//i->second->Animate(NULL);
 		}
 	}
 
@@ -1014,7 +1015,7 @@ void Game::Reset() {
 
 	prince = new Prince();
 	//prince->setX(10 * Level::BLOCK_WIDTH_PX - 50);
-	prince->setX(10 * Level::BLOCK_WIDTH_PX - 50);
+	prince->setX(3 * Level::BLOCK_WIDTH_PX - 50);
 	prince->setY(prince->getAnim()->getSheet()->getFrameHeight() - Level::FOOT_FLOAT - Level::BLOCK_HEIGHT_PX);
 	prince->setState(sIdle);
 	

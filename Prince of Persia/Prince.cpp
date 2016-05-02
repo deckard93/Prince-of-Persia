@@ -79,21 +79,27 @@ Prince::Prince() {
 	drink->setReverse();
 	drop->setReverse();
 	//fightInjure->setReverse();
-	
 
+
+	climbUp->Reset();
+	runningJump->Reset();
+	runningTurn->Reset();
+	jumpGrab->Reset();
+	drink->Reset();
+	drop->Reset();
+	
 
 	fightStep->setReverse();
 	fightParry->setReverse();
 	//fightStrike->setReverse();
 	fightStart->setReverse();
-	fightStart->setCurrentFrame(fightStart->getLastFrameNr());
+	fightStart->Reset();
 	fightFinish->setReverse();
-	fightFinish->setCurrentFrame(fightFinish->getLastFrameNr());
+	fightFinish->Reset();
 
 
 	facingRight = false;
 	inFight = false;
-
 
 	setCurrentAnim(idle);
 
@@ -710,6 +716,7 @@ void Prince::Land(int currentBlockY) {
 			this->currentHealth--;
 			break;
 		default:
+			//TODO: check for spikes
 			this->setCurrentAnim(swordDeath);
 			this->currentAnim->Freeze();
 			this->setState(sDead);
