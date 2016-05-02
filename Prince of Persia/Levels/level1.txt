@@ -3,16 +3,21 @@
 10
 92
 ____________________________________________________________________________________________
-]]    TP_^#T [IIIIIIIIIIIIIIIII]*  ____#TT#_^#^___TT^_^_-G*_G   _#!__[I                     
-]T *  [IIII]$T [IIIIIIII]* T^#TT^^_T__[IIIIIIIIIIIIIIIII]T []^^#T [IIII                     
-]T *  [IIIIII]_T/^#__T^#T$$[IIII]TPT__[IIIIIIIIIIIII]^P#_T$[IIII]$T~#_[_____________________
-]T *  T__#____-* _T_G *     *    -_T__T^G     *-#_G^#- T_#^_T* [II]* [IIIIIIIIII]-    *   [I
-]T *  T^^_TT__T* [II]^#^_=__-##^_T_T* [I]^^__*_T-_[II] [IIII]^_T^_T__T_T#_^#^__#TT#^_H^_#_[I
-I]_|S$T [IIIII]/ [IIIIIII] [IIIII]_T__T_[II]* [IIIIII]//[IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+]]    TP_^#T [IIIIIIIIIIIIIIIII]*  ____#TT#_^#^1__TT^_^_-G*_G   _#___[I                     
+]T *  [IIII]$T [IIIIIIII]* T^#TT^^_T~~[IIIIIIIIIIIIIIIII]T []^^#T [IIII                     
+]T *  [IIIIII]_T/^#~_T^#T$$[IIII]TPT__[IIIIIIIIIIIII]^P#~T$[IIII]$T~#_[_____________________
+]T *  T__#__~~-* _T_G *     *    -_T~~T^G     *-#_G^#- T_#^_T* [II]* [IIIIIIIIII]-    *   [I
+]T *  T^^_TT__T* [II]^#^_=~_-##^_T_T* [I]^^_~*_T-_[II] [IIII]^_T^_T__T_T#_^#^_1#TT#^_H^_#_[I
+I]_|S$T [IIIII]/ [IIIIIII] [IIIII]~T__T_[II]* [IIIIII]//[IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
 I]* __T$T [IIII] [IIIIIII] [IIIII]_TP^* [II]* [IIII                                         
 I]* [III]$TT_^^T/T_^TT_^T*  [IIIIIII]T* [II]*  [III                                         
 I]//[IIIIIIIIIIIIIIIIIII]#_$[IIIIIIII]//TTST_$_[III                                         
-4 53 4 50   
-5 25 4 20 
-5 28 4 20      
+4 53 4 50
+4 47 4 50
+5 48 4 40
+4 33 4 40
+4 14 4 20
+5 25 4 20
+5 28 4 20
 4 81 5 85
+1 56 1 57
