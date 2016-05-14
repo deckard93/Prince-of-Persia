@@ -3,8 +3,8 @@
 
 
 Gate::Gate(int x, int y, int levelX, int levelY) {
-	slowTime = 900;
 	slowTime = 30;
+	delay = 4000;
 
 	type = gateT;
 
@@ -72,7 +72,7 @@ void Gate::Animate(Graphics* graphics) {
 	}
 
 	if (state == sOpened) {
-		if (timer->GetTimeMilli() > slowTime) {
+		if (timer->GetTimeMilli() > delay) {
 			state = sClosing;
 
 			this->getAnim()->setForward();

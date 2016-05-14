@@ -16,6 +16,8 @@ public:
 	int slowTime;
 	int fastTime;
 
+	int delay;
+
 	void Open();
 	void Close();
 
