@@ -78,6 +78,7 @@ public:
 	void HandlePrince(Input* input);
 	bool isStriking();
 	bool isJumping();
+	bool isFalling();
 	int Drink();
 	void increaseMaxHealth();
 	void Animate(Graphics* graphics);

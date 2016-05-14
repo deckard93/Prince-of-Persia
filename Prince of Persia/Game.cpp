@@ -290,25 +290,23 @@ void Game::CheckPrinceCollision() {
 
 	if (DEBUG) { graphics.DrawCircle(xFootReal, yFootReal, 20, 255, 255, 255); }
 
-	int mX = prince->getDefferX();
-	int mY = prince->getDefferY();
+	double mX = prince->getDefferX();
+	double mY = prince->getDefferY();
 
 	int nBlockX = level->getSceneBlockXByCoord(xFoot);
 	int nBlockY = level->getSceneBlockYByCoord(yFoot);
-	//nBlockX = level->getSceneBlockXByCoord(xFootReal - 23);
-
 
 	//===================== Fall ==========================
-	if (level->getSceneCodeByBlock(nBlockY, nBlockX) == '-' ||
-		level->getSceneCodeByBlock(nBlockY, nBlockX) == '#' ||
-		level->getSceneCodeByBlock(nBlockY, nBlockX) == '/' ||
-		level->getSceneCodeByBlock(nBlockY, nBlockX) == '^' ||
-		level->getSceneCodeByBlock(nBlockY, nBlockX) == '$' ||
-		level->getSceneCodeByBlock(nBlockY, nBlockX) == '|' ||
-		level->getSceneCodeByBlock(nBlockY, nBlockX) == '=' ||
-		level->getSceneCodeByBlock(nBlockY, nBlockX) == '~' ||
-		level->getSceneCodeByBlock(nBlockY, nBlockX) == '_') {
-
+	if (prince->isFalling() && (level->getSceneCodeByBlock(nBlockY, nBlockX) == '-' ||
+								level->getSceneCodeByBlock(nBlockY, nBlockX) == '#' ||
+								level->getSceneCodeByBlock(nBlockY, nBlockX) == '/' ||
+								level->getSceneCodeByBlock(nBlockY, nBlockX) == '^' ||
+								level->getSceneCodeByBlock(nBlockY, nBlockX) == '$' ||
+								level->getSceneCodeByBlock(nBlockY, nBlockX) == '|' ||
+								level->getSceneCodeByBlock(nBlockY, nBlockX) == '=' ||
+								level->getSceneCodeByBlock(nBlockY, nBlockX) == '~' ||
+								level->getSceneCodeByBlock(nBlockY, nBlockX) == '_'
+								) ){
 		int bar = (Level::BLOCK_HEIGHT_PX * nBlockY);
 		if (DEBUG) graphics.DrawLine(0, bar, Graphics::SCREENX, bar, 255, 255, 255);
 
@@ -317,6 +315,8 @@ void Game::CheckPrinceCollision() {
 		}
 		else {
 			//prince->getAnim()->Play(); ???????????????
+			//prince->setY(Level::BLOCK_HEIGHT_PX * (nBlockY - 1));
+			mY = 0;
 			prince->Land(level->getLevelBlockYByCoord(yFoot));
 		}
 	}
@@ -433,8 +433,14 @@ void Game::CheckPrinceCollision() {
 
 
 	//===================== Move Prince =====================
-	prince->MoveX(mX);
-	prince->MoveY(mY);
+	if (mX > 0.0 && mX < 1.0) {
+		prince->MoveX(mX);
+		prince->MoveY(mY);
+	}
+	else {
+		prince->MoveX(mX);
+		prince->MoveY(mY);
+	}
 
 	char code = level->getSceneCodeByCoord(prince->getMidX() - 22, prince->getMidY());
 	int absX = level->getLevelBlockX(level->getSceneBlockXByCoord(prince->getMidX() - 22));

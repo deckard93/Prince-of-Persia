@@ -12,6 +12,9 @@ Entity::Entity(Animation* a,int x, int y, entityType t) {
 
 	defferX = 0;
 	defferY = 0;
+
+	accelerationX = 0;
+	accelerationY = 0;
 }
 Entity::Entity() {
 	xPos = 0;
@@ -19,6 +22,25 @@ Entity::Entity() {
 
 	defferX = 0;
 	defferY = 0;
+
+	accelerationX = 0;
+	accelerationY = 0;
+}
+
+void Entity::setAccX(double x) {
+	accelerationX = x;
+}
+
+void Entity::setAccY(double y) {
+	accelerationY = y;
+}
+
+double Entity::getAccX() {
+	return accelerationX;
+}
+
+double Entity::getAccY() {
+	return accelerationY;
 }
 
 //coords
@@ -43,10 +65,10 @@ void Entity::setSceneY(int y) {
 	sceneY = y;
 }
 
-void Entity::defferMoveX(int x) {
+void Entity::defferMoveX(double x) {
 	defferX = x;
 }
-void Entity::defferMoveY(int y) { 
+void Entity::defferMoveY(double y) { 
 	defferY = y;
 }
 
@@ -111,10 +133,10 @@ void Entity::Animate(Graphics* graphics) {
 	//MoveX(x);
 	//MoveY(y);
 }
-void Entity::MoveX(int x) {
+void Entity::MoveX(double x) {
 	xPos += x;
 }
-void Entity::MoveY(int y) {
+void Entity::MoveY(double y) {
 	yPos += y;
 }
 void Entity::setType(entityType t) {

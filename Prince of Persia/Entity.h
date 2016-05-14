@@ -10,8 +10,8 @@ class Entity {
 protected:
 	Animation* currentAnim;
 
-	int xPos;
-	int yPos;
+	double xPos;
+	double yPos;
 
 	int levelX;
 	int levelY;
@@ -19,8 +19,11 @@ protected:
 	int sceneX;
 	int sceneY;
 
-	int defferX;
-	int defferY;
+	double defferX;
+	double defferY;
+
+	double accelerationX;
+	double accelerationY;
 
 	entityType type;
 
@@ -29,6 +32,13 @@ public:
 	//constructor
 	Entity(Animation* anim,int x, int y, entityType t = noneT);
 	Entity();
+
+
+	void setAccX(double x);
+	void setAccY(double y);
+
+	double getAccX();
+	double getAccY();
 
 	//setters
 	void setX(int x);
@@ -40,8 +50,8 @@ public:
 	void setSceneX(int x);
 	void setSceneY(int y);
 
-	void defferMoveX(int x);
-	void defferMoveY(int y);
+	void defferMoveX(double x);
+	void defferMoveY(double y);
 
 	void setCurrentAnim(Animation* anim);
 
@@ -71,8 +81,8 @@ public:
 
 	virtual void EventHandler(int Event) {}
 
-	void MoveX(int x);
-	void MoveY(int y);
+	void MoveX(double x);
+	void MoveY(double y);
 
 	//destructor
 	~Entity();
