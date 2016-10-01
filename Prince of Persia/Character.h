@@ -26,15 +26,20 @@ public:
 	void SwitchFacing();
 	bool isImmune();
 	bool isParying();
+	bool isHitting(Character * enemy, Level & level);
 	bool checkParryBy(Character* enemy);
-	bool isHitting(Character * enemy);
 	bool isFighting();
 	bool isIdle();
 	bool isDead();
+	
 	bool isFacingRight();
 	void FaceCharacter(Character& character, Level& level);
 
 	void EngageEnemy(Character & enemy);
+
+	bool isInScene();
+	void setInScene(bool val);
+
 
 	Animation* turn;
 	Animation* running;
@@ -83,6 +88,9 @@ protected:
 	bool facingRight;
 	bool inFight;
 	bool dead;
+
+	bool inScene;
+
 	int maxHealth;
 	int currentHealth;
 	

@@ -5,6 +5,7 @@ class Platform : public Entity {
 private:
 	platformState state;
 	Animation* platformMove;
+	static const int animDisplayTime = 160;
 public:
 	Platform(int x, int y);
 	void Delete();

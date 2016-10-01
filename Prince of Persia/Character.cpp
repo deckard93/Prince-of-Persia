@@ -4,6 +4,7 @@
 Character::Character() {
 	inFight = false;
 	dead = false;
+	inScene = true;
 }
 
 void Character::Hurt() {
@@ -102,10 +103,10 @@ bool Character::isParying()
 	return false;
 }
 
-bool Character::isHitting(Character* enemy)
+bool Character::isHitting(Character* enemy, Level &level)
 {
 	
-	if (this->getY() != enemy->getY()) {
+	if (level.getCharLevelBlockY(this) != level.getCharLevelBlockY(enemy)) {
 		return false;
 	}
 
@@ -168,4 +169,12 @@ void Character::EngageEnemy(Character & enemy) {
 			}
 		}
 	}
+}
+
+bool Character::isInScene() {
+	return inScene;
+}
+
+void Character::setInScene(bool val) {
+	inScene = val;
 }

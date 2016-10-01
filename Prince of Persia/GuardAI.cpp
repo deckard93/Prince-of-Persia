@@ -7,7 +7,7 @@
 #include "GuardAI.h"
 
 GuardAI::GuardAI(int x, int y) : Guard(x, y) {
-	chanceToParry = 50;
+	chanceToParry = 100;
 	chanceToStrike = 50;
 }
 
@@ -26,8 +26,8 @@ void GuardAI::Control(Prince& prince, Level& level) {
 	//about to be hit
 		//chance to parry (depending on how close prince is)
 
-	int princeLevelY = level.getSceneBlockYByCoord(prince.getY());
-	int guardLevelY = level.getSceneBlockYByCoord(this->getY());
+	int princeLevelY = level.getCharLevelBlockY(&prince);
+	int guardLevelY = level.getCharLevelBlockY(this);
 
 	int princeLevelX = level.getSceneBlockYByCoord(prince.getX());
 	int guardLevelX = level.getSceneBlockYByCoord(this->getX());

@@ -46,6 +46,7 @@ private:
 	*/
 
 	Animation* fallDamage;
+	Animation* missStep;
 	//Animation* fallDeath;
 
 	princeState state;
@@ -69,6 +70,7 @@ public:
 	princeState getPrinceState();
 
 	//setters
+	void setIdle();
 	void setState(princeState state);
 	void FightController(Input * input);
 	void NormalController(Input * input);
@@ -79,10 +81,20 @@ public:
 	bool isStriking();
 	bool isJumping();
 	bool isFalling();
+	bool isJumpGrab();
+	bool isClimbUp();
+	bool isGoingDown();
+	bool isDrop();
+	bool isMovingUp();
+	bool isStep();
+
 	int Drink();
 	void increaseMaxHealth();
 	void Animate(Graphics* graphics);
 	int setFall(int currentBlockY);
+	void setMissStep();
+	void setDrop();
+	void setClimbDown();
 	int PickUpSword();
 	void Land(int currentBlockY);
 	void Catch();

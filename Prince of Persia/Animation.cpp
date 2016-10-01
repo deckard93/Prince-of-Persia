@@ -89,7 +89,7 @@ float Animation::getDefaultDisplayTime() {
 float Animation::getCurrentDisplayTime() {
 	return timer.GetTimeMilli();
 }
-float Animation::getFrameDisplayTIme() {
+float Animation::getFrameDisplayTime() {
 	return frameDisplayTime[currentFrame];
 }
 SpriteSheet* Animation::getSheet() {
@@ -153,19 +153,23 @@ void Animation::NextFrame() {
 		threshold = defaultDisplayTime;
 	}
 
-	if(timer.GetTimeMilli() > threshold) {
+	if(timer.GetTimeMilli() > threshold ) {
+		
+		if (playForward) {
+			currentFrame += inc;
+			effectPending = true;
+		}
+		else {
+			currentFrame -= inc;
+			effectPending = true;
+		}
+
+		if (inc == 0) { return; }
+		
 		currentDisplayTime = -1;
 
 		timer.StopWatch();
 		timer.StartWatch();
-
-		if(playForward) {
-			currentFrame+=inc;
-			effectPending = true;
-		} else {
-			currentFrame-=inc;
-			effectPending = true;
-		}
 
 		if(currentFrame >= sheet->getFrameCount()) {
 			currentFrame = 0;

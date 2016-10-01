@@ -38,11 +38,17 @@ public:
 	int getLevelBlockXByCoord(int x);
 	int getLevelBlockYByCoord(int y);
 
+	int getCharLevelBlockY(Character* c);
+	int getCharLevelBlockX(Character* c);
+
 	int getLevelBlockX(int x);
 	int getLevelBlockY(int y);
 
 	void setCodeByCoord(int x, int y, char c);
 	void setLevelCodeByBlock(int x, int y, char c);
+
+	bool isEmptySpace(char code);
+	bool isLedge(char code);
 
 	void drawLevel();
 	void changeScene();

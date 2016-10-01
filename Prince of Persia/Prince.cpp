@@ -7,7 +7,7 @@ Prince::Prince() {
 
 	hasSword = false;
 	maxHealth = 6;
-	currentHealth = 2;
+	currentHealth = 6;
 
 	idleSpeedX = 0;
 	runningSpeedX = 2;
@@ -23,6 +23,7 @@ Prince::Prince() {
 	crouch      = new Animation(Game::getSprite("crouch")     , 13);
 	staticJump  = new Animation(Game::getSprite("staticJump") , 17);
 	step        = new Animation(Game::getSprite("step")       , 12);
+	missStep	= new Animation(Game::getSprite("missStep")   , 5);
 	hang        = new Animation(Game::getSprite("newHang")    , 11);
 	runningJump = new Animation(Game::getSprite("runningJump"), 11);
 	runningTurn = new Animation(Game::getSprite("runningTurn"), 9);
@@ -60,11 +61,12 @@ Prince::Prince() {
 	turn->setDisplayTime(49);
 	hang->setDisplayTime(100);
 	drink->setDisplayTime(60);
-	crouch->setDisplayTime(49);
+	crouch->setDisplayTime(60);
 	climbUp->setDisplayTime(49);
 	//climbUp->setDisplayTime(2000);
 	running->setDisplayTime(49);
 	jumpGrab->setDisplayTime(65);
+	missStep->setDisplayTime(80);
 	pickSword->setDisplayTime(100);
 	staticJump->setDisplayTime(65);
 	runningJump->setDisplayTime(49);
@@ -112,19 +114,11 @@ void Prince::Animate(Graphics* graphics) {
 	double moveX = 0;
 	double moveY = 0;
 
-	double acc = getAccX();
-	moveX = acc;
-	acc = acc / 1.2;
-	setAccX(acc);
-
-	if(this->getAnim()->isFinished()) {
-		//side effects at the end of an animation
-		if(this->getAnim() == climbUp) { 
+	if (this->getAnim()->isFinished()) {
+		// Side effects at the end of an animation
+		if (this->getAnim() == climbUp) { 
 			if(climbUp->isReversed()){		
 				climbUp->setForward();
-				//moveY += BLOCK_HEIGHT_PX; 
-				//==TODO
-				//this->MoveY(Level::BLOCK_HEIGHT_PX);
 			}
 		}
 		if (this->getAnim() == fightDying) {
@@ -133,242 +127,103 @@ void Prince::Animate(Graphics* graphics) {
 			dead = true;
 			return;
 		}
-
-		if(this->getAnim() == runningJump) {
+		if (this->getAnim() == runningJump) {
 			this->setCurrentAnim(running);
 			getAnim()->setCurrentFrame(12);
 			this->getAnim()->Play();
 		}
-
 		if (this->getAnim() == jumpGrab) {
 			this->setCurrentAnim(drop);
 		}
-
 		if (hang == this->getAnim()) {
 			this->setCurrentAnim(drop);
 		}
 
-		//set idle state
 		defaultToIdle();
-
+	} 
+	else if (this->getAnim()->getCurrentFrame() != 0) { 
+		// Side effects during animation
 		
-	} else if(this->getAnim()->getCurrentFrame() != 0) {
-		//side effects during animation
-		if(this->getAnim() == running) {
-	
-			if(getAnim()->getCurrentFrame() > 5 && getAnim()->getCurrentFrame() < 13) {
+		// ACC
+		if (this->getAnim() == staticJump) {
+			if(getAnim()->getCurrentFrame() > 5 && getAnim()->getCurrentFrame() < 11) {
+				
 				if (facingRight) {
-					moveX = 4;	
-					//moveX += 10;
-					//this->MoveX(runningSpeedX);
-				} else {
-					moveX = -4;
-					//moveX -= 10;
-					//this->MoveX(-runningSpeedX);
-				}
-				setAccX(moveX);
-			} else if(getAnim()->getCurrentFrame() < 19){
-				if(facingRight) {
-					moveX = 2.5;	
-					//moveX += 8;
-					//this->MoveX(4);	
-				} else {		
-					moveX = -2.5;	
-					//moveX -= 8;
-					//this->MoveX(-4);
-				}
-				//setAccX(moveX);
-			}
-			
-		}
-		if (this->getAnim() == climbUp && getAnim()->isEffectPending()) {
-			int frame = getAnim()->getCurrentFrame();
-			int changeY = 0;
-			int changeX = 0;
-			switch (16 - frame) {
-				case 1:
-				{
-					changeX = 0;
-					changeY = 18;
-				} break;
-				case 2:
-				{
-					changeX = 0;
-					changeY = 10;
-				} break;
-				case 3:
-				{
-					changeX = 4;
-					changeY = 11;
-				} break;
-				case 4:
-				{
-					changeX = 3;
-					changeY = 10;
-				} break;
-				case 5:
-				{
-					changeX = -4;
-					changeY = 13;
-				} break;
-				case 6:
-				{
-					changeX = 2;
-					changeY = 13;
-				} break;
-				case 7:
-				{
-					changeX = 14;
-					changeY = 18;
-				} break;
-				case 8:
-				{
-					changeX = 7;
-					changeY = 13;
-				} break;
-				case 9:
-				{
-					changeX = 10;
-					changeY = 0;
-				} break;
-				case 10:
-				{
-					changeX = 0;
-					changeY = -5;
-				} break;
-				case 11:
-				{
-					changeX = 0;
-					changeY = 0;
-				} break;
-				case 12:
-				{
-					changeX = 0;
-					changeY = 0;
-				} break;
-				case 13:
-				{
-					changeX = 0;
-					changeY = 0;
-				} break;
-				case 14:
-				{
-					changeX = 0;
-					changeY = 0;
-				} break;
-				case 15:
-				{
-					changeX = 0;
-					changeY = 0;
-				} break;
-				case 16:
-				{
-					changeX = 0;
-					changeY = 0;
-				} break;
-			}
-
-			if (!getAnim()->isReversed()) {
-				moveY += changeY;
-				if (facingRight) {
-					moveX = -changeX;
+					moveX = 7;	
 				}
 				else {
-					moveX = changeX;
-				}
-			}
-			else {
-				moveY -= changeY;
-				if (facingRight) {
-					moveX = changeX;
-				}
-				else {
-					moveX = -changeX;
-				}
-			}
-			getAnim()->setEffectDone();
-		}
-
-		if(this->getAnim() == runningTurn) {
-			if(facingRight) {
-				moveX = -3;	//MoveX(-3);
-			} else {
-				moveX = 3;	//MoveX(3);
-			}
-		}
-
-
-		if (this->getAnim() == fall) {
-			double accY = getAccY();
-			if (accY < 4) {
-				moveY = accY;
-				setAccY(accY + 0.2);
-			}
-			else {
-				moveY = 2;
-			}
-		}
-		/*
-			else {
-				double acc = getAccX();
-				if (acc < 0) {
-					//moveX += acc;	// MoveX(-3);
-					//acc = acc / 1.5;
-					//setAccX(acc);
-				}
-			}
-			*/
-
-		if(this->getAnim() == staticJump) {
-			if(getAnim()->getCurrentFrame() > 5 && getAnim()->getCurrentFrame() < 13) {
-				if(facingRight) {	
-					moveX = 7;	//this->MoveX(13);
-				} else {
-					moveX = -7;	//this->MoveX(-13);
+					moveX = -7;
 				}
 				setAccX(moveX);
 			}
 		}
-
-		if(this->getAnim() == runningJump) {
-			//moveX = 0;
+		if (this->getAnim() == runningJump) { 
 			if(getAnim()->getCurrentFrame() > 0 && getAnim()->getCurrentFrame() < 12) {
 				if(facingRight) {	
-					moveX = 8;	//this->MoveX(13);
+					moveX = 8;	
 				} else {
-					moveX = -8;	//this->MoveX(-13);
+					moveX = -8;
 				}
 				setAccX(moveX);
 			}
+		}	
+		if (this->getAnim() == running) {
+			if (getAnim()->getCurrentFrame() > 5 && getAnim()->getCurrentFrame() < 13) {
+				if (facingRight) {
+					moveX = 4;
+				}
+				else {
+					moveX = -4;
+				}
+			}
+			else if (getAnim()->getCurrentFrame() < 19) {
+				if (facingRight) {
+					moveX = 2.5;
+				}
+				else {
+					moveX = -2.5;
+				}
+			}
+			setAccX(moveX);
+		}	
+		if (this->getAnim() == fall) {			
+			moveX = getAccX();
+			moveY = getAccY();
 		}
-
+		// ACC
+		
 		if (this->getAnim() == jumpGrab) {
 			if (getAnim()->getCurrentFrame() > 0 && getAnim()->getCurrentFrame() < 4 && getAnim()->isEffectPending()) {
-				moveY -= 8;	//this->MoveX(13);
+				moveY -= 8;
 				getAnim()->setEffectDone();
 			}
 		}
-
 		if (this->getAnim() == drop) {
 			if (getAnim()->getCurrentFrame() >= 3 && getAnim()->getCurrentFrame() <= 4 && getAnim()->isEffectPending()) {
-				moveY += 12;	//this->MoveX(13);
+				moveY += 12;
 				getAnim()->setEffectDone();
 			}
 		}
-
-		if(this->getAnim() == step) {
+		if (this->getAnim() == step) {
 			if(getAnim()->getCurrentFrame() > 6 && getAnim()->getCurrentFrame() < 12) {
-				if(facingRight) {
-					//this->MoveX(4);
+				if (facingRight) {
 					moveX = 2;
-				} else {
-					//this->MoveX(-4);
+				}
+				else {
 					moveX = -2;
 				}
 			}
 		}
-
-		//fighting side effects
+		if (this->getAnim() == runningTurn) {
+			if (facingRight) {
+				moveX = -3;
+			}
+			else {
+				moveX = 3;
+			}
+		}
+		
+		// Fighting side effects
 		if (this->getAnim() == fightInjure) {
 			if (this->getAnim()->isFlipped()) {
 				moveX = -2;
@@ -395,19 +250,119 @@ void Prince::Animate(Graphics* graphics) {
 				}
 			}
 		}
+		if (this->getAnim() == climbUp && getAnim()->isEffectPending()) {
+			int frame = getAnim()->getCurrentFrame();
+			int changeY = 0;
+			int changeX = 0;
+			switch (16 - frame) {
+			case 1:
+			{
+				changeX = 0;
+				changeY = 18;
+			} break;
+			case 2:
+			{
+				changeX = 0;
+				changeY = 10;
+			} break;
+			case 3:
+			{
+				changeX = 4;
+				changeY = 11;
+			} break;
+			case 4:
+			{
+				changeX = 3;
+				changeY = 10;
+			} break;
+			case 5:
+			{
+				changeX = -4;
+				changeY = 13;
+			} break;
+			case 6:
+			{
+				changeX = 2;
+				changeY = 13;
+			} break;
+			case 7:
+			{
+				//changeX = 14;
+				changeX = 7;
+				changeY = 18;
+			} break;
+			case 8:
+			{
+				changeX = 7;
+				changeY = 13;
+			} break;
+			case 9:
+			{
+				//changeX = 10;
+				changeX = 5;
+				changeY = 0;
+			} break;
+			case 10:
+			{
+				changeX = 0;
+				changeY = -5;
+			} break;
+			case 11:
+			{
+				changeX = 0;
+				changeY = 0;
+			} break;
+			case 12:
+			{
+				changeX = 0;
+				changeY = 0;
+			} break;
+			case 13:
+			{
+				changeX = 0;
+				changeY = 0;
+			} break;
+			case 14:
+			{
+				changeX = 0;
+				changeY = 0;
+			} break;
+			case 15:
+			{
+				changeX = 0;
+				changeY = 0;
+			} break;
+			case 16:
+			{
+				changeX = 0;
+				changeY = 0;
+			} break;
+			}
 
-
-	} else {
-		//side effects at the beggining of an animation
-		if(this->getAnim() == jumpGrab) {
-			//moveY -= BLOCK_HEIGHT_PX;  
-			//this->MoveY(-Level::BLOCK_HEIGHT_PX);
+			if (!getAnim()->isReversed()) {
+				moveY += changeY;
+				if (facingRight) {
+					moveX = -changeX;
+				}
+				else {
+					moveX = changeX;
+				}
+			}
+			else {
+				moveY -= changeY;
+				if (facingRight) {
+					moveX = changeX;
+				}
+				else {
+					moveX = -changeX;
+				}
+			}
+			getAnim()->setEffectDone();
 		}
-
-		if(this->getAnim() == hang) {
-			//moveY -= BLOCK_HEIGHT_PX;	
-			//this->MoveY(-Level::BLOCK_HEIGHT_PX);
-		}
+	} 
+	else {
+		// Side effects at the beggining of an animation
+		// PASS
 	}
 
 	defferMoveX(moveX);
@@ -423,7 +378,7 @@ void Prince::ActionHandler(Action action)
 
 	switch (action) {
 		case aLeftJump: {
-			if (!facingRight) {	setCurrentAnim(staticJump); }
+			if (!facingRight) { staticJump->Reset();  setCurrentAnim(staticJump); }
 		} break;
 		case aRightJump: {
 			if (facingRight) { setCurrentAnim(staticJump);  }
@@ -478,7 +433,6 @@ void Prince::ActionHandler(Action action)
 
 }
 
-
 void Prince::FightController(Input* input) {
 	if (this->getAnim()->isFinished()) {
 		//input at the end of an animation
@@ -528,10 +482,11 @@ void Prince::NormalController(Input* input) {
 
 	if (this->getAnim()->isFinished()) {
 
-		//input at the end of an animation
+		// Input at the end of an animation
 		if (hang == this->getAnim()) {
 			if (input->isShiftPressed()) { this->getAnim()->Play(); }
 		}
+
 		if (climbUp == this->getAnim() && !getAnim()->isReversed()) {
 			this->setCurrentAnim(hang);
 		}
@@ -541,6 +496,8 @@ void Prince::NormalController(Input* input) {
 			if (input->isUpPressed()) {
 				this->setCurrentAnim(climbUp);
 				getAnim()->setReverse();
+				currentAnim->Reset();
+				currentAnim->Play();
 			}
 		}
 
@@ -556,13 +513,13 @@ void Prince::NormalController(Input* input) {
 
 	}
 	else {
-		//input during animation
+		// Input during animation
 		if (this->getAnim() == crouch && this->getAnim()->getCurrentFrame() == 3) {
 			if (input->isDownPressed()) {
 				this->getAnim()->setCurrentFrame(2);
 			}
 		}
-
+		
 		if (this->getAnim() == running) {
 			if (getAnim()->getCurrentFrame() == 8) {
 				if (!((input->isRightPressed() && facingRight) ||
@@ -609,22 +566,15 @@ void Prince::NormalController(Input* input) {
 	
 	if (this->getAnim() != idle) { return; }
 
-	//accept input
+	// Accept input
 	if (nInput.doLeftStep()  && !facingRight){ this->setCurrentAnim(step);	     return; }
 	if (nInput.doRightStep() && facingRight) { this->setCurrentAnim(step);       return; }
 	if (nInput.doLeftJump()  && !facingRight){ this->setCurrentAnim(staticJump); return; }
 	if (nInput.doRightJump() && facingRight) { this->setCurrentAnim(staticJump); return; }
 
-	if (input->isDownPressed() && input->isShiftPressed()) {
-		this->setCurrentAnim(climbUp);
-		climbUp->setForward();
-		climbUp->Reset();
-		return;
-	}
-	if (nInput.doClimb()) { this->setCurrentAnim(jumpGrab); return;  }
+	if (nInput.doClimb()) { this->setCurrentAnim(jumpGrab); return; }
 	if (nInput.goDown())  { this->setCurrentAnim(crouch);   return;  }
 	
-
 	if (input->isRightPressed()) {
 		if (facingRight) {
 			this->setCurrentAnim(running);
@@ -690,8 +640,8 @@ void Prince::increaseMaxHealth() {
 }
 
 int Prince::setFall(int currentBlockY) {
-	//sanity checks
-	//assert(currentAnim == running || currentAnim == runningJump || currentAnim == staticJump || currentAnim == fall);
+	// Sanity checks
+	// Assert(currentAnim == running || currentAnim == runningJump || currentAnim == staticJump || currentAnim == fall);
 
 	if(this->getAnim() == runningJump) {
 		if(this->getAnim()->getCurrentFrame() < 6) {
@@ -705,34 +655,35 @@ int Prince::setFall(int currentBlockY) {
 		}
 	}
 
-	if (this->getAnim() == drop) {
-		return 0;
-	}
-
-	if (this->getAnim() == hang) {
-		return 0;
-	}
-
-	if (this->getAnim() == jumpGrab) {
-		return 0;
-	}
-
-	if (this->getAnim() == climbUp) {
-		return 0;
-	}
-
+	if (this->getAnim() == drop) { return 0; }
+	if (this->getAnim() == hang) { return 0; }
+	if (this->getAnim() == jumpGrab) { return 0; }
+	if (this->getAnim() == climbUp) { return 0; }
 
 	if(this->getAnim() != fall) {
+		this->getAnim()->Reset();
 		this->setCurrentAnim(fall);
-		this->lastBlockY = currentBlockY;
-		this->setAccY(0.1);
+		this->lastBlockY = currentBlockY;		
+		this->getAnim()->setCurrentFrame(4); //TODO
 		this->getAnim()->Play();
+		this->setAccY(4);
 	} else if(this->getAnim()->getCurrentFrame() == 4) {
 		this->getAnim()->Freeze();
 	}
 	
-	return 3;
-
+	return 0; // value not used anymore
+}
+void Prince::setMissStep() {
+	missStep->Reset();
+	setCurrentAnim(missStep);
+}
+void Prince::setDrop() {
+	setCurrentAnim(drop);
+}
+void Prince::setClimbDown() {
+	setCurrentAnim(climbUp);
+	climbUp->setForward();
+	climbUp->Reset();
 }
 int Prince::PickUpSword() {
 	if (this->getAnim() == idle) {
@@ -752,7 +703,8 @@ void Prince::Land(int currentBlockY) {
 			getAnim()->Play();
 			break;
 		case 1:
-			getAnim()->Play();
+			this->setCurrentAnim(crouch);
+			//getAnim()->Play();
 			break;
 		case 2:
 			this->setCurrentAnim(crouch);
@@ -771,11 +723,15 @@ void Prince::Land(int currentBlockY) {
 }
 
 void Prince::Catch() {
-	this->setCurrentAnim(hang);
+	if (currentAnim != hang) {
+		currentAnim->Reset();
+		this->setCurrentAnim(hang);
+	}
 }
 
 //destructors
 Prince::~Prince() {}
+
 
 //privates
 void Prince::defaultToIdle() {
@@ -808,6 +764,7 @@ void Prince::switchFacing() {
 		running->setFlipped(false);
 		climbUp->setFlipped(false);
 		jumpGrab->setFlipped(false);
+		missStep->setFlipped(false);
 		pickSword->setFlipped(false);
 		staticJump->setFlipped(false);
 		spikeDeath->setFlipped(false);
@@ -841,6 +798,7 @@ void Prince::switchFacing() {
 		running->setFlipped(true);
 		climbUp->setFlipped(true);
 		jumpGrab->setFlipped(true);
+		missStep->setFlipped(true);
 		pickSword->setFlipped(true);
 		staticJump->setFlipped(true);
 		spikeDeath->setFlipped(true);
@@ -873,6 +831,10 @@ princeState Prince::getPrinceState() {
 	return sIdle;
 }
 
+void Prince::setIdle() {
+	setCurrentAnim(idle);
+}
+
 void Prince::setState(princeState state) {
 	this->state = state;
 }
@@ -900,6 +862,49 @@ bool Prince::isJumping() {
 
 bool Prince::isFalling() {
 	return getAnim() == fall;
+}
+
+bool Prince::isJumpGrab()
+{
+	if (getAnim() == jumpGrab) {
+		return true;
+	}
+	return false;
+}
+
+bool Prince::isClimbUp() {
+	if (currentAnim == climbUp) {
+		return true;
+	}
+	return false;
+}
+
+bool Prince::isGoingDown() {
+	if(currentAnim == crouch) {
+		return true;
+	}
+	return false;
+}
+
+bool Prince::isDrop() {
+	if (currentAnim == drop) {
+		return true;
+	}
+	return false;
+}
+
+bool Prince::isMovingUp() {
+	if (getAnim() == climbUp || getAnim() == jumpGrab || getAnim() == staticJump || getAnim() == hang) {
+		return true;
+	}
+	return false;
+}
+
+bool Prince::isStep() {
+	if (currentAnim == step) {
+		return true;
+	}
+	return false;
 }
 
 /*

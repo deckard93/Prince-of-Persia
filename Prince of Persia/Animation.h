@@ -40,7 +40,7 @@ public:
 	bool isEffectPending();
 	float getDefaultDisplayTime();
 	float getCurrentDisplayTime();
-	float getFrameDisplayTIme();
+	float getFrameDisplayTime();
 	int getLastFrameNr();
 	SpriteSheet* getSheet();
 	int getCurrentFrame();

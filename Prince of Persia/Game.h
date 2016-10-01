@@ -50,10 +50,11 @@ private:
 	void CheckPrinceCollision();
 	void CheckCombatCollision();
 	void CheckCollision();
-	bool CheckCatchConditions();
+	bool CheckCatchConditions(int defferY);
 
 	void DrawGraphics();
-	void EngageFight(Character* prince, Character* guard);
+	bool isGuardInScene(Character * guard_in);
+	void EngageFight(Character * prince, Character * guard, Level * level);
 	void SetEngagedGuard(Character* guard);
 
 	//Update Frame
@@ -78,7 +79,12 @@ private:
 	D3DCOLOR fontSurf[512 * 84];
 	Font fixedSys;
 
+	Timer timer;
+	int timeSinceLastFrame;
+
 	Character* engagedGuard;
+
+
 
 public:
 

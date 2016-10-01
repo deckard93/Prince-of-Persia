@@ -21,14 +21,14 @@ void Level::loadLevel(int l) {
 	filePath += levelNo;
 	filePath += ".txt";
 
-	filePath = "Levels/platform.txt";
+	filePath = "Levels/level1.txt";
 
 	//open file
 	FILE *file = fopen(filePath.c_str(), "rb");
 	
 	//set initial scene
 	fscanf (file, "%d", &scene_x);
-	fscanf (file, "%d", &scene_y);
+	fscanf (file, "%d", &scene_y); 
 	
 	fscanf (file, "%d", &level_height);
 	fscanf (file, "%d", &level_width);
@@ -65,7 +65,6 @@ void Level::loadLevel(int l) {
 		std::pair<int, int> gate(gateY, gateX);
 
 		(*mechanism)[plat] = gate;
-		
 	}
 
 	entities->clear();
@@ -101,6 +100,34 @@ void Level::setLevelCodeByBlock(int x, int y, char c) {
 	level[y][x] = c;
 }
 
+bool Level::isEmptySpace(char code) {
+	if (code == ' ' ||
+		code == '*'
+		) {
+		return true;
+	}
+	return false;
+}
+
+bool Level::isLedge(char code) {
+	if (code == '-' ||
+		code == '#' ||
+		code == '/' ||
+		code == '^' ||
+		code == '$' ||
+		code == '|' ||
+		code == '=' ||
+		code == '~' ||
+		code == '_' ||
+		code == 'G' ||
+		code == 'T'
+		) {
+		return true;
+	}
+	
+	return false;
+}
+
 int Level::getLevelBlockXByCoord(int x) {
 	int blockX = getSceneBlockXByCoord(x);
 	return getLevelBlockX(blockX);
@@ -108,6 +135,14 @@ int Level::getLevelBlockXByCoord(int x) {
 int Level::getLevelBlockYByCoord(int y) {
 	int blockY = getSceneBlockYByCoord(y);
 	return getLevelBlockY(blockY);
+}
+
+int Level::getCharLevelBlockY(Character * c) {
+	return getLevelBlockYByCoord(c->getMidY());
+}
+
+int Level::getCharLevelBlockX(Character * c) {
+	return getLevelBlockXByCoord(c->getMidX());
 }
 
 

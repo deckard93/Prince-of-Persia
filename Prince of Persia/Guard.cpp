@@ -46,6 +46,11 @@ void Guard::ActionHandler(Action action) {
 		//input during animation
 	}
 
+	if (action == aParry) {
+		int i = 0;
+		i++;
+	}
+
 	if (this->getAnim() != fightIdle) { return; }
 
 	//accept input

@@ -13,7 +13,8 @@ Platform::Platform(int x, int y) {
 	state = lodged;
 
 	platformMove = new Animation(Game::getSprite("platformMove"), 4);
-	platformMove->setDisplayTime(80);
+	//platformMove->setDisplayTime(80);
+	platformMove->setDisplayTime(animDisplayTime);
 	platformMove->setForward();
 	//platformMove->Play();
 	//platformMove->setLoop(true);
