@@ -3,7 +3,6 @@
 
 #include "Prince.h"
 #include "Level.h"
-#include "Guard.h"
 #include "GuardAI.h"
 
 GuardAI::GuardAI(int x, int y) : Guard(x, y) {

@@ -1,17 +1,16 @@
 #pragma once;
 
-#include "Animation.h"
+
 #include "Entity.h"
 
-#include <list>
 #include <map>
 
 
 class Level;
 
-//std::list<Character*>;
 
 enum Action { aLeftJump, aRightJump, aJumpGrab, aCrouch, aGoRight, aGoLeft, aClimbUp, aClimbDown, aLeftStep, aRightStep, aHang, aNone, aStrike, aParry, aEngage, aDisengage };
+enum characterState { sRunning, sFalling, sIdle, sDead, sFinish, sJumping };
 
 class Character : public Entity {
 //Functions
@@ -40,6 +39,9 @@ public:
 	bool isInScene();
 	void setInScene(bool val);
 
+	characterState Character::getState();
+	void setState(characterState state);
+	void spikeKill();
 
 	Animation* turn;
 	Animation* running;
@@ -80,6 +82,7 @@ protected:
 
 	std::map<Character*, bool> seenEnemies;
 
+	characterState state;
 	bool hasSword;
 
 //variables

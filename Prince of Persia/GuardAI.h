@@ -1,8 +1,6 @@
 #pragma once
 
-class Level;
-class Prince;
-class Guard;
+#include "Guard.h"
 
 class GuardAI : public Guard {
 

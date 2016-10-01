@@ -9,8 +9,7 @@
 #include "Prince.h"
 #include "Level.h"
 #include "Gate.h"
-#include "Spikes.h"
-#include "Guilotine.h"
+#include "Collision.h"
 
 #include <windows.h>
 #include <string.h>
@@ -31,7 +30,7 @@ class Game {
 public:
 	Game (HWND hwnd, Input* in);
 	void GameLoop();
-	~Game();
+	~Game() {}
 
 	static Sprite* getSprite(string name);
 	static void RegisterSprite(string name, string path = "Assets//");
@@ -82,13 +81,7 @@ private:
 	Timer timer;
 	int timeSinceLastFrame;
 
+
+	Collision* collision;
 	Character* engagedGuard;
-
-
-
-public:
-
-	//static const int TOP_MARGIN = (Graphics::SCREENY - Level::BLOCK_HEIGHT_PX * Level::SCENE_HEIGHT_BLK) / 2;
-	//static const int LEFT_MARGIN = (Graphics::SCREENX - Level::BLOCK_WIDTH_PX * Level::SCENE_WIDTH_BLK) / 2;
-
 };

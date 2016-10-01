@@ -2,7 +2,9 @@
 #include "Platform.h"
 #include "Guard.h"
 #include "GuardAI.h"
+#include "Guilotine.h"
 #include "FinishDoor.h"
+
 #include "Level.h"
 
 
@@ -382,7 +384,6 @@ bool Level::findSpikes(int block_x, int block_y) {
 		}
 	}
 	return false;
-
 }
 
 Level::~Level()

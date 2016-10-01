@@ -733,6 +733,10 @@ void Prince::Catch() {
 Prince::~Prince() {}
 
 
+characterState Prince::getState() {
+	return Character::getState();
+}
+
 //privates
 void Prince::defaultToIdle() {
 	/* Must be called after checking for
@@ -820,48 +824,8 @@ void Prince::switchFacing() {
 	}
 }
 
-princeState Prince::getPrinceState() {
-	if (getAnim() == running) {
-		return sRunning;
-	}
-	else if (getAnim() == fall) {
-		return sFalling;
-	}
-
-	return sIdle;
-}
-
 void Prince::setIdle() {
 	setCurrentAnim(idle);
-}
-
-void Prince::setState(princeState state) {
-	this->state = state;
-}
-
-void Prince::spikeKill() {
-	state = sDead;
-	this->setCurrentAnim(spikeDeath);
-	this->getAnim()->Freeze();
-}
-
-bool Prince::isJumping() {
-	if (this->getAnim() == staticJump) {
-		if (this->getAnim()->getCurrentFrame() >= 1 &&
-			this->getAnim()->getCurrentFrame() <= 12) {
-			return true;
-		}
-	}
-	if (this->getAnim() == runningJump) {
-		if (this->getAnim()->getCurrentFrame() <= 6) {
-			return true;
-		}
-	}
-	return false;
-}
-
-bool Prince::isFalling() {
-	return getAnim() == fall;
 }
 
 bool Prince::isJumpGrab()

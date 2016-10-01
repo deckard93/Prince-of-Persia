@@ -1,5 +1,12 @@
-#include "Character.h"
+#include <list>
+#include <map>
+
 #include "Level.h"
+#include "Entity.h"
+#include "Animation.h"
+
+#include "Character.h"
+
 
 Character::Character() {
 	inFight = false;
@@ -19,6 +26,40 @@ void Character::Hurt() {
 	//dead = true;
 
 }
+
+characterState Character::getState() {
+	if (this->getAnim() == staticJump) {
+		if (this->getAnim()->getCurrentFrame() >= 1 &&
+			this->getAnim()->getCurrentFrame() <= 12) {
+			return sJumping;
+		}
+	}
+	if (this->getAnim() == runningJump) {
+		if (this->getAnim()->getCurrentFrame() <= 6) {
+			return sJumping;
+		}
+	}
+
+	if (getAnim() == running) {
+		return sRunning;
+	}
+	else if (getAnim() == fall) {
+		return sFalling;
+	}
+
+	return sIdle;
+}
+
+void Character::setState(characterState state) {
+	this->state = state;
+}
+
+void Character::spikeKill() {
+	state = sDead;
+	this->setCurrentAnim(spikeDeath);
+	this->getAnim()->Freeze();
+}
+
 void Character::Heal() {
 	if (currentHealth < maxHealth) {
 		currentHealth++;

@@ -1,6 +1,5 @@
 #pragma once
 
-class Input;
 
 class NormalInput {
 private:

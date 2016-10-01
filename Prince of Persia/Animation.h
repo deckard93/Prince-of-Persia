@@ -1,9 +1,7 @@
 #pragma once;
 
-#include <assert.h>
 
 #include "Graphics.h"
-#include "SpriteSheet.h"
 
 
 class Animation  {

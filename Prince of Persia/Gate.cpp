@@ -1,5 +1,8 @@
-#include "Gate.h"
 #include "Game.h"
+#include "Timer.h"
+#include "Graphics.h"
+
+#include "Gate.h"
 
 
 Gate::Gate(int x, int y, int levelX, int levelY) {

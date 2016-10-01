@@ -1,5 +1,5 @@
-#include "Guard.h"
 #include "Game.h"
+#include "Guard.h"
 
 Guard::Guard(int x, int y) {
 	setX(x);

@@ -2,11 +2,12 @@
 
 #include "Animation.h"
 
+
 enum entityType : int { noneT, torchT, guilotineT, gateT, potionT, poisonPotT, extendPotT, spikeT, swordT, guardT, doorT, platformT };
 
 class Entity {
 
-//variables
+// Variables
 protected:
 	Animation* currentAnim;
 
@@ -27,20 +28,17 @@ protected:
 
 	entityType type;
 
-//methods
+// Methods
 public:
-	//constructor
+	// Constructors
 	Entity(Animation* anim,int x, int y, entityType t = noneT);
 	Entity();
 
 
+	//setters
 	void setAccX(double x);
 	void setAccY(double y);
-
-	double getAccX();
-	double getAccY();
-
-	//setters
+	
 	void setX(int x);
 	void setY(int y);
 
@@ -57,6 +55,10 @@ public:
 
 	//getters
 	Animation* getAnim();
+
+	double getAccX();
+	double getAccY();
+
 	int getX();
 	int getY();
 
@@ -72,7 +74,7 @@ public:
 	int getDefferX();
 	int getDefferY();
 	
-	//functions
+	// Functions
 	virtual void Animate(Graphics* graphics, int& moveX, int& moveY);
 	virtual void Animate(Graphics* graphics);
 
@@ -84,7 +86,6 @@ public:
 	void MoveX(double x);
 	void MoveY(double y);
 
-	//destructor
+	// Destructor
 	~Entity();
-
 };

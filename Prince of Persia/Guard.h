@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Entity.h"
 #include "Character.h"
 
 class Guard : public Character {

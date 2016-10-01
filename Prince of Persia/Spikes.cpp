@@ -1,5 +1,5 @@
-#include "Spikes.h"
 #include "Game.h"
+#include "Spikes.h"
 
 Spikes::Spikes(int x, int y, int levelX, int levelY) {
 	type = spikeT;
@@ -53,10 +53,6 @@ void Spikes::Off() {
 		foreground->Play();
 		on = false;
 	}
-}
-
-void Spikes::Kill() {
-
 }
 
 void Spikes::AnimateForeground(Graphics* graphics) {

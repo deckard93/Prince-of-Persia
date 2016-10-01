@@ -7,8 +7,6 @@
 #include "Game.h"
 
 
-enum princeState { sRunning, sFalling, sIdle, sDead, sFinish };
-
 class Prince : public Character {
 	static const int fightDisplacement = 40;
 
@@ -49,7 +47,6 @@ private:
 	Animation* missStep;
 	//Animation* fallDeath;
 
-	princeState state;
 
 	int idleSpeedX;
 	int runningSpeedX;
@@ -66,21 +63,13 @@ public:
 	Prince();
 	Prince(int x, int y);
 
-	//getters
-	princeState getPrinceState();
-
-	//setters
 	void setIdle();
-	void setState(princeState state);
 	void FightController(Input * input);
 	void NormalController(Input * input);
 	void Disengage();
 
-	//function
 	void HandlePrince(Input* input);
 	bool isStriking();
-	bool isJumping();
-	bool isFalling();
 	bool isJumpGrab();
 	bool isClimbUp();
 	bool isGoingDown();
@@ -99,7 +88,7 @@ public:
 	void Land(int currentBlockY);
 	void Catch();
 
-	void spikeKill();
+	characterState getState();
 	void defaultToIdle();
 
 	//destructors
