@@ -135,7 +135,7 @@ void Collision::CheckGateCollision(Character * character) {
 
 			std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
 			int absY = level->getLevelBlockY(nBlockY);
-			int absX = level->getLevelBlockY(nBlockX);
+			int absX = level->getLevelBlockX(nBlockX);
 
 			std::pair<int, int> gateKey(absY, absX);
 			Gate* g = dynamic_cast<Gate*>((*entitites)[gateKey]);
@@ -167,7 +167,7 @@ void Collision::CheckGateCollision(Character * character) {
 
 			std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
 			int absY = level->getLevelBlockY(nBlockY);
-			int absX = level->getLevelBlockY(nBlockX);
+			int absX = level->getLevelBlockX(nBlockX);
 
 			std::pair<int, int> gateKey(absY, absX);
 			Gate* g = dynamic_cast<Gate*>((*entitites)[gateKey]);
