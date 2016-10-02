@@ -350,6 +350,10 @@ int Level::getLevelWidth() {
 	return level_width;
 }
 
+int Level::getSceneY() {
+	return scene_y;
+}
+
 std::map<std::pair<int,int>, Entity*>* Level::getEntities() {
 	return entities;
 }

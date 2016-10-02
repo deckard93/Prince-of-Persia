@@ -69,6 +69,8 @@ public:
 	int getLevelHeight();
 	int getLevelWidth();
 
+	int getSceneY();
+
 	bool isFreeSpace(char c);
 
 	bool inScene(int abs_block_x, int abs_block_y);

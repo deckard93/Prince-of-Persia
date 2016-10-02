@@ -114,8 +114,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 	int sizeX = Graphics::SCREENX + border_thickness * 2;
 	int sizeY = Graphics::SCREENY + border_thickness * 2;
 
-	int xPos = (GetSystemMetrics(SM_CXSCREEN) - sizeX)/2;
-	int yPos = (GetSystemMetrics(SM_CYSCREEN) - sizeY)/2;
+	int xPos = (GetSystemMetrics(SM_CXSCREEN) - sizeX) / 2;
+	int yPos = (GetSystemMetrics(SM_CYSCREEN) - sizeY) / 2;
 
 
     // Create the window.

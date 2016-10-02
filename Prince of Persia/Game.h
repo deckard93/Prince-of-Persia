@@ -21,7 +21,7 @@ using std::make_pair;
 using std::string;
 
 
-#define DEBUG 1
+#define DEBUG 0
 
 
 class Prince;
@@ -36,28 +36,21 @@ public:
 	static void RegisterSprite(string name, string path = "Assets//");
 
 private:
-	//util
+	// Util
 	static void LoadAssets();
 	void Reset();
-
-	//control
-	void HandleInput();
-
-	void ControlAI();
-
-	void CheckCharacterCollision(Character & character);
-	void CheckPrinceCollision();
-	void CheckCombatCollision();
-	void CheckCollision();
-	bool CheckCatchConditions(int defferY);
-
-	void DrawGraphics();
 	bool isGuardInScene(Character * guard_in);
 	void EngageFight(Character * prince, Character * guard, Level * level);
 	void SetEngagedGuard(Character* guard);
 
-	//Update Frame
-	void ComposeFrame();
+	// Flow Control
+	void HandleInput();
+	void ControlAI();
+	void CheckCombatCollision();
+	void CheckCollision();
+
+	// Draw Functions
+	void DrawGraphics();
 	void DrawBackground();
 	void DrawForeground();
 	void DrawHealth();

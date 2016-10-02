@@ -329,14 +329,14 @@ void Game::GameLoop() {
 
 	graphics.BeginFrame();
 
+	DrawGraphics();
+
 	HandleInput();
 
 	if (!prince->isDead()) {
 		ControlAI();
 		CheckCollision();
 	}
-
-	DrawGraphics();
 
 	graphics.EndFrame();
 }
@@ -392,10 +392,6 @@ void Game::SetEngagedGuard(Character* guard) {
 void Game::DrawGraphics() {
 
 	//graphics.BeginFrame();
-
-	//Sprite* myDoor = getSprite("finishDoor");
-	//int yCut = 100;
-	//graphics.DrawSprite(100,100, myDoor, 0, 0 + yCut, myDoor->width, myDoor->height - yCut);
 
 	std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
 
@@ -457,9 +453,6 @@ void Game::DrawHealth() {
 		graphics.DrawSprite(i * getSprite("healthEmpty")->width, Level::BLOCK_HEIGHT_PX * 3, getSprite("healthEmpty"));
 	}
 
-
-
-
 	//std::list<Character*>* guards = level->getGuards();
 	//std::list<Character*>::iterator i = guards->begin();
 	//engagedGuard = *i;
@@ -469,8 +462,6 @@ void Game::DrawHealth() {
 		graphics.DrawSprite(Level::BLOCK_WIDTH_PX * 10 - (i + 1) * (getSprite("healthFull")->width), Level::BLOCK_HEIGHT_PX * 3, getSprite("healthFull"));
 
 	}
-
-
 }
 void Game::DrawBackground() {
 	int yOff = 0;
@@ -510,15 +501,12 @@ void Game::DrawBackground() {
 				Entity* e = entities->at(platformKey);
 				Platform* p = dynamic_cast<Platform*>(e);
 				if (p != NULL) {
-					p->Animate(&graphics);
-					if (p->getState() == dislodged) {
-						p->setY(p->getY() + 5); //TODO needs to be a variable
-						if (level->getSceneCodeByCoord(p->getX(), p->getY() - 70) == '_') {
-							level->newSetCodeByCoord(p->getX(), p->getY(), '$');
-							level->setSceneCodeByBlock(x, y, ' ');
-						}
-					}
+					int currentLevelBlockX = blockX;
+					int currentLevelBlockY = blockY + (p->getYOffset() + 120) / Level::BLOCK_HEIGHT_PX;
 
+					if (level->inScene(currentLevelBlockX, currentLevelBlockY)) {
+						p->Animate(&graphics);
+					}
 				}
 				if (level->getSceneBlockXByCoord(prince->getMidX() - princeXOffset) == x &&
 					level->getSceneBlockYByCoord(prince->getMidY()) == y && prince->getState() != sJumping) {
@@ -689,6 +677,39 @@ void Game::CheckCombatCollision() {
 	}
 }
 void Game::CheckCollision() {
+
+	// TODO all X and Y coords to absolute (level) values as opposed to screen values refactor this
+	std::map<std::pair<int, int>, Entity*>* entities = level->getEntities();
+	for (std::map<std::pair<int, int>, Entity*>::iterator i = entities->begin(); i != entities->end(); i++) {
+		Entity* entity = i->second;
+		Platform* p = dynamic_cast<Platform*>(entity);
+
+		int levelBlockX = i->first.second;
+		int levelBlockY = i->first.first;
+		
+		if (p != NULL && p->getState() == dislodged) {
+			p->setYOffset(p->getYOffset() + 5); //TODO needs to be a variable
+
+			int currentLevelBlockX = levelBlockX;
+			int currentLevelBlockY = levelBlockY + (p->getYOffset() + 50) / Level::BLOCK_HEIGHT_PX;
+
+			if (level->getLevelCodeByBlock(currentLevelBlockX, currentLevelBlockY) == '_') {
+				p->setState(broken);
+				level->setLevelCodeByBlock(currentLevelBlockX,currentLevelBlockY, '$');
+				level->setLevelCodeByBlock(levelBlockX, levelBlockY, ' ');
+			}
+			else {
+				p->setY(int(p->getY() + 5) % (Level::BLOCK_HEIGHT_PX * Level::SCENE_HEIGHT_BLK));
+				//p->setY((levelBlockY - level->getSceneY()) * Level::BLOCK_HEIGHT_PX + p->getYOffset() - p->getAnim()->getSheet()->getFrameHeight());
+
+				if (!level->inScene(levelBlockX, levelBlockY) && level->inScene(currentLevelBlockX, currentLevelBlockY)) {
+					p->Animate(&graphics);
+				}
+			}
+		}	
+	}
+
+
 	collision->CheckPrinceCollision(prince);
 	CheckCombatCollision();
 }
