@@ -65,10 +65,10 @@ void Entity::setSceneY(int y) {
 	sceneY = y;
 }
 
-void Entity::defferMoveX(double x) {
+void Entity::setDefferX(double x) {
 	defferX = x;
 }
-void Entity::defferMoveY(double y) { 
+void Entity::setDefferY(double y) { 
 	defferY = y;
 }
 
@@ -109,14 +109,10 @@ int Entity::getSceneY() {
 
 
 int Entity::getDefferX() {
-	int temp = defferX;
-	defferX = 0;
-	return temp;
+	return defferX;
 }
 int Entity::getDefferY() {
-	int temp = defferY;
-	defferY = 0;
-	return temp;
+	return defferY;
 }
 
 //functions

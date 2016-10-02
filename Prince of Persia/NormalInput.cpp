@@ -49,3 +49,35 @@ bool NormalInput::goDown() {
 	}
 	return false;
 }
+
+bool NormalInput::goLeft() {
+	if (input->isLeftPressed() &&
+		!input->isUpPressed() ) {
+		return true;
+	}
+	return false;
+}
+
+bool NormalInput::goRight() {
+	if (input->isRightPressed() &&
+		!input->isUpPressed() ) {
+		return true;
+	}
+	return false;
+}
+
+bool NormalInput::Strike() {
+	if (input->isCtrlPressed()) {
+		return true;
+	}
+	return false;
+}
+
+bool NormalInput::Hang()
+{
+	if (input->isShiftPressed()) {
+		return true;
+	}
+	return false;
+}
+

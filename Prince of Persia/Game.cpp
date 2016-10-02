@@ -191,11 +191,11 @@ void Game::HandleInput()  {
 	}
 
 	if (input->getKeyStatus('P')) {
-		prince->defferMoveX(1);
+		prince->setDefferX(1);
 	}
 
 	if (input->getKeyStatus('O')) {
-		prince->defferMoveX(-1);
+		prince->setDefferX(-1);
 	}
 
 

@@ -18,14 +18,14 @@ private:
 	Timer* timer;
 	Input* input;
 
-	bool CheckCatchConditions(Prince* prince, double mY);
-	void CheckLedgeClimb(Prince* prince, double *mX, double *mY);
+	bool CheckCatchConditions(Prince* prince);
+	void CheckLedgeClimb(Prince* prince);
 	void CheckSceneChange(Prince* prince);
 	void CheckFall(Prince* prince);
-	void CheckStepDanger(Prince* prince, double* mX, double* mY);
-	void CheckWallCollision(Prince* prince, double* mX, double* mY);
+	void CheckStepDanger(Prince* prince);
+	void CheckWallCollision(Prince* prince);
 
-	void CheckGateCollision(Character* prince, double* mX);
+	void CheckGateCollision(Character* prince);
 	void CheckSpikeCollision(Character* prince);
 
 };

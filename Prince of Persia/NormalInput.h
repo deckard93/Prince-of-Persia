@@ -13,4 +13,8 @@ public:
 	bool doLeftJump();
 	bool doClimb();
 	bool goDown();
+	bool goLeft();
+	bool goRight();
+	bool Strike();
+	bool Hang();
 };

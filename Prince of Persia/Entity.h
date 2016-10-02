@@ -48,8 +48,8 @@ public:
 	void setSceneX(int x);
 	void setSceneY(int y);
 
-	void defferMoveX(double x);
-	void defferMoveY(double y);
+	void setDefferX(double x);
+	void setDefferY(double y);
 
 	void setCurrentAnim(Animation* anim);
 

@@ -155,8 +155,8 @@ void Guard::Animate(Graphics* graphics) {
 		//side effects at the beggining of an animation
 	}
 
-	defferMoveX(moveX);
-	defferMoveY(moveY);
+	setDefferX(moveX);
+	setDefferY(moveY);
 
 	Entity::Animate(graphics);
 }

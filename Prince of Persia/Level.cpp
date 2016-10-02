@@ -23,6 +23,7 @@ void Level::loadLevel(int l) {
 	filePath += levelNo;
 	filePath += ".txt";
 
+	//filePath = "Levels/foot_pos.txt";
 	filePath = "Levels/level1.txt";
 
 	//open file

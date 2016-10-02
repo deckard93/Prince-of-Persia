@@ -365,72 +365,10 @@ void Prince::Animate(Graphics* graphics) {
 		// PASS
 	}
 
-	defferMoveX(moveX);
-	defferMoveY(moveY);
+	setDefferX(moveX);
+	setDefferY(moveY);
 
 	Entity::Animate(graphics);
-}
-
-
-void Prince::ActionHandler(Action action)
-{
-	if (this->getAnim() != idle) { return; }
-
-	switch (action) {
-		case aLeftJump: {
-			if (!facingRight) { staticJump->Reset();  setCurrentAnim(staticJump); }
-		} break;
-		case aRightJump: {
-			if (facingRight) { setCurrentAnim(staticJump);  }
-		} break;
-		case aLeftStep: {
-			if (!facingRight) { setCurrentAnim(step); }
-		} break;
-		case aRightStep: {
-			if (facingRight) { setCurrentAnim(step); }
-		} break;
-		case aClimbUp:	{
-
-		} break;
-		case aClimbDown: {
-			this->setCurrentAnim(climbUp);
-			climbUp->setForward();
-			climbUp->Reset();
-		} break;
-
-		case aJumpGrab: {
-			this->setCurrentAnim(jumpGrab);
-		} break;
-		case aHang:		{
-		} break;
-
-		case aGoRight: {
-			if (facingRight) {
-				setCurrentAnim(running);
-			} else {
-				setCurrentAnim(turn);
-				switchFacing();
-			}
-		} break;
-
-		case aGoLeft: {
-			if (!facingRight) {	
-				setCurrentAnim(running);
-			} else {
-				setCurrentAnim(turn);
-				switchFacing();
-			}
-		} break;
-
-		case aCrouch: {
-			setCurrentAnim(crouch);
-		} break;
-
-		case aNone: { } break;
-
-
-	}
-
 }
 
 void Prince::FightController(Input* input) {
@@ -484,7 +422,7 @@ void Prince::NormalController(Input* input) {
 
 		// Input at the end of an animation
 		if (hang == this->getAnim()) {
-			if (input->isShiftPressed()) { this->getAnim()->Play(); }
+			if (nInput.Hang()) { this->getAnim()->Play(); }
 		}
 
 		if (climbUp == this->getAnim() && !getAnim()->isReversed()) {
@@ -492,8 +430,8 @@ void Prince::NormalController(Input* input) {
 		}
 
 		if (jumpGrab == this->getAnim()) {
-			if (input->isShiftPressed()) { this->setCurrentAnim(hang); }
-			if (input->isUpPressed()) {
+			if (nInput.Hang()) { this->setCurrentAnim(hang); }
+			if (nInput.doClimb()) {
 				this->setCurrentAnim(climbUp);
 				getAnim()->setReverse();
 				currentAnim->Reset();
@@ -515,47 +453,48 @@ void Prince::NormalController(Input* input) {
 	else {
 		// Input during animation
 		if (this->getAnim() == crouch && this->getAnim()->getCurrentFrame() == 3) {
-			if (input->isDownPressed()) {
+			if (nInput.goDown()) {
 				this->getAnim()->setCurrentFrame(2);
 			}
 		}
 		
 		if (this->getAnim() == running) {
 			if (getAnim()->getCurrentFrame() == 8) {
-				if (!((input->isRightPressed() && facingRight) ||
-					(input->isLeftPressed() && !facingRight)))
+				if (!((nInput.goRight() && facingRight) ||
+					(nInput.goLeft() && !facingRight)))
 				{
 					getAnim()->setCurrentFrame(13);
 				}
 			}
 
 			if (getAnim()->getCurrentFrame() == 13) {
-				if ((input->isRightPressed() && facingRight) ||
-					(input->isLeftPressed() && !facingRight))
+				if ((nInput.goRight() && facingRight) ||
+					(nInput.goLeft() && !facingRight))
 				{
 					getAnim()->setCurrentFrame(5);
 				}
 
-				if ((input->isRightPressed() && !facingRight) ||
-					(input->isLeftPressed() && facingRight))
+				if ((nInput.goRight() && !facingRight) ||
+					(nInput.goLeft() && facingRight))
 				{
 					this->setCurrentAnim(runningTurn);
 					switchFacing();
 				}
 			}
 
-			if (input->isUpPressed() && ( getAnim()->getCurrentFrame() > 6  &&
-				                          getAnim()->getCurrentFrame() < 14 || 
-				                          getAnim()->getCurrentFrame() == 400 )) {
+			if ( (nInput.doLeftJump() && !facingRight || 
+				  nInput.doRightJump() && facingRight) && ( getAnim()->getCurrentFrame() > 6  &&
+														    getAnim()->getCurrentFrame() < 14 || 
+														    getAnim()->getCurrentFrame() == 400 )) {
 				this->setCurrentAnim(runningJump);
 			}
 		}
 
 		if (this->getAnim() == hang) {
-			if ((!input->isShiftPressed() || hang->isFinished())) {
+			if ((!nInput.Hang() || hang->isFinished())) {
 				this->getAnim()->Stop();
 			}
-			else if (input->isUpPressed()) {
+			else if (nInput.doClimb()) {
 				this->setCurrentAnim(climbUp);
 				getAnim()->setReverse();
 				climbUp->Reset();
@@ -575,7 +514,7 @@ void Prince::NormalController(Input* input) {
 	if (nInput.doClimb()) { this->setCurrentAnim(jumpGrab); return; }
 	if (nInput.goDown())  { this->setCurrentAnim(crouch);   return;  }
 	
-	if (input->isRightPressed()) {
+	if (nInput.goRight()) {
 		if (facingRight) {
 			this->setCurrentAnim(running);
 			return;
@@ -585,7 +524,7 @@ void Prince::NormalController(Input* input) {
 			return;
 		}
 	}
-	if (input->isLeftPressed()) {
+	if (nInput.goLeft()) {
 		if (facingRight) {
 			this->setCurrentAnim(turn);
 			switchFacing();
@@ -596,7 +535,7 @@ void Prince::NormalController(Input* input) {
 		}
 	}
 
-	if (input->isCtrlPressed() && hasSword) {
+	if (nInput.Strike() && hasSword) {
 		inFight = true;
 		this->MoveX(-fightDisplacement);
 		setCurrentAnim(fightStart);
@@ -609,9 +548,6 @@ void Prince::Disengage() {
 
 void Prince::HandlePrince(Input* input) {
 	if (state == sDead || state == sFinish) { return; }
-
-	int moveX = 0;
-	int moveY = 0;
 
 	if (inFight) {		
 		FightController(input);
@@ -697,7 +633,7 @@ void Prince::Land(int currentBlockY) {
 	int fallHeight = currentBlockY - lastBlockY;
 
 	if (getAnim() == fall && getAnim()->getCurrentFrame() == 4 && getAnim()->isFrozen()) { 
-		this->defferMoveY(0);
+		//this->setDefferY(0);
 		switch (fallHeight) {
 		case 0:
 			getAnim()->Play();
@@ -870,20 +806,3 @@ bool Prince::isStep() {
 	}
 	return false;
 }
-
-/*
-idle		= new Animation(L"Assets//prince//idle.png"       ,	1	);
-turn		= new Animation(L"Assets//prince//turn.png"       , 8	);
-running		= new Animation(L"Assets//prince//running.png"    , 21	);
-climbUp		= new Animation(L"Assets//prince//climbUp.png"    , 17	);
-jumpGrab	= new Animation(L"Assets//prince//jumpGrab.png"   , 16	);
-crouch		= new Animation(L"Assets//prince//crouch.png"     , 13	);
-staticJump	= new Animation(L"Assets//prince//staticJump.png" ,	17	);
-step		= new Animation(L"Assets//prince//step.png"       ,	12	);
-hang		= new Animation(L"Assets//prince//hang.png"       , 11	);
-runningJump = new Animation(L"Assets//prince//runningJump.png", 11	);
-runningTurn = new Animation(L"Assets//prince//runningTurn.png", 9	);
-fall        = new Animation(L"Assets//prince//fall.png"       , 5	);
-drop        = new Animation(L"Assets//prince//drop.png"       , 6	);
-drink       = new Animation(L"Assets//prince//drink.png"      , 15	);
-*/
