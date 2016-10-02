@@ -52,16 +52,12 @@ private:
 	int runningSpeedX;
 	int climbSpeedX;
 	int* princeSpeedX;
-	int lastBlockY;
-
-public:
 	
 
 //methods
 public:
 	//constructors
 	Prince();
-	Prince(int x, int y);
 
 	void setIdle();
 	void FightController(Input * input);
@@ -80,12 +76,10 @@ public:
 	int Drink();
 	void increaseMaxHealth();
 	void Animate(Graphics* graphics);
-	int setFall(int currentBlockY);
 	void setMissStep();
 	void setDrop();
 	void setClimbDown();
 	int PickUpSword();
-	void Land(int currentBlockY);
 	void Catch();
 
 	characterState getState();
@@ -98,6 +92,4 @@ private:
 	void ActionHandler(Action action);
 	void handleInput();
 	void switchFacing();
-	void doAnimationEffects();
-
 };

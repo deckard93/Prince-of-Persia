@@ -575,40 +575,6 @@ void Prince::increaseMaxHealth() {
 	currentHealth = maxHealth;
 }
 
-int Prince::setFall(int currentBlockY) {
-	// Sanity checks
-	// Assert(currentAnim == running || currentAnim == runningJump || currentAnim == staticJump || currentAnim == fall);
-
-	if(this->getAnim() == runningJump) {
-		if(this->getAnim()->getCurrentFrame() < 6) {
-			return 0;
-		}
-	}
-
-	if(this->getAnim() == staticJump) {
-		if(this->getAnim()->getCurrentFrame() < 11) {
-			return 0;
-		}
-	}
-
-	if (this->getAnim() == drop) { return 0; }
-	if (this->getAnim() == hang) { return 0; }
-	if (this->getAnim() == jumpGrab) { return 0; }
-	if (this->getAnim() == climbUp) { return 0; }
-
-	if(this->getAnim() != fall) {
-		this->getAnim()->Reset();
-		this->setCurrentAnim(fall);
-		this->lastBlockY = currentBlockY;		
-		this->getAnim()->setCurrentFrame(4); //TODO
-		this->getAnim()->Play();
-		this->setAccY(4);
-	} else if(this->getAnim()->getCurrentFrame() == 4) {
-		this->getAnim()->Freeze();
-	}
-	
-	return 0; // value not used anymore
-}
 void Prince::setMissStep() {
 	missStep->Reset();
 	setCurrentAnim(missStep);
@@ -628,34 +594,6 @@ int Prince::PickUpSword() {
 		return 1;
 	}
 	return 0;
-}
-void Prince::Land(int currentBlockY) {
-	int fallHeight = currentBlockY - lastBlockY;
-
-	if (getAnim() == fall && getAnim()->getCurrentFrame() == 4 && getAnim()->isFrozen()) { 
-		//this->setDefferY(0);
-		switch (fallHeight) {
-		case 0:
-			getAnim()->Play();
-			break;
-		case 1:
-			this->setCurrentAnim(crouch);
-			//getAnim()->Play();
-			break;
-		case 2:
-			this->setCurrentAnim(crouch);
-			this->currentAnim->setCurrentFrame(2);
-			this->currentAnim->setCurrentDisplayTime(3000.0);
-			this->currentHealth--;
-			break;
-		default:
-			//TODO: check for spikes
-			this->setCurrentAnim(swordDeath);
-			this->currentAnim->Freeze();
-			this->setState(sDead);
-			
-		}
-	}
 }
 
 void Prince::Catch() {

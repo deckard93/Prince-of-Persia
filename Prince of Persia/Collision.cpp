@@ -20,58 +20,8 @@ void Collision::CheckCollision() {}
 
 void Collision::CheckCharacterCollision(Character* character) {
 
-	// Calculate foot position
-	int xFoot = character->getX() + character->getAnim()->getSheet()->getFrameWidth() / 2 - 36;
-	int yFoot = character->getY() + character->getAnim()->getSheet()->getFrameHeight() - 9;
-
-	int xFootReal = character->getX() + character->getAnim()->getSheet()->getFrameWidth() / 2;
-	int yFootReal = character->getY() + character->getAnim()->getSheet()->getFrameHeight() - 9;
-
-	int nBlockX = level->getSceneBlockXByCoord(xFoot);
-	int nBlockY = level->getSceneBlockYByCoord(yFoot);
-
-	//===================== Fall ==========================
-	if (level->isEmptySpace(level->getSceneCodeByBlock(nBlockY, nBlockX))) {
-
-		int bar = (Level::BLOCK_HEIGHT_PX * nBlockY);
-		if (yFoot < bar - 20) {
-			//moveY += prince->setFall(); //TODO make part of Character
-		}
-		else {
-			//prince->Land(); //TODO make part of character
-			//prince->setY(threshold);
-		}
-	}
-
-	if (level->getSceneCodeByBlock(nBlockY, nBlockX) == ' ' ||
-		level->getSceneCodeByBlock(nBlockY, nBlockX) == '*') {
-		//moveY += prince->setFall(); TODO make this part of the character Class
-	}
-
-	//=============== Collision With Walls =====================
-	if (character->getDefferX() < 0 && level->getSceneCodeByBlock(nBlockY, nBlockX) == ']') {
-		int bar = (Level::BLOCK_WIDTH_PX * (nBlockX));
-
-		if (DEBUG) graphics->DrawLine(0, bar, Graphics::SCREENX, bar, 255, 255, 255);
-
-		if (xFoot + character->getDefferX() < bar) {
-			character->setDefferX(0);
-		}
-	}
-
-	if (character->getDefferX() > 0 && level->getSceneCodeByBlock(nBlockY, nBlockX + 1) == '[' ||
-		level->getSceneCodeByBlock(nBlockY, nBlockX) == '[') {
-
-		int bar = (Level::BLOCK_WIDTH_PX * (nBlockX)-27);
-		if (DEBUG) graphics->DrawLine(bar, yFoot, bar, Level::BLOCK_HEIGHT_PX, 255, 255, 255);
-
-		if (xFoot + character->getDefferX() > bar) {
-			character->setDefferX(0);
-		}
-	}
-
-	//CheckFall(character);
-	//CheckWallCollision(character, &moveX, &moveY);
+	CheckFall(character);
+	CheckWallCollision(character);
 	CheckGateCollision(character);
 	CheckSpikeCollision(character);
 
@@ -84,8 +34,6 @@ void Collision::CheckCharacterCollision(Character* character) {
 	// Move Character
 	character->MoveX(moveX);
 	character->MoveY(moveY);
-
-	
 }
 void Collision::CheckPrinceCollision(Prince* prince) {
 
@@ -226,7 +174,7 @@ void Collision::CheckGateCollision(Character * character) {
 		}
 	}
 }
-void Collision::CheckFall(Prince * character) {
+void Collision::CheckFall(Character * character) {
 
 	// Calculate foot position
 	int xFoot = character->getX() + character->getAnim()->getSheet()->getFrameWidth() / 2 - /*36*/ 16;
@@ -272,7 +220,7 @@ void Collision::CheckFall(Prince * character) {
 		character->setFall(level->getLevelBlockYByCoord(yFoot));
 	}
 }
-void Collision::CheckWallCollision(Prince * character) {
+void Collision::CheckWallCollision(Character * character) {
 
 	int xFoot = character->getX() + character->getAnim()->getSheet()->getFrameWidth() / 2 - /*36*/ 16;
 	int yFoot = character->getY() + character->getAnim()->getSheet()->getFrameHeight() - 9;
@@ -280,7 +228,7 @@ void Collision::CheckWallCollision(Prince * character) {
 	int nBlockX = level->getSceneBlockXByCoord(xFoot);
 	int nBlockY = level->getSceneBlockYByCoord(yFoot);
 
-	if (!character->isClimbUp() && !character->isJumpGrab()) {
+	if (character->getState() != sClimbUp && character->getState() != sJumpGrab) {
 		if (level->getSceneCodeByBlock(nBlockY, nBlockX - 1) == ']') {
 			int threshold = (Level::BLOCK_WIDTH_PX * (nBlockX - 1) + 20);
 

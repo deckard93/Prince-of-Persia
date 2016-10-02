@@ -10,7 +10,7 @@ class Level;
 
 
 enum Action { aLeftJump, aRightJump, aJumpGrab, aCrouch, aGoRight, aGoLeft, aClimbUp, aClimbDown, aLeftStep, aRightStep, aHang, aNone, aStrike, aParry, aEngage, aDisengage };
-enum characterState { sRunning, sFalling, sIdle, sDead, sFinish, sJumping };
+enum characterState { sRunning, sFalling, sIdle, sDead, sFinish, sJumping, sJumpGrab, sClimbUp };
 
 class Character : public Entity {
 //Functions
@@ -37,11 +37,14 @@ public:
 	void EngageEnemy(Character & enemy);
 
 	bool isInScene();
+	bool isMovingUp();
 	void setInScene(bool val);
 
 	characterState Character::getState();
 	void setState(characterState state);
 	void spikeKill();
+	void Land(int currentBlockY);
+	void setFall(int currentBlockY);
 
 	Animation* turn;
 	Animation* running;
@@ -96,6 +99,7 @@ protected:
 
 	int maxHealth;
 	int currentHealth;
+	int lastBlockY;
 	
 public:
 

@@ -21,10 +21,10 @@ private:
 	bool CheckCatchConditions(Prince* prince);
 	void CheckLedgeClimb(Prince* prince);
 	void CheckSceneChange(Prince* prince);
-	void CheckFall(Prince* prince);
+	void CheckFall(Character* prince);
 	void CheckStepDanger(Prince* prince);
-	void CheckWallCollision(Prince* prince);
-
+	
+	void CheckWallCollision(Character* prince);
 	void CheckGateCollision(Character* prince);
 	void CheckSpikeCollision(Character* prince);
 
