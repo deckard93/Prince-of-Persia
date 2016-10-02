@@ -10,7 +10,7 @@ class Level;
 
 
 enum Action { aLeftJump, aRightJump, aJumpGrab, aCrouch, aGoRight, aGoLeft, aClimbUp, aClimbDown, aLeftStep, aRightStep, aHang, aNone, aStrike, aParry, aEngage, aDisengage };
-enum characterState { sRunning, sFalling, sIdle, sDead, sFinish, sJumping, sJumpGrab, sClimbUp, sStep };
+enum characterState { sRunning, sFalling, sIdle, sDead, sFinish, sJumping, sJumpGrab, sClimbUp, sStep, sRunningTurn };
 
 class Character : public Entity {
 //Functions
@@ -40,7 +40,7 @@ public:
 	bool isMovingUp();
 	void setInScene(bool val);
 
-	characterState Character::getState();
+	characterState getState();
 	void setState(characterState state);
 	void spikeKill();
 	void Land(int currentBlockY);

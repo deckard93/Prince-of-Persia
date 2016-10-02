@@ -37,6 +37,13 @@ void Collision::CheckCharacterCollision(Character* character) {
 }
 void Collision::CheckPrinceCollision(Prince* prince) {
 
+	this->timer->StopWatch();
+
+	prince->setDefferX(prince->getDefferX() * this->timer->GetTimeMilli() / 14.5);
+	prince->setDefferY(prince->getDefferY());
+
+	this->timer->StartWatch();
+
 	CheckLedgeClimb(prince);
 	CheckSceneChange(prince);
 	CheckFall(prince);
@@ -51,9 +58,7 @@ void Collision::CheckPrinceCollision(Prince* prince) {
 		}
 	}
 
-	this->timer->StopWatch();
-
-	double moveX = prince->getDefferX() * this->timer->GetTimeMilli() / 14.5;
+	double moveX = prince->getDefferX();
 	double moveY = prince->getDefferY();
 
 	prince->setDefferX(0);
@@ -65,8 +70,6 @@ void Collision::CheckPrinceCollision(Prince* prince) {
 	if (prince->getAccY() > 10) { prince->setAccY(10); }
 	if (prince->getAccX() > 20) { prince->setAccY(20); }
 
-	this->timer->StartWatch();
-
 	// Move Prince
 	prince->MoveX(moveX);
 	prince->MoveY(moveY);
@@ -75,8 +78,6 @@ void Collision::CheckPrinceCollision(Prince* prince) {
 void Collision::CheckGateCollision(Character * character) {
 
 	//TODO clean this up
-	//TODO running Turn Bug
-
 
 	// Calculate foot position
 	int xFoot = character->getX() + character->getAnim()->getSheet()->getFrameWidth() / 2 - /*36*/ 16;
@@ -123,52 +124,67 @@ void Collision::CheckGateCollision(Character * character) {
 	}
 
 
-	//int xOffset = -22;
-	int xOffset = 0;
-	nBlockX = level->getSceneBlockXByCoord(character->getMidX() + xOffset);
-	nBlockY = level->getSceneBlockYByCoord(character->getMidY());
-	if (level->getSceneCodeByBlock(nBlockY, nBlockX) == 'G' && character->isFacingRight()) {
+	// ================== Gate Collision ==================
+	 
+	{
+		int xOffset = 0;
+		nBlockX = level->getSceneBlockXByCoord(character->getMidX() + xOffset);
+		nBlockY = level->getSceneBlockYByCoord(character->getMidY());
 
-		std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
-		int absY = level->getLevelBlockY(nBlockY);
-		int absX = level->getLevelBlockY(nBlockX);
+		if (level->getSceneCodeByBlock(nBlockY, nBlockX) == 'G') {
 
-		std::pair<int, int> gateKey(absY, absX);
-		Gate* g = dynamic_cast<Gate*>((*entitites)[gateKey]);
+			std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
+			int absY = level->getLevelBlockY(nBlockY);
+			int absX = level->getLevelBlockY(nBlockX);
 
-		if (g != NULL && !g->isOpen()) {
-			int bar = (Level::BLOCK_WIDTH_PX * (nBlockX));
+			std::pair<int, int> gateKey(absY, absX);
+			Gate* g = dynamic_cast<Gate*>((*entitites)[gateKey]);
 
-			if (DEBUG) graphics->DrawLine(bar, 0, bar, Graphics::SCREENY, 255, 255, 255);
-			if (DEBUG) graphics->DrawLine(character->getMidX() + xOffset, 0, character->getMidX() + xOffset, Graphics::SCREENY, 0, 255, 0);
+			if (g != NULL && !g->isOpen()) {
+				int bar = (Level::BLOCK_WIDTH_PX * (nBlockX));
 
-			if (character->getMidX() + xOffset + character->getDefferX() >= bar) {
-				character->setDefferX(0);
+				if (DEBUG) graphics->DrawLine(bar, 0, bar, Graphics::SCREENY, 255, 255, 255);
+				if (DEBUG) graphics->DrawLine(character->getMidX() + xOffset, 0, character->getMidX() + xOffset, Graphics::SCREENY, 0, 255, 0);
+
+				if (character->getDefferX() > 0 && character->getMidX() + xOffset < bar && character->getMidX() + xOffset + character->getDefferX() >= bar) {
+					character->setDefferX(0);
+				}
+
+				if (character->getDefferX() < 0 && character->getMidX() + xOffset > bar && character->getMidX() + xOffset + character->getDefferX() <= bar) {
+					character->setDefferX(0);
+				}
 			}
 		}
 	}
+	
+	{
+		int xOffset = -20;
+		nBlockX = level->getSceneBlockXByCoord(character->getMidX() + xOffset);
+		nBlockY = level->getSceneBlockYByCoord(character->getMidY());
+		nBlockX--;
 
-	xOffset -= 20;
-	nBlockX = level->getSceneBlockXByCoord(character->getMidX() + xOffset);
-	nBlockY = level->getSceneBlockYByCoord(character->getMidY());
-	nBlockX--;
-	if (level->getSceneCodeByBlock(nBlockY, nBlockX) == 'G' && !character->isFacingRight()) {
+		if (level->getSceneCodeByBlock(nBlockY, nBlockX) == 'G') {
 
-		std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
-		int levelBlockY = level->getLevelBlockY(nBlockY);
-		int levelBlockX = level->getLevelBlockX(nBlockX);
+			std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
+			int absY = level->getLevelBlockY(nBlockY);
+			int absX = level->getLevelBlockY(nBlockX);
 
-		std::pair<int, int> gateKey(levelBlockY, levelBlockX);
-		Gate* g = dynamic_cast<Gate*>((*entitites)[gateKey]);
+			std::pair<int, int> gateKey(absY, absX);
+			Gate* g = dynamic_cast<Gate*>((*entitites)[gateKey]);
 
-		if (g != NULL && !g->isOpen()) {
-			int bar = (Level::BLOCK_WIDTH_PX * (nBlockX));
+			if (g != NULL && !g->isOpen()) {
+				int bar = (Level::BLOCK_WIDTH_PX * (nBlockX));
 
-			if (DEBUG) graphics->DrawLine(bar, 0, bar, Graphics::SCREENY, 255, 255, 255);
-			if (DEBUG) graphics->DrawLine(character->getMidX() + xOffset, 0, character->getMidX() + xOffset, Graphics::SCREENY, 0, 255, 0);
+				if (DEBUG) graphics->DrawLine(bar, 0, bar, Graphics::SCREENY, 255, 255, 255);
+				if (DEBUG) graphics->DrawLine(character->getMidX() + xOffset, 0, character->getMidX() + xOffset, Graphics::SCREENY, 0, 255, 0);
 
-			if (character->getMidX() + xOffset + character->getDefferX() <= bar) {
-				character->setDefferX(0);
+				if (character->getDefferX() > 0 && character->getMidX() + xOffset < bar && character->getMidX() + xOffset + character->getDefferX() >= bar) {
+					character->setDefferX(0);
+				}
+
+				if (character->getDefferX() < 0 && character->getMidX() + xOffset > bar && character->getMidX() + xOffset + character->getDefferX() <= bar) {
+					character->setDefferX(0);
+				}
 			}
 		}
 	}

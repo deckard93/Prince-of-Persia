@@ -24,7 +24,7 @@ void Level::loadLevel(int l) {
 	filePath += ".txt";
 
 	//filePath = "Levels/foot_pos.txt";
-	filePath = "Levels/level1.txt";
+	filePath = "Levels/gate.txt";
 
 	//open file
 	FILE *file = fopen(filePath.c_str(), "rb");

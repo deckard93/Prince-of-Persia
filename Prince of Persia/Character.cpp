@@ -55,6 +55,9 @@ characterState Character::getState() {
 	else if (getAnim() == step) {
 		return sStep;
 	}
+	else if (getAnim() == runningTurn) {
+		return sRunningTurn;
+	}
 
 	return sIdle;
 }
