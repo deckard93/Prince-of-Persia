@@ -155,12 +155,11 @@ void Collision::CheckGateCollision(Character * character) {
 	if (level->getSceneCodeByBlock(nBlockY, nBlockX) == 'G' && !character->isFacingRight()) {
 
 		std::map<std::pair<int, int>, Entity*>* entitites = level->getEntities();
-		int absY = level->getLevelBlockY(nBlockY);
-		int absX = level->getLevelBlockY(nBlockX);
+		int levelBlockY = level->getLevelBlockY(nBlockY);
+		int levelBlockX = level->getLevelBlockX(nBlockX);
 
-		std::pair<int, int> gateKey(absY, absX);
+		std::pair<int, int> gateKey(levelBlockY, levelBlockX);
 		Gate* g = dynamic_cast<Gate*>((*entitites)[gateKey]);
-
 
 		if (g != NULL && !g->isOpen()) {
 			int bar = (Level::BLOCK_WIDTH_PX * (nBlockX));
@@ -302,7 +301,7 @@ void Collision::CheckLedgeClimb(Prince* prince) {
 			checkLedgeXOp = nBlockX + 1;
 		}
 
-		if (prince->isJumpGrab()) {
+		if (prince->getState() == sJumpGrab) {
 
 			if (level->isLedge(level->getSceneCodeByBlock(checkLedgeY, checkLedgeX)) &&
 				level->isEmptySpace(level->getSceneCodeByBlock(nBlockY - 1, nBlockX))
@@ -440,24 +439,18 @@ void Collision::CheckStepDanger(Prince * prince) {
 	int xFoot = prince->getX() + prince->getAnim()->getSheet()->getFrameWidth() / 2 - /*36*/ 16;
 	int yFoot = prince->getY() + prince->getAnim()->getSheet()->getFrameHeight() - 9;
 
-	int nBlockX = level->getSceneBlockXByCoord(xFoot);
+	int nBlockX = level->getSceneBlockXByCoord(xFoot + prince->getDefferX() + 2);
+	if (!prince->isFacingRight()) { nBlockX = level->getSceneBlockXByCoord(xFoot + prince->getDefferX() - 5); }
 	int nBlockY = level->getSceneBlockYByCoord(yFoot);
 
-	{
-		int nBlockX = level->getSceneBlockXByCoord(xFoot + prince->getDefferX() + 2);
-		if (!prince->isFacingRight()) { nBlockX = level->getSceneBlockXByCoord(xFoot + prince->getDefferX() - 5); }
-		int nBlockY = level->getSceneBlockYByCoord(yFoot);
-
-		if (prince->isStep()) {
-			if (level->getSceneCodeByBlock(nBlockY, nBlockX) == ' ' ||
-				level->getSceneCodeByBlock(nBlockY, nBlockX) == '*') {
-				if (prince->getAnim()->getCurrentFrame() == 5) {
-					prince->getAnim()->Reset();
-					prince->setMissStep();
-				}
-				if (prince->getAnim()->getCurrentFrame() > 5) {
-					prince->setDefferX(0);
-				}
+	if (prince->getState() == sStep) {
+		if (level->isEmptySpace(level->getSceneCodeByBlock(nBlockY, nBlockX))) {
+			if (prince->getAnim()->getCurrentFrame() == 5) {
+				prince->getAnim()->Reset();
+				prince->setMissStep();
+			}
+			if (prince->getAnim()->getCurrentFrame() > 5) {
+				prince->setDefferX(0);
 			}
 		}
 	}

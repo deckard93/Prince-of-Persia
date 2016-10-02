@@ -52,6 +52,9 @@ characterState Character::getState() {
 	else if (getAnim() == climbUp) {
 		return sClimbUp;
 	}
+	else if (getAnim() == step) {
+		return sStep;
+	}
 
 	return sIdle;
 }

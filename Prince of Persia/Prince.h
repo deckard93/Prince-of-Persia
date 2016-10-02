@@ -66,20 +66,16 @@ public:
 
 	void HandlePrince(Input* input);
 	bool isStriking();
-	bool isJumpGrab();
-	bool isClimbUp();
 	bool isGoingDown();
 	bool isDrop();
-	bool isMovingUp();
-	bool isStep();
 
 	int Drink();
+	int PickUpSword();
 	void increaseMaxHealth();
 	void Animate(Graphics* graphics);
 	void setMissStep();
 	void setDrop();
 	void setClimbDown();
-	int PickUpSword();
 	void Catch();
 
 	characterState getState();

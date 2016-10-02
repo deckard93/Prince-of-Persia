@@ -10,7 +10,7 @@ class Level;
 
 
 enum Action { aLeftJump, aRightJump, aJumpGrab, aCrouch, aGoRight, aGoLeft, aClimbUp, aClimbDown, aLeftStep, aRightStep, aHang, aNone, aStrike, aParry, aEngage, aDisengage };
-enum characterState { sRunning, sFalling, sIdle, sDead, sFinish, sJumping, sJumpGrab, sClimbUp };
+enum characterState { sRunning, sFalling, sIdle, sDead, sFinish, sJumping, sJumpGrab, sClimbUp, sStep };
 
 class Character : public Entity {
 //Functions

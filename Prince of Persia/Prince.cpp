@@ -702,21 +702,6 @@ void Prince::setIdle() {
 	setCurrentAnim(idle);
 }
 
-bool Prince::isJumpGrab()
-{
-	if (getAnim() == jumpGrab) {
-		return true;
-	}
-	return false;
-}
-
-bool Prince::isClimbUp() {
-	if (currentAnim == climbUp) {
-		return true;
-	}
-	return false;
-}
-
 bool Prince::isGoingDown() {
 	if(currentAnim == crouch) {
 		return true;
@@ -726,20 +711,6 @@ bool Prince::isGoingDown() {
 
 bool Prince::isDrop() {
 	if (currentAnim == drop) {
-		return true;
-	}
-	return false;
-}
-
-bool Prince::isMovingUp() {
-	if (getAnim() == climbUp || getAnim() == jumpGrab || getAnim() == staticJump || getAnim() == hang) {
-		return true;
-	}
-	return false;
-}
-
-bool Prince::isStep() {
-	if (currentAnim == step) {
 		return true;
 	}
 	return false;
