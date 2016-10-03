@@ -46,11 +46,11 @@ void Collision::CheckPrinceCollision(Prince* prince) {
 
 	CheckLedgeClimb(prince);
 	CheckSceneChange(prince);
-	CheckFall(prince);
 	CheckStepDanger(prince);
 	CheckWallCollision(prince);
 	CheckGateCollision(prince);
 	CheckSpikeCollision(prince);
+	CheckFall(prince);
 
 	if (input->isShiftPressed()) {
 		if (CheckCatchConditions(prince)) {
@@ -212,9 +212,13 @@ void Collision::CheckFall(Character * character) {
 		int bar = (Level::BLOCK_HEIGHT_PX * nBlockY) - 20;
 		if (DEBUG) graphics->DrawLine(0, bar, Graphics::SCREENX, bar, 255, 255, 255);
 
-		if (yFoot >= bar) {
+		if (yFoot >= bar && !level->isFreeSpace(code)) {
 			//moveY = 0;
 			character->Land(level->getLevelBlockYByCoord(yFoot));
+			if (character->getState() == sDead) {
+				character->MoveY(-15);
+				//character->MoveX(level->getSceneBlockXByCoord(character->getX()) * Level::BLOCK_WIDTH_PX);
+			}
 		}
 		else {
 			character->setFall(level->getLevelBlockYByCoord(yFoot));

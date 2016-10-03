@@ -367,8 +367,7 @@ std::list<Character*>* Level::getGuards() {
 
 bool Level::isFreeSpace(char c) {
 	if (c == ' ' ||
-		c == '*' ||
-		c == '#' ) {
+		c == '*' ) {
 		return true;
 	}
 	return false;

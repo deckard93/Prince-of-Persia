@@ -595,6 +595,9 @@ void Game::DrawForeground() {
 	int xOff;
 
 
+	//TODO this value is being reused in check collision move it in a common location or eliminate collision detection when drawing completely
+	int princeXOffset = 22;
+
 	int mask = 20;
 	for (int i = 3; i >= 0; i--) {
 		for (int j = 0; j < 11; j++) {
@@ -615,7 +618,9 @@ void Game::DrawForeground() {
 				}
 				break;
 			case 'T':
-				//graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height + mask, getSprite("tileCornerLeft"), 0, mask, getSprite("tileCornerLeft")->width, getSprite("tileCornerLeft")->height - mask);
+				if (level->isEmptySpace(level->getSceneCodeByBlock(i, j - 1))) {
+					graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height + mask, getSprite("tileCornerLeft"), 0, mask, getSprite("tileCornerLeft")->width - 60, getSprite("tileCornerLeft")->height - mask);
+				}
 				graphics.DrawSprite(xOff, yOff - getSprite("columnFront")->height, getSprite("columnFront"));
 				break;
 			case '$':
@@ -632,6 +637,22 @@ void Game::DrawForeground() {
 				break;
 			case 'I':
 				graphics.DrawSprite(xOff, yOff - getSprite("block")->height, getSprite("block"));
+				break;
+			case '-':
+				if (level->getSceneCodeByCoord(prince->getMidX() - princeXOffset, prince->getMidY()) == '-') {
+					if (level->getSceneBlockXByCoord(prince->getMidX() - princeXOffset) == j &&
+						level->getSceneBlockYByCoord(prince->getMidY() == i) &&
+						prince->getState() != sJumping) {
+						graphics.DrawSprite(xOff, yOff - getSprite("tileCornerLeft")->height + mask, getSprite("tileCornerLeft"), 0, mask, getSprite("tileCornerLeft")->width - 60, getSprite("tileCornerLeft")->height - mask);
+					}
+					else {
+						graphics.DrawSprite(xOff, yOff - getSprite("activate")->height + mask, getSprite("activate"), 0, mask, getSprite("activate")->width - 60, getSprite("activate")->height - mask);
+					}
+				}
+				else {
+					graphics.DrawSprite(xOff, yOff - getSprite("activate")->height + mask, getSprite("activate"), 0, mask, getSprite("activate")->width - 60, getSprite("activate")->height - mask);
+				}
+				break;
 				break;
 			}
 		}

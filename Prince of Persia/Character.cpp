@@ -28,6 +28,10 @@ void Character::Hurt() {
 }
 
 characterState Character::getState() {
+	if (this->getAnim() == swordDeath) {
+		return sDead;
+	}
+
 	if (this->getAnim() == staticJump) {
 		if (this->getAnim()->getCurrentFrame() >= 1 &&
 			this->getAnim()->getCurrentFrame() <= 12) {
@@ -88,14 +92,17 @@ void Character::Land(int currentBlockY) {
 		case 2:
 			this->setCurrentAnim(crouch);
 			this->currentAnim->setCurrentFrame(2);
-			this->currentAnim->setCurrentDisplayTime(3000.0);
+			this->currentAnim->setCurrentDisplayTime(2000.0);
 			this->currentHealth--;
 			break;
 		default:
 			//TODO: check for spikes
 			this->setCurrentAnim(swordDeath);
 			this->currentAnim->Freeze();
-			this->setState(sDead);
+			this->currentHealth = 0;
+			//this->defferX = 0;
+			//this->defferY = 0;
+			//this->yPos -= 30;
 
 		}
 	}
@@ -252,7 +259,7 @@ bool Character::isIdle() {
 }
 
 bool Character::isDead() {
-	return dead;
+	return this->getState() == sDead;
 }
 
 bool Character::isFacingRight() {
