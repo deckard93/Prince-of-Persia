@@ -30,7 +30,7 @@ class Game {
 public:
 	Game (HWND hwnd, Input* in);
 	void GameLoop();
-	~Game() {}
+	~Game() { delete audio; }
 
 	static Sprite* getSprite(string name);
 	static void RegisterSprite(string name, string path = "Assets//");
@@ -59,7 +59,7 @@ private:
 	HWND		winHandle;
 	Graphics	graphics;
 	Input*		input;
-	//Audio		audio;
+	Audio*		audio;
 	//Benchmark	benchmark;
 
 private:

@@ -2,7 +2,7 @@
 #include "NormalInput.h"
 
 //constructors
-Prince::Prince() {
+Prince::Prince(Audio* audio) : Character(audio) {
 	state = sIdle;
 
 	hasSword = false;
@@ -64,7 +64,7 @@ Prince::Prince() {
 	crouch->setDisplayTime(60);
 	climbUp->setDisplayTime(49);
 	//climbUp->setDisplayTime(2000);
-	running->setDisplayTime(49);
+	running->setDisplayTime(60);
 	jumpGrab->setDisplayTime(65);
 	missStep->setDisplayTime(80);
 	pickSword->setDisplayTime(100);
@@ -169,6 +169,18 @@ void Prince::Animate(Graphics* graphics) {
 		}	
 		if (this->getAnim() == running) {
 			if (getAnim()->getCurrentFrame() > 5 && getAnim()->getCurrentFrame() < 13) {
+
+				
+				switch (getAnim()->getCurrentFrame()) {
+				case 6:
+				case 10:
+					if (getAnim()->isEffectPending()) {
+						audio->PlaySound(Audio::step);
+						getAnim()->setEffectDone();
+					}
+					break;
+				}
+
 				if (facingRight) {
 					moveX = 4;
 				}

@@ -2,6 +2,7 @@
 
 
 #include "Entity.h"
+#include "Audio.h"
 
 #include <map>
 
@@ -16,6 +17,7 @@ class Character : public Entity {
 //Functions
 public:
 	Character();
+	Character(Audio* audio);
 	void Hurt();
 	void Heal();
 
@@ -100,6 +102,8 @@ protected:
 	int maxHealth;
 	int currentHealth;
 	int lastBlockY;
+
+	Audio* audio;
 	
 public:
 

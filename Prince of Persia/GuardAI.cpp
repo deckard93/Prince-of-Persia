@@ -5,7 +5,7 @@
 #include "Level.h"
 #include "GuardAI.h"
 
-GuardAI::GuardAI(int x, int y) : Guard(x, y) {
+GuardAI::GuardAI(Audio* audio, int x, int y) : Guard(audio, x, y) {
 	chanceToParry = 100;
 	chanceToStrike = 50;
 }

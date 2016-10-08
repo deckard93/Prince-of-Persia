@@ -12,6 +12,6 @@ private:
 
 //functions
 public:
-	GuardAI(int x, int y);
+	GuardAI(Audio* audio, int x, int y);
 	void Control(Prince & prince, Level & level);
 };

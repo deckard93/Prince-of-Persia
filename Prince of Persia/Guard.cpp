@@ -1,7 +1,10 @@
 #include "Game.h"
 #include "Guard.h"
 
-Guard::Guard(int x, int y) {
+Guard::Guard(Audio* audio, int x, int y) {
+
+	this->audio = audio;
+
 	setX(x);
 	setY(y);
 

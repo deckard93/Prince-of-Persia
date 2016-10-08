@@ -57,7 +57,7 @@ private:
 //methods
 public:
 	//constructors
-	Prince();
+	Prince(Audio* audio);
 
 	void setIdle();
 	void FightController(Input * input);

@@ -127,9 +127,14 @@ Game::Game(HWND hwnd, Input* in) :
 
 	// Objects
 	level = new Level();
-	prince = new Prince();
 	engagedGuard = NULL;
 	collision = new Collision(level, &graphics, input);
+	audio = new Audio();
+	audio->RegisterSound(Audio::drop);
+	audio->RegisterSound(Audio::step);
+
+	prince = new Prince(audio);
+	
 
 	Reset();
 
@@ -142,7 +147,7 @@ Game::Game(HWND hwnd, Input* in) :
 }
 
 void Game::RegisterSprite(string name, string path) {
-	Sprite * sprite = new Sprite();
+	Sprite* sprite = new Sprite();
 	std::wstring item = std::wstring(path.begin(), path.end()) + std::wstring(name.begin(), name.end()) + L".png";
 	LoadSprite(sprite, item.c_str());
 	assets->insert(make_pair(name, sprite));
@@ -317,7 +322,7 @@ void Game::HandleInput()  {
 void Game::Reset() {
 	level->loadLevel(1);
 
-	prince = new Prince();
+	prince = new Prince(audio);
 	//prince->setX(10 * Level::BLOCK_WIDTH_PX - 50);
 	prince->setX(7 * Level::BLOCK_WIDTH_PX - 70);
 	prince->setY(prince->getAnim()->getSheet()->getFrameHeight() - Level::FOOT_FLOAT - Level::BLOCK_HEIGHT_PX + 12); // Magic Number should be size of ledge?

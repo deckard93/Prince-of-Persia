@@ -8,10 +8,18 @@
 #include "Character.h"
 
 
-Character::Character() {
+Character::Character()
+{
 	inFight = false;
 	dead = false;
 	inScene = true;
+}
+
+Character::Character(Audio* audio) {
+	inFight = false;
+	dead = false;
+	inScene = true;
+	this->audio = audio;
 }
 
 void Character::Hurt() {
@@ -88,12 +96,14 @@ void Character::Land(int currentBlockY) {
 		case 1:
 			this->setCurrentAnim(crouch);
 			//getAnim()->Play();
+			this->audio->PlaySound(Audio::drop);
 			break;
 		case 2:
 			this->setCurrentAnim(crouch);
 			this->currentAnim->setCurrentFrame(2);
 			this->currentAnim->setCurrentDisplayTime(2000.0);
 			this->currentHealth--;
+			this->audio->PlaySound(Audio::drop);
 			break;
 		default:
 			//TODO: check for spikes

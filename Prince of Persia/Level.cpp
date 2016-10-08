@@ -240,7 +240,7 @@ void Level::loadEntities() {
 
 				case '1': {
 					//setLevelCodeByBlock(abs_block_x, abs_block_y, '_');
-					GuardAI* aiGuard = new GuardAI(x, y - 5);
+					GuardAI* aiGuard = new GuardAI(NULL, x, y - 5);
 					entity = aiGuard;
 					characters->push_back(aiGuard);
 				} break;
@@ -338,8 +338,6 @@ void Level::changeScene(direction dir) {
 		if(scene_x + SCENE_WIDTH > level_width) scene_x = level_width - 12;
 		break;
 	}
-
-	//loadEntities();
 }
 
 

@@ -97,7 +97,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow) {
 
-	//Register the widow class
+	// Register the widow class
 	const wchar_t CLASS_NAME[] = L"Pop";
 
 	WNDCLASS wc = { };
@@ -108,7 +108,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 
 	RegisterClass(&wc);
 
-	//Find the center position for the window
+	// Find the center position for the window
 	int border_thickness = GetSystemMetrics(SM_CXSIZEFRAME);
 
 	int sizeX = Graphics::SCREENX + border_thickness * 2;
@@ -158,7 +158,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
 		}
     }
 
+	
+
     return 0;
 }
-
-
