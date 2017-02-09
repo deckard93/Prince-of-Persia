@@ -495,7 +495,7 @@ void Game::DrawGraphics()
                 gate->Animate(&graphics, audio);
             }
             else {
-                i->second->Animate(NULL);
+                gate->Animate(NULL, audio);
             }
             continue;
         }
