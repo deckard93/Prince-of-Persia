@@ -3,16 +3,17 @@
 #include "Guilotine.h"
 
 
-Guilotine::Guilotine(int x, int y) {
-	xPos = x;
-	yPos = y;
+Guilotine::Guilotine(int x, int y) 
+{
+    xPos = x;
+    yPos = y;
 
-	type = guilotineT;
+    type = guilotineT;
 
-	currentAnim = new Animation(Game::getSprite("guilotine"), 5);
+    currentAnim = new Animation(Game::getSprite("guilotine"), 5);
 
-	currentAnim->setCurrentFrame(rand() % 5);
-	currentAnim->setDisplayTime(90);
-	currentAnim->setLoop(true);
-	currentAnim->Play();
+    currentAnim->setCurrentFrame(rand() % 5);
+    currentAnim->setDisplayTime(90);
+    currentAnim->setLoop(true);
+    currentAnim->Play();
 }

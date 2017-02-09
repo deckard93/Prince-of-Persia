@@ -5,73 +5,73 @@
 
 
 double Platform::getXOffset() {
-	return xOffset;
+    return xOffset;
 }
 
 double Platform::getYOffset() {
-	return yOffset;
+    return yOffset;
 }
 
 void Platform::setXOffset(double x) {
-	xOffset = x;
+    xOffset = x;
 }
 
 void Platform::setYOffset(double y) {
-	yOffset = y;
+    yOffset = y;
 }
 
 Platform::Platform(int x, int y) {
-	type = platformT;
+    type = platformT;
 
-	xOffset = 0;
-	yOffset = 0;
+    xOffset = 0;
+    yOffset = 0;
 
-	xPos = x;
-	yPos = y;
+    xPos = x;
+    yPos = y;
 
-	state = lodged;
+    state = lodged;
 
-	platformMove = new Animation(Game::getSprite("platformMove"), 4);
-	//platformMove->setDisplayTime(80);
-	platformMove->setDisplayTime(animDisplayTime);
-	platformMove->setForward();
-	//platformMove->Play();
-	//platformMove->setLoop(true);
-	currentAnim = platformMove;
+    platformMove = new Animation(Game::getSprite("platformMove"), 4);
+    //platformMove->setDisplayTime(80);
+    platformMove->setDisplayTime(animDisplayTime);
+    platformMove->setForward();
+    //platformMove->Play();
+    //platformMove->setLoop(true);
+    currentAnim = platformMove;
 
 }
 
 void Platform::Delete() { //TODO DEPRECATE
-	state = broken;
+    state = broken;
 }
 
 void Platform::Move() {
-	this->setCurrentAnim(platformMove);
+    this->setCurrentAnim(platformMove);
 }
 
 void Platform::Drop() {
-	if (state == lodged) {
-		platformMove->setCurrentFrame(0);
-		this->setCurrentAnim(platformMove);
-		state = dislodging;
-	}
+    if (state == lodged) {
+        platformMove->setCurrentFrame(0);
+        this->setCurrentAnim(platformMove);
+        state = dislodging;
+    }
 }
 
 void Platform::Animate(Graphics* graphics) {
-	if (state == broken) { return;  }
-	if (state == dislodging) {
-		if (platformMove->getCurrentFrame() == platformMove->getLastFrameNr()) {
-			platformMove->Freeze();
-			state = dislodged;
-		}
-	}
-	Entity::Animate(graphics);
+    if (state == broken) { return;  }
+    if (state == dislodging) {
+        if (platformMove->getCurrentFrame() == platformMove->getLastFrameNr()) {
+            platformMove->Freeze();
+            state = dislodged;
+        }
+    }
+    Entity::Animate(graphics);
 }
 
 platformState Platform::getState() {
-	return state;
+    return state;
 }
 
 void Platform::setState(platformState state) {
-	this->state = state;
+    this->state = state;
 }

@@ -2,15 +2,14 @@
 
 enum guilotineState { sChomp, sSafe };
 
-class Guilotine : public Entity{
+class Guilotine : public Entity
+{
 
 private:
-	guilotineState state;
+    guilotineState state;
 
 
 public:
-	Guilotine(int x, int y);
-	~Guilotine();
-
-
+    Guilotine(int x, int y);
+    ~Guilotine();
 };

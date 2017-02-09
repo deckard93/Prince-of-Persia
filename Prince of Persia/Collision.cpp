@@ -7,10 +7,13 @@
 #include "Collision.h"
 
 
-Collision::Collision(Level* level, Graphics* graphics, Input* input) {
+Collision::Collision(Audio* audio, Level* level, Graphics* graphics, Input* input) {
 	this->level = level;
 	this->graphics = graphics;
 	this->input = input;
+	this->audio = audio;
+
+	this->triggerSoundPlayed = false;
 
 	this->timer = new Timer();
 	this->timer->StartWatch();
@@ -110,17 +113,34 @@ void Collision::CheckGateCollision(Character * character) {
 			FinishDoor* d = dynamic_cast<FinishDoor*>(e);
 			if (code == '-') {
 				d->Open();
+				if (!triggerSoundPlayed) {
+					audio->PlaySound(Audio::trigger);
+                    //TODO: (sort of) the sound may not sync up with the animation -> investigate
+                    audio->PlaySound(Audio::door_open);
+					triggerSoundPlayed = true;
+				}
 			}
 		}
 		else if (e->getType() == gateT) {
 			Gate* g = dynamic_cast<Gate*>(e);
 			if (code == '-') {
 				g->Open();
+				if (!triggerSoundPlayed) {
+					audio->PlaySound(Audio::trigger);
+					triggerSoundPlayed = true;
+				}
 			}
 			else {
 				g->Close();
+				if (!triggerSoundPlayed) {
+					audio->PlaySound(Audio::trigger);
+					triggerSoundPlayed = true;
+				}
 			}
 		}
+	}
+	else {
+		triggerSoundPlayed = false;
 	}
 
 
@@ -288,7 +308,7 @@ void Collision::CheckSpikeCollision(Character * character) {
 	
 	int absX = level->getLevelBlockX(level->getSceneBlockXByCoord(character->getMidX() - 22));
 	int absY = level->getLevelBlockY(level->getSceneBlockYByCoord(character->getMidY()));
-	level->findSpikes(absX, absY); //TODO
+	level->findSpikes(audio, absX, absY); //TODO
 
 	if (code == '/') {
 		if (character->getState() == sRunning ||
@@ -299,6 +319,7 @@ void Collision::CheckSpikeCollision(Character * character) {
 			character->setX((nBlockX - 1) * Level::BLOCK_WIDTH_PX - 15);
 			character->setY((nBlockY - 1)* Level::BLOCK_HEIGHT_PX);
 			character->spikeKill();
+			audio->PlaySound(Audio::spike_kill);
 		}
 	}
 }

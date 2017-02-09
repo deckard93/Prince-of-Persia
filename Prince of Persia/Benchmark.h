@@ -4,7 +4,7 @@
 class Benchmark {
 
 public:
-	Benchmark();
-	~Benchmark();
+    Benchmark();
+    ~Benchmark();
 
 };

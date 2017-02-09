@@ -24,57 +24,63 @@ using std::string;
 #define DEBUG 0
 
 
+enum GameState { gTitle, gGame, gPause, gLevelComplete };
 class Prince;
 
 class Game {
 public:
-	Game (HWND hwnd, Input* in);
-	void GameLoop();
-	~Game() { delete audio; }
+    Game (HWND hwnd, Input* in);
+    void GameLoop();
+    ~Game() { delete audio; }
 
-	static Sprite* getSprite(string name);
-	static void RegisterSprite(string name, string path = "Assets//");
-
-private:
-	// Util
-	static void LoadAssets();
-	void Reset();
-	bool isGuardInScene(Character * guard_in);
-	void EngageFight(Character * prince, Character * guard, Level * level);
-	void SetEngagedGuard(Character* guard);
-
-	// Flow Control
-	void HandleInput();
-	void ControlAI();
-	void CheckCombatCollision();
-	void CheckCollision();
-
-	// Draw Functions
-	void DrawGraphics();
-	void DrawBackground();
-	void DrawForeground();
-	void DrawHealth();
+    static Sprite* getSprite(string name);
+    static void RegisterSprite(string name, string path = "Assets//");
 
 private:
-	HWND		winHandle;
-	Graphics	graphics;
-	Input*		input;
-	Audio*		audio;
-	//Benchmark	benchmark;
+    // Util
+    static void LoadAssets();
+    void Reset();
+    bool isGuardInScene(Character * guard_in);
+    void EngageFight(Character * prince, Character * guard, Level * level);
+    void SetEngagedGuard(Character* guard);
+
+    // Flow Control
+    void HandleInput();
+    void ControlAI();
+    void CheckCombatCollision();
+    void CheckCollision();
+
+    // Draw Functions
+    void DrawGraphics();
+    void DrawBackground();
+    void DrawForeground();
+    void DrawHealth();
+    void DrawTitle();
 
 private:
-	static hash_map<string, Sprite*>* assets;
+    HWND        winHandle;
+    Graphics    graphics;
+    Input*        input;
+    Audio*        audio;
+    //Benchmark    benchmark;
 
-	Level *level;
-	Prince* prince;
+private:
+    static hash_map<string, Sprite*>* assets;
 
-	D3DCOLOR fontSurf[512 * 84];
-	Font fixedSys;
+    Level *level;
+    Prince* prince;
 
-	Timer timer;
-	int timeSinceLastFrame;
+    D3DCOLOR fontSurf[512 * 84];
+    Font fixedSys;
+
+    Timer timer;
+    int timeSinceLastFrame;
 
 
-	Collision* collision;
-	Character* engagedGuard;
+    Collision* collision;
+    Character* engagedGuard;
+
+    IXAudio2SourceVoice* titleMusic;
+
+    GameState gameState;
 };

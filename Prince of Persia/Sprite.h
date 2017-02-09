@@ -5,8 +5,8 @@
 class Sprite
 {
 public:
-	int width;
-	int height;
-	D3DCOLOR key;
-	D3DCOLOR* surface;
+    int width;
+    int height;
+    D3DCOLOR key;
+    D3DCOLOR* surface;
 };

@@ -8,9 +8,9 @@ struct BitmapFileHeader {
 };
 
 struct Pixel24 {
-	unsigned char blue;
-	unsigned char green;
-	unsigned char red;
+    unsigned char blue;
+    unsigned char green;
+    unsigned char red;
 };
 
 struct BitmapInfoHeader {

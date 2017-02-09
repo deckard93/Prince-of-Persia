@@ -7,30 +7,29 @@
 
 class SpriteSheet {
 
-//variables
+// Variables
 private:
-	Sprite* sheet;
+    Sprite* sheet;
 
-	int frameWidth;
-	int frameHeight;
+    int frameWidth;
+    int frameHeight;
 
-	int frameNum;
+    int frameNum;
 
-//functions
+// Functions
 public:
-	//constructors
-	SpriteSheet(const WCHAR* spriteName, int frames);
-	SpriteSheet(Sprite* sprite, int frames);			
-	SpriteSheet(Sprite* sprite, int width, int height);	
+    // Constructors
+    SpriteSheet(const WCHAR* spriteName, int frames);
+    SpriteSheet(Sprite* sprite, int frames);            
+    SpriteSheet(Sprite* sprite, int width, int height);    
 
-	//getters
-	int getFrameCount();
-	int getFrameWidth();
-	int getFrameHeight();
+    // Getters
+    int getFrameCount();
+    int getFrameWidth();
+    int getFrameHeight();
 
-	Sprite* getSprite();
+    Sprite* getSprite();
 
-	//destructor
-	~SpriteSheet();
-
+    // Destructor
+    ~SpriteSheet();
 };

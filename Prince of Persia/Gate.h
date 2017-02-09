@@ -1,39 +1,27 @@
 #pragma once
 
 #include "Entity.h"
+#include "Audio.h"
 
 enum gateState { sOpened, sClosed, sClosing, sOpening };
 
 class Gate : public Entity {
-
 //methods
 public:
-	Gate(int x, int y, int levelX, int levelY);
-	~Gate() {}
+    int slowTime;
+    int fastTime;
+    int delay;
 
-	int slowTime;
-	int fastTime;
-
-	int delay;
-
-	void Open();
-	void Close();
-
-	bool isOpen();
-
-	void Animate(Graphics* graphics);
-
-private:
-
-
+    Gate(int x, int y, int levelX, int levelY);
+    ~Gate() {}
+    void Open();
+    void Close();
+    bool isOpen();
+    void Animate(Graphics* graphics, Audio* audio);
 
 //attributes
 protected:
-	gateState state;
-	Timer* timer;
-
-	Animation* gate;
-
-public:
-
+    gateState state;
+    Timer* timer;
+    Animation* gate;
 };

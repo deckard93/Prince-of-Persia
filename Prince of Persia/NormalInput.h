@@ -1,20 +1,21 @@
 #pragma once
 
 
-class NormalInput {
+class NormalInput 
+{
 private:
-	Input* input;
+    Input* input;
 
 public:
-	NormalInput(Input* input);
-	bool doLeftStep();
-	bool doRightStep();
-	bool doRightJump();
-	bool doLeftJump();
-	bool doClimb();
-	bool goDown();
-	bool goLeft();
-	bool goRight();
-	bool Strike();
-	bool Hang();
+    NormalInput(Input* input);
+    bool doLeftStep();
+    bool doRightStep();
+    bool doRightJump();
+    bool doLeftJump();
+    bool doClimb();
+    bool goDown();
+    bool goLeft();
+    bool goRight();
+    bool Strike();
+    bool Hang();
 };

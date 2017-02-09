@@ -2,16 +2,16 @@
 
 #include "Guard.h"
 
-class GuardAI : public Guard {
-
-	//variables
+class GuardAI : public Guard 
+{
+// Variables
 private:
-	int chanceToParry;
-	int chanceToStrike;
-	bool engaged; //triggered //aggroed
+    int chanceToParry;
+    int chanceToStrike;
+    bool engaged;
 
-//functions
+// Functions
 public:
-	GuardAI(Audio* audio, int x, int y);
-	void Control(Prince & prince, Level & level);
+    GuardAI(Audio* audio, int x, int y);
+    void Control(Prince & prince, Level & level);
 };

@@ -16,95 +16,95 @@ enum characterState { sRunning, sFalling, sIdle, sDead, sFinish, sJumping, sJump
 class Character : public Entity {
 //Functions
 public:
-	Character();
-	Character(Audio* audio);
-	void Hurt();
-	void Heal();
+    Character();
+    Character(Audio* audio);
+    void Hurt();
+    void Heal();
 
-	int getHealth();
-	int getMaxHealth();
+    int getHealth();
+    int getMaxHealth();
 
-	void SwitchFacing();
-	bool isImmune();
-	bool isParying();
-	bool isHitting(Character * enemy, Level & level);
-	bool checkParryBy(Character* enemy);
-	bool isFighting();
-	bool isIdle();
-	bool isDead();
-	
-	bool isFacingRight();
-	void FaceCharacter(Character& character, Level& level);
+    void SwitchFacing();
+    bool isImmune();
+    bool isParying();
+    bool isHitting(Character * enemy, Level & level);
+    bool checkParryBy(Character* enemy);
+    bool isFighting();
+    bool isIdle();
+    bool isDead();
+    
+    bool isFacingRight();
+    void FaceCharacter(Character& character, Level& level);
 
-	void EngageEnemy(Character & enemy);
+    void EngageEnemy(Character & enemy);
 
-	bool isInScene();
-	bool isMovingUp();
-	void setInScene(bool val);
+    bool isInScene();
+    bool isMovingUp();
+    void setInScene(bool val);
 
-	characterState getState();
-	void setState(characterState state);
-	void spikeKill();
-	void Land(int currentBlockY);
-	void setFall(int currentBlockY);
+    characterState getState();
+    void setState(characterState state);
+    void spikeKill();
+    void Land(int currentBlockY);
+    void setFall(int currentBlockY);
 
-	Animation* turn;
-	Animation* running;
-	Animation* climbUp;
-	Animation* crouch;
-	Animation* jumpGrab;
-	Animation* staticJump;
-	Animation* step;
-	Animation* hang;
-	Animation* runningJump;
-	Animation* runningTurn;
-	Animation* fall;
-	Animation* drop;
-	Animation* drink;
-	Animation* pickSword;
-	
-
-protected:
-	void defaultToIdle();
+    Animation* turn;
+    Animation* running;
+    Animation* climbUp;
+    Animation* crouch;
+    Animation* jumpGrab;
+    Animation* staticJump;
+    Animation* step;
+    Animation* hang;
+    Animation* runningJump;
+    Animation* runningTurn;
+    Animation* fall;
+    Animation* drop;
+    Animation* drink;
+    Animation* pickSword;
+    
 
 protected:
-	Animation* idle;
+    void defaultToIdle();
 
-	Animation* fightIdle;
-	Animation* fightStep;
-	Animation* fightParry;
-	Animation* fightParried;
-	Animation* fightStrike;
+protected:
+    Animation* idle;
 
-	Animation* fightInjure;
-	Animation* fightDying;
-	Animation* fightStart;
-	Animation* fightFinish;
+    Animation* fightIdle;
+    Animation* fightStep;
+    Animation* fightParry;
+    Animation* fightParried;
+    Animation* fightStrike;
 
-	Animation* swordDeath;
-	Animation* guilotineDeath;
-	Animation* spikeDeath;
+    Animation* fightInjure;
+    Animation* fightDying;
+    Animation* fightStart;
+    Animation* fightFinish;
 
-	std::map<Character*, bool> seenEnemies;
+    Animation* swordDeath;
+    Animation* guilotineDeath;
+    Animation* spikeDeath;
 
-	characterState state;
-	bool hasSword;
+    std::map<Character*, bool> seenEnemies;
+
+    characterState state;
+    bool hasSword;
 
 //variables
 protected:
-	bool isAnimating;
-	bool facingRight;
-	bool inFight;
-	bool dead;
+    bool isAnimating;
+    bool facingRight;
+    bool inFight;
+    bool dead;
 
-	bool inScene;
+    bool inScene;
 
-	int maxHealth;
-	int currentHealth;
-	int lastBlockY;
+    int maxHealth;
+    int currentHealth;
+    int lastBlockY;
 
-	Audio* audio;
-	
+    Audio* audio;
+    
 public:
 
 };

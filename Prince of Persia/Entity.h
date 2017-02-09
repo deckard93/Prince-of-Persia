@@ -9,83 +9,83 @@ class Entity {
 
 // Variables
 protected:
-	Animation* currentAnim;
+    Animation* currentAnim;
 
-	double xPos;
-	double yPos;
+    double xPos;
+    double yPos;
 
-	int levelX;
-	int levelY;
+    int levelX;
+    int levelY;
 
-	int sceneX;
-	int sceneY;
+    int sceneX;
+    int sceneY;
 
-	double defferX;
-	double defferY;
+    double defferX;
+    double defferY;
 
-	double accelerationX;
-	double accelerationY;
+    double accelerationX;
+    double accelerationY;
 
-	entityType type;
+    entityType type;
 
 // Methods
 public:
-	// Constructors
-	Entity(Animation* anim,int x, int y, entityType t = noneT);
-	Entity();
+    // Constructors
+    Entity(Animation* anim,int x, int y, entityType t = noneT);
+    Entity();
 
 
-	//setters
-	void setAccX(double x);
-	void setAccY(double y);
-	
-	void setX(int x);
-	void setY(int y);
+    //setters
+    void setAccX(double x);
+    void setAccY(double y);
+    
+    void setX(int x);
+    void setY(int y);
 
-	void setLevelX(int x);
-	void setLevelY(int y);
+    void setLevelX(int x);
+    void setLevelY(int y);
 
-	void setSceneX(int x);
-	void setSceneY(int y);
+    void setSceneX(int x);
+    void setSceneY(int y);
 
-	void setDefferX(double x);
-	void setDefferY(double y);
+    void setDefferX(double x);
+    void setDefferY(double y);
 
-	void setCurrentAnim(Animation* anim);
+    void setCurrentAnim(Animation* anim);
 
-	//getters
-	Animation* getAnim();
+    //getters
+    Animation* getAnim();
 
-	double getAccX();
-	double getAccY();
+    double getAccX();
+    double getAccY();
 
-	int getX();
-	int getY();
+    int getX();
+    int getY();
 
-	int getLevelX();
-	int getLevelY();
+    int getLevelX();
+    int getLevelY();
 
-	int getSceneX();
-	int getSceneY();
+    int getSceneX();
+    int getSceneY();
 
-	int getMidX();
-	int getMidY();
+    int getMidX();
+    int getMidY();
 
-	int getDefferX();
-	int getDefferY();
-	
-	// Functions
-	virtual void Animate(Graphics* graphics, int& moveX, int& moveY);
-	virtual void Animate(Graphics* graphics);
+    int getDefferX();
+    int getDefferY();
+    
+    // Functions
+    virtual void Animate(Graphics* graphics, int& moveX, int& moveY);
+    virtual void Animate(Graphics* graphics);
 
-	void setType(entityType t);
-	entityType getType();
+    void setType(entityType t);
+    entityType getType();
 
-	virtual void EventHandler(int Event) {}
+    virtual void EventHandler(int Event) {}
 
-	void MoveX(double x);
-	void MoveY(double y);
+    void MoveX(double x);
+    void MoveY(double y);
 
-	// Destructor
-	~Entity();
+    // Destructor
+    ~Entity();
 };
